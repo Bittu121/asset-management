@@ -1,6 +1,7 @@
 "use client";
-
 import { useState } from "react";
+import { Trash2 } from "lucide-react";
+
 import AddDepartmentModal from "./AddDepartmentModal";
 import UpdateDepartmentModal from "./UpdateDepartmentModal";
 
@@ -55,69 +56,119 @@ function Department() {
     );
   };
 
+  const handleDelete = (id: number) => {
+    setDepartments((prev) => prev.filter((d) => d.id !== id));
+  };
+
   return (
     <>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-semibold">Departments</h1>
-            <p className="text-sm text-gray-500">
-              {departments.length} departments total
-            </p>
+      <div className="p-6 bg-[#f8fafc] min-h-screen">
+        <div className="mb-6">
+          {/* Row 1: Title + Add Button */}
+          <div className="flex justify-between items-center mb-4">
+            {/* Left: Title */}
+            <h1 className="text-2xl font-semibold text-gray-900">
+              Departments
+            </h1>
+
+            {/* Right: Add Button */}
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
+            >
+              + Add Department
+            </button>
           </div>
 
-          <button
-            onClick={() => setIsAddOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
-          >
-            + Add Department
-          </button>
+          {/* Row 2: Search + Filter (LEFT ALIGNED) */}
+          <div className="flex items-center gap-4">
+            {/* Search */}
+            <input
+              placeholder="Search departments..."
+              className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            {/* Filter */}
+            <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
+              <option>All Departments</option>
+              <option>Assigned</option>
+              <option>Unassigned</option>
+            </select>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <input
-            placeholder="Search departments..."
-            className="w-full border rounded-lg px-4 py-2"
-          />
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-500">
-              <tr>
-                <th className="text-left p-3">Department</th>
-                <th>Code</th>
-                <th>Head</th>
-                <th>Date</th>
-                <th>Action</th>
+        {/* Table */}
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <table className="w-full">
+            {/* Header */}
+            <thead>
+              <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+                <th className="text-left px-6 py-4 font-medium">Department</th>
+                <th className="text-left px-6 py-4">Code</th>
+                <th className="text-left px-6 py-4">Head</th>
+                <th className="text-left px-6 py-4">Created</th>
+                <th className="text-right px-6 py-4">Action</th>
               </tr>
             </thead>
 
-            <tbody>
+            {/* Body */}
+            <tbody className="divide-y divide-gray-100">
               {departments.map((dept) => (
-                <tr key={dept.id} className="border-t hover:bg-gray-50">
-                  <td className="p-3 font-medium">{dept.name}</td>
-                  <td>{dept.code}</td>
+                <tr
+                  key={dept.id}
+                  className="hover:bg-gray-50 transition-all duration-150"
+                >
+                  {/* Department */}
+                  <td className="px-6 py-5">
+                    <div className="text-sm font-medium text-gray-900">
+                      {dept.name}
+                    </div>
+                  </td>
 
-                  <td>
+                  {/* Code */}
+                  <td className="px-6 py-5 text-sm text-gray-600">
+                    {dept.code}
+                  </td>
+
+                  {/* Head */}
+                  <td className="px-6 py-5">
                     {dept.head ? (
-                      <span className="text-gray-700">{dept.head}</span>
+                      <span className="text-sm text-gray-700">{dept.head}</span>
                     ) : (
-                      <span className="text-yellow-600 text-xs bg-yellow-100 px-2 py-1 rounded">
+                      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-md">
                         Unassigned
                       </span>
                     )}
                   </td>
 
-                  <td className="text-gray-500">{dept.createdAt}</td>
+                  {/* Date */}
+                  <td className="px-6 py-5 text-sm text-gray-500">
+                    {dept.createdAt}
+                  </td>
 
-                  <td>
-                    <button
-                      onClick={() => handleEdit(dept)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      ✏️ Edit
-                    </button>
+                  {/* Actions */}
+                  <td className="px-6 py-5">
+                    <div className="flex justify-end items-center gap-3">
+                      {/* Edit Button */}
+                      <button
+                        onClick={() => handleEdit(dept)}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                      >
+                        Edit
+                      </button>
+
+                      {/* Divider */}
+                      <div className="w-px h-4 bg-gray-200"></div>
+
+                      {/* Delete Icon */}
+                      <button
+                        onClick={() => handleDelete(dept.id)}
+                        className="p-1.5 rounded-md hover:bg-red-50 text-red-500 transition"
+                        title="Delete"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -125,6 +176,7 @@ function Department() {
           </table>
         </div>
 
+        {/* Modals */}
         <AddDepartmentModal
           isOpen={isAddOpen}
           onClose={() => setIsAddOpen(false)}

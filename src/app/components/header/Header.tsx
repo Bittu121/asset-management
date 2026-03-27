@@ -7,13 +7,8 @@ function Header() {
     <>
       <div className="w-full h-16 bg-white/70 backdrop-blur-md border-b border-gray-200/50 px-6 flex items-center justify-between shadow-sm">
         {/* Search */}
-        <div className="flex items-center bg-gray-100/70 hover:bg-gray-100 px-4 py-2 rounded-xl w-105 transition-all duration-200 border border-transparent focus-within:border-gray-300">
-          <Search size={16} className="text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent outline-none ml-2 w-full text-sm text-gray-700 placeholder-gray-400"
-          />
+        <div className="flex items-center text-md">
+          <p>Asset Management</p>
         </div>
 
         {/* Right Section */}
