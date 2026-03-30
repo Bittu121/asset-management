@@ -12,6 +12,7 @@ export default function MainLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -31,12 +32,31 @@ export default function MainLayout({
   if (loading) return null;
 
   return (
-    <div className="flex">
-      <Sidebar />
+    <div className="flex h-screen overflow-hidden">
+      {/* Fixed Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 h-screen z-40 transition-all duration-300 ${
+          sidebarCollapsed ? "w-20" : "w-72"
+        }`}
+      >
+        <Sidebar onCollapseChange={setSidebarCollapsed} />
+      </aside>
 
-      <div className="flex flex-col w-full">
-        <Header />
-        <main className="flex-1 bg-gray-100 p-4 overflow-auto">{children}</main>
+      {/* Content area — offset to match sidebar width */}
+      <div
+        className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${
+          sidebarCollapsed ? "ml-20" : "ml-72"
+        }`}
+      >
+        {/* Sticky Header */}
+        <header className="sticky top-0 z-30">
+          <Header />
+        </header>
+
+        {/* Scrollable Page Content */}
+        <main className="flex-1 bg-gray-100 p-4 overflow-y-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

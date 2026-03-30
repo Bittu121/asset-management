@@ -16,7 +16,11 @@ import {
   Menu,
 } from "lucide-react";
 
-function Sidebar() {
+interface SidebarProps {
+  onCollapseChange?: (collapsed: boolean) => void;
+}
+
+function Sidebar({ onCollapseChange }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -25,6 +29,12 @@ function Sidebar() {
 
   const toggleMenu = (name: string) => {
     setOpenMenu(openMenu === name ? null : name);
+  };
+
+  const handleToggle = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    onCollapseChange?.(next);
   };
 
   const role = localStorage.getItem("role") || "admin";
@@ -48,13 +58,19 @@ function Sidebar() {
             icon: Layers,
             children: [
               {
-                name: "User Account",
-                path: "/admin/user-account",
-                icon: Users,
-              },
-              {
                 name: "Roles & Permissions",
                 path: "/admin/roles",
+                icon: Users,
+              },
+
+              {
+                name: "Support Group",
+                path: "/admin/support-group",
+                icon: LifeBuoy,
+              },
+              {
+                name: "User Account",
+                path: "/admin/user-account",
                 icon: Users,
               },
               { name: "Location", path: "/admin/location", icon: MapPin },
@@ -85,11 +101,6 @@ function Sidebar() {
               },
               { name: "Asset Types", path: "/admin/asset-types", icon: Tag },
               { name: "Vendor", path: "/admin/vendor", icon: Truck },
-              {
-                name: "Support Group",
-                path: "/admin/support-group",
-                icon: LifeBuoy,
-              },
             ],
           },
         ]
@@ -130,7 +141,7 @@ function Sidebar() {
     <>
       <div
         className={`h-screen ${
-          collapsed ? "w-20" : "w-80"
+          collapsed ? "w-20" : "w-72"
         } bg-linear-to-b from-[#0f172a] via-[#111827] to-[#020617] border-r border-white/10 text-gray-300 px-3 py-6 flex flex-col
         transition-all duration-300`}
       >
@@ -142,7 +153,7 @@ function Sidebar() {
           {!collapsed && (
             <div className="cursor-pointer flex items-center gap-2">
               <h1 className="text-white font-semibold text-base tracking-wide">
-                Asset
+                Asset Management
               </h1>
             </div>
           )}
@@ -150,7 +161,7 @@ function Sidebar() {
           <Menu
             size={20}
             className="cursor-pointer text-gray-400 hover:text-white transition"
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={handleToggle}
           />
         </div>
 

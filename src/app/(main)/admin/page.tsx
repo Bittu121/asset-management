@@ -1,5 +1,5 @@
 async function getData() {
-  await new Promise((res) => setTimeout(res, 3000)); 
+  await new Promise((res) => setTimeout(res, 1000)); 
   return "data";
 }
 
