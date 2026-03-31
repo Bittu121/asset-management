@@ -32,7 +32,7 @@ export default function MainLayout({
   if (loading) return null;
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen">
       {/* Fixed Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-screen z-40 transition-all duration-300 ${
@@ -44,7 +44,7 @@ export default function MainLayout({
 
       {/* Content area — offset to match sidebar width */}
       <div
-        className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${
+        className={`flex flex-col flex-1 min-h-screen min-w-0 transition-all duration-300 ${
           sidebarCollapsed ? "ml-20" : "ml-72"
         }`}
       >

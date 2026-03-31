@@ -23,3 +23,29 @@
     background-color: #94a3b8;
 }
 
+
+/* ONLY for table horizontal scroll */
+.table-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 12px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #cbd5f5, #94a3b8);
+    border-radius: 999px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #94a3b8, #64748b);
+}
+
+/* Firefox */
+.table-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 transparent;
+}
+

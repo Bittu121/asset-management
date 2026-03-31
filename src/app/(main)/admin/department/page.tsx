@@ -140,10 +140,8 @@ function Department() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-md overflow-hidden"></div>
-
-        <div className="bg-white rounded-md overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
+          <table className="min-w-[1100px] w-full">
             <thead>
               <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
                 <th className="text-left px-6 py-4 ">ID</th>
@@ -230,7 +228,7 @@ function Department() {
           department={selectedDept}
           onUpdate={handleUpdate}
         />
-        <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-3">
+        <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-4">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

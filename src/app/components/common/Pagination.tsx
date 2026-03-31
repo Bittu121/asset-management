@@ -26,7 +26,7 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex justify-between items-center mt-6">
+    <div className="flex justify-between items-center mt-4">
       {/* Left */}
       <p className="text-sm text-gray-500">
         Page {currentPage} of {totalPages}
