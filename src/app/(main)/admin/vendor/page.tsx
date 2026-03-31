@@ -106,7 +106,7 @@ function Vendor() {
     //Create Api
     const newVendor: Vendor = {
       ...data,
-      id: Date.now(),
+      id: vendor.length+1,
       createdAt: new Date().toDateString(),
     };
     setVendor((prev) => [newVendor, ...prev]);
