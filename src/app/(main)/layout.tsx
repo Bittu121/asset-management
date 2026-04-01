@@ -44,7 +44,7 @@ export default function MainLayout({
 
       {/* Content area — offset to match sidebar width */}
       <div
-        className={`flex flex-col flex-1 min-h-screen min-w-0 transition-all duration-300 ${
+        className={`flex flex-col flex-1 min-h-screen layout-scroll min-w-0 transition-all duration-300 ${
           sidebarCollapsed ? "ml-20" : "ml-72"
         }`}
       >
@@ -54,7 +54,7 @@ export default function MainLayout({
         </header>
 
         {/* Scrollable Page Content */}
-        <main className="flex-1 bg-gray-100 p-4 overflow-y-auto">
+        <main className="flex-1 bg-gray-100 p-4 overflow-y-auto layout-scroll">
           {children}
         </main>
       </div>

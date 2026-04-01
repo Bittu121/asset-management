@@ -7,7 +7,15 @@ function UpdateVendor({ isOpen, onClose, selectedVendor, onUpdate }: any) {
 
   useEffect(() => {
     if (selectedVendor) {
-      setForm(selectedVendor);
+      setForm({
+        name: selectedVendor.name || "",
+        email: selectedVendor.email || "",
+        phone: selectedVendor.phone || "",
+        address: selectedVendor.address || "",
+        gstNumber: selectedVendor.gstNumber || "",
+        contractExpiry: selectedVendor.contractExpiry || "",
+        isActive: selectedVendor.isActive ?? true,
+      });
     }
   }, [selectedVendor]);
 
@@ -23,7 +31,9 @@ function UpdateVendor({ isOpen, onClose, selectedVendor, onUpdate }: any) {
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
         <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Update Vendor</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Update Vendor
+            </h2>
 
             <button
               onClick={onClose}
@@ -83,7 +93,7 @@ function UpdateVendor({ isOpen, onClose, selectedVendor, onUpdate }: any) {
 
               <button
                 onClick={() =>
-                  setForm((prev:any) => ({
+                  setForm((prev: any) => ({
                     ...prev,
                     isActive: !prev.isActive,
                   }))

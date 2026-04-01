@@ -105,6 +105,37 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
           },
         ]
       : []),
+    ...(role === "admin"
+      ? [
+          {
+            name: "Assets",
+            icon: Boxes,
+            children: [
+              { name: "Dashboard", path: "/assets", icon: LayoutDashboard },
+              {
+                name: "Add Assets",
+                path: "/assets/asset",
+                icon: Layers,
+              },
+              {
+                name: "Asset Allocation",
+                path: "/assets/asset-allocation",
+                icon: Layers,
+              },
+              {
+                name: "Asset Bulk Upload",
+                path: "/assets/asset-bulk-upload",
+                icon: Layers,
+              },
+              {
+                name: "Asset Gate Pass",
+                path: "/assets/asset-gate-pass",
+                icon: Layers,
+              },
+            ],
+          },
+        ]
+      : []),
     ...(role === "technician"
       ? [
           {
