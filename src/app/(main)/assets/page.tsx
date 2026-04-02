@@ -87,28 +87,28 @@ export default function Dashboard() {
           <div className="flex flex-wrap items-center bg-gray-100 rounded-lg p-1 gap-2">
             <button
               onClick={() => router.push("/assets/asset")}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-indigo-100 border-indigo-500 text-indigo-600 hover:bg-indigo-200 transition"
             >
-              Assets
+              + Add Assets
             </button>
 
             <button
               onClick={() => router.push("/assets/asset-allocation")}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-green-100 text-green-600 hover:bg-green-200 transition"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-green-100 border-gray-500 text-green-600 hover:bg-green-200 transition"
             >
-              Allocation
+              Asset Allocation
             </button>
 
             <button
               onClick={() => router.push("/assets/asset-bulk-upload")}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-amber-100 text-amber-600 hover:bg-amber-200 transition"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-amber-100 border-amber-500 text-amber-600 hover:bg-amber-200 transition"
             >
               Bulk Upload
             </button>
 
             <button
               onClick={() => router.push("/assets/asset-gate-pass")}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-purple-100 text-purple-600 hover:bg-purple-200 transition"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs rounded-md bg-purple-100 border-purple-500 text-purple-600 hover:bg-purple-200 transition"
             >
               Gate Pass
             </button>
