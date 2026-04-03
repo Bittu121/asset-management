@@ -8,12 +8,21 @@ import {
   Users,
   MapPin,
   Building2,
-  Boxes,
   Layers,
   Tag,
   Truck,
   LifeBuoy,
   Menu,
+  Boxes,
+  Laptop,
+  UserCheck,
+  UploadCloud,
+  ShieldCheck,
+  RotateCcw,
+  AlertTriangle,
+  Wrench,
+  ClipboardList,
+  BarChart3,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -39,133 +48,155 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
 
   const role = localStorage.getItem("role") || "admin";
 
+  const isAdmin = role === "admin" || role === "superadmin";
+  const isTechnician = role === "technician" || role === "superadmin";
+  const isUser = role === "user";
+
+  const getDashboardPath = () => {
+    if (role === "superadmin" || role === "admin") return "/admin";
+    if (role === "technician") return "/technician";
+    return "/end-user";
+  };
+
   const menuItems = [
     {
       name: "Dashboard",
       icon: LayoutDashboard,
-      path:
-        role === "admin"
-          ? "/admin"
-          : role === "technician"
-            ? "/technician"
-            : "/end-user",
+      path: getDashboardPath(),
     },
 
-    ...(role === "admin"
-      ? [
-          {
-            name: "Admin",
-            icon: Layers,
-            children: [
-              {
-                name: "Roles & Permissions",
-                path: "/admin/roles",
-                icon: Users,
-              },
-
-              {
-                name: "Support Group",
-                path: "/admin/support-group",
-                icon: LifeBuoy,
-              },
-              {
-                name: "User Account",
-                path: "/admin/user-account",
-                icon: Users,
-              },
-              { name: "Location", path: "/admin/location", icon: MapPin },
-              {
-                name: "Sub Location",
-                path: "/admin/sub-location",
-                icon: MapPin,
-              },
-              {
-                name: "Department",
-                path: "/admin/department",
-                icon: Building2,
-              },
-              {
-                name: "Sub Department",
-                path: "/admin/sub-department",
-                icon: Building2,
-              },
-              {
-                name: "Asset Categories",
-                path: "/admin/asset-categories",
-                icon: Boxes,
-              },
-              {
-                name: "Sub Categories",
-                path: "/admin/sub-categories",
-                icon: Boxes,
-              },
-              { name: "Asset Types", path: "/admin/asset-types", icon: Tag },
-              { name: "Vendor", path: "/admin/vendor", icon: Truck },
-            ],
-          },
-        ]
-      : []),
-    ...(role === "admin"
+    ...(isAdmin
       ? [
           {
             name: "Assets",
             icon: Boxes,
             children: [
-              { name: "Dashboard", path: "/assets", icon: LayoutDashboard },
+              { name: "Overview", path: "/assets", icon: LayoutDashboard },
+              { name: "Asset List", path: "/assets/asset", icon: Laptop },
               {
-                name: "Add Assets",
-                path: "/assets/asset",
-                icon: Layers,
-              },
-              {
-                name: "Asset Allocation",
+                name: "Allocations",
                 path: "/assets/asset-allocation",
-                icon: Layers,
+                icon: UserCheck,
               },
               {
-                name: "Asset Bulk Upload",
+                name: "Bulk Import",
                 path: "/assets/asset-bulk-upload",
-                icon: Layers,
+                icon: UploadCloud,
               },
               {
-                name: "Asset Gate Pass",
+                name: "Gate Pass",
                 path: "/assets/asset-gate-pass",
-                icon: Layers,
+                icon: ShieldCheck,
               },
+              { name: "Reports", path: "/assets/reports", icon: BarChart3 },
+            ],
+          },
+          {
+            name: "Admin",
+            icon: Layers,
+            children: [
+              { name: "Roles", path: "/admin/roles", icon: Users },
+              {
+                name: "Support Groups",
+                path: "/admin/support-group",
+                icon: LifeBuoy,
+              },
+              { name: "Users", path: "/admin/user-account", icon: Users },
+              { name: "Locations", path: "/admin/location", icon: MapPin },
+              {
+                name: "Sub Locations",
+                path: "/admin/sub-location",
+                icon: MapPin,
+              },
+              {
+                name: "Departments",
+                path: "/admin/department",
+                icon: Building2,
+              },
+              { name: "Units", path: "/admin/sub-department", icon: Building2 },
+              {
+                name: "Categories",
+                path: "/admin/asset-categories",
+                icon: Boxes,
+              },
+              {
+                name: "Subcategories",
+                path: "/admin/sub-categories",
+                icon: Boxes,
+              },
+              { name: "Types", path: "/admin/asset-types", icon: Tag },
+              { name: "Vendors", path: "/admin/vendor", icon: Truck },
             ],
           },
         ]
       : []),
-    ...(role === "technician"
+
+    ...(isTechnician
       ? [
           {
-            name: "Technician",
+            name: "Operations",
             icon: Users,
             children: [
-              { name: "Dashboard", path: "/technician", icon: LayoutDashboard },
+              { name: "Overview", path: "/technician", icon: LayoutDashboard },
+              { name: "My Assets", path: "/technician/asset", icon: Laptop },
+
               {
-                name: "Assets",
-                path: "/technician/technician-asset",
-                icon: Layers,
+                name: "Allocations",
+                path: "/technician/asset-allocation",
+                icon: UserCheck,
+              },
+              {
+                name: "Returns",
+                path: "/technician/asset-returns",
+                icon: RotateCcw,
+              },
+              {
+                name: "Overdue",
+                path: "/technician/asset-overdue",
+                icon: AlertTriangle,
+              },
+
+              {
+                name: "Gate Pass",
+                path: "/technician/asset-gate-pass",
+                icon: ShieldCheck,
+              },
+
+              {
+                name: "Asset History",
+                path: "/technician/asset-history",
+                icon: ClipboardList,
               },
             ],
           },
         ]
       : []),
 
-    ...(role === "user"
+    ...(isUser
       ? [
           {
-            name: "End User",
+            name: "My Workspace",
             icon: Users,
             children: [
-              { name: "Dashboard", path: "/end-user", icon: LayoutDashboard },
-              { name: "Requests", path: "/end-user/requests", icon: Layers },
+              { name: "Overview", path: "/end-user", icon: LayoutDashboard },
+              { name: "My Assets", path: "/end-user/assets", icon: Laptop },
+
+              {
+                name: "Requests",
+                path: "/end-user/requests",
+                icon: ClipboardList,
+              },
+              {
+                name: "Gate Pass",
+                path: "/end-user/gate-pass",
+                icon: ShieldCheck,
+              },
             ],
           },
         ]
       : []),
   ];
+
   const isActive = (path?: string) => pathname === path;
 
   return (

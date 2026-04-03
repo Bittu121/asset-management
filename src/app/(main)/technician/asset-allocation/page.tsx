@@ -3,7 +3,7 @@ import React from "react";
 function page() {
   return (
     <>
-      <div>request</div>
+      <div>Asset Allocation</div>
     </>
   );
 }

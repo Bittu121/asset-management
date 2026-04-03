@@ -61,3 +61,15 @@ export default function MainLayout({
     </div>
   );
 }
+
+
+
+
+// /components/
+//  ├── Table.tsx
+//  ├── Modal.tsx
+//  ├── Dropdown.tsx
+//  ├── Pagination.tsx
+//  ├── StatusBadge.tsx
+//  ├── EmptyState.tsx
+//  ├── Loader.tsx
