@@ -19,7 +19,6 @@ export default function Pagination({
     pages.push(i);
   }
 
-  // ✅ Safe page change handler
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
     onPageChange(page);
@@ -27,12 +26,9 @@ export default function Pagination({
 
   return (
     <div className="flex justify-between items-center mt-4">
-      {/* Left */}
       <p className="text-sm text-gray-500">
         Page {currentPage} of {totalPages}
       </p>
-
-      {/* Right */}
       <div className="flex items-center gap-1">
         {/* Prev */}
         <button
@@ -42,8 +38,6 @@ export default function Pagination({
         >
           Prev
         </button>
-
-        {/* Numbers */}
         {pages.map((page) => (
           <button
             key={page}
@@ -57,7 +51,6 @@ export default function Pagination({
             {page}
           </button>
         ))}
-
         {/* Next */}
         <button
           onClick={() => handlePageChange(currentPage + 1)}

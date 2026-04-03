@@ -74,7 +74,7 @@ export default function Dashboard() {
         {/* LEFT */}
         <div>
           <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
-            Asset Management
+            Asset Dashboard
           </h1>
           <p className="text-xs sm:text-sm text-gray-500">
             Manage assets, allocations, and lifecycle tracking
@@ -113,14 +113,6 @@ export default function Dashboard() {
               Gate Pass
             </button>
           </div>
-
-          {/* Divider (hidden on mobile) */}
-          <div className="hidden sm:block h-5 w-px bg-gray-200" />
-
-          {/* EXPORT BUTTON */}
-          <button className="w-full sm:w-auto px-3 py-1.5 text-xs rounded-md bg-gray-900 text-white hover:bg-black transition">
-            Export
-          </button>
         </div>
       </div>
 

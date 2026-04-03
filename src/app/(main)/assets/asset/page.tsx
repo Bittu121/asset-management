@@ -272,36 +272,75 @@ export default function Page() {
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-      <div className="mb-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-lg font-semibold text-gray-900">Assets</h1>
+      <div className="mb-6 space-y-6">
+        {/* ROW 1 → HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h1 className="text-xl font-semibold text-gray-900">Assets</h1>
+
           <button
             onClick={handleCreate}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
+            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition w-full sm:w-auto"
           >
             + Add Asset
           </button>
         </div>
-        {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Search..."
-            className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
 
-          {/* Filter */}
-          <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-            <option>All Location</option>
-            <option>Assigned</option>
-            <option>Unassigned</option>
-          </select>
-          <button
-            onClick={() => router.push("/assets/asset-bulk-upload")}
-            className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-          >
-            Bulk Upload
-          </button>
+        {/* ROW 2 → CONTROL BAR */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+          {/* LEFT → SEARCH */}
+          <div className="w-full lg:max-w-xs">
+            <input
+              placeholder="Search assets..."
+              className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* MIDDLE → FILTERS */}
+          <div className="flex flex-wrap items-center gap-2">
+            <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
+              <option>All Status</option>
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+
+            <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
+              <option>All Category</option>
+              <option>Laptop</option>
+              <option>Desktop</option>
+              <option>Tablet</option>
+            </select>
+
+            <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
+              <option>All Vendors</option>
+              <option>XYZ Pvt Ltd</option>
+              <option>ABC Pvt Ltd</option>
+              <option>TechSource Ltd</option>
+            </select>
+          </div>
+
+          {/* RIGHT → ACTION BUTTONS */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => router.push("/assets/asset-bulk-upload")}
+              className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
+            >
+              Bulk Upload
+            </button>
+
+            <button
+              onClick={() => console.log("pdf")}
+              className="px-4 py-2 text-sm rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
+            >
+              Export PDF
+            </button>
+
+            <button
+              onClick={() => console.log("excel")}
+              className="px-4 py-2 text-sm rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
+            >
+              Export Excel
+            </button>
+          </div>
         </div>
       </div>
       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
