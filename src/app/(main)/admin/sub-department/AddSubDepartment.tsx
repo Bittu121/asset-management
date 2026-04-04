@@ -2,10 +2,17 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 
-function AddSubDepartment({ isOpen, onClose, onAdd, department }: any) {
+function AddSubDepartment({
+  isOpen,
+  onClose,
+  onAdd,
+  department,
+  manager,
+}: any) {
   const [formData, setFormData] = useState({
     name: "",
-    parentDepartment: "",
+    department: "",
+    manager: "",
     description: "",
     isActive: true,
   });
@@ -21,7 +28,8 @@ function AddSubDepartment({ isOpen, onClose, onAdd, department }: any) {
     onAdd(formData);
     setFormData({
       name: "",
-      parentDepartment: "",
+      department: "",
+      manager: "",
       description: "",
       isActive: true,
     });
@@ -62,7 +70,7 @@ function AddSubDepartment({ isOpen, onClose, onAdd, department }: any) {
                 onClick={() => setOpen(!open)}
                 className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm cursor-pointer bg-white"
               >
-                {formData.parentDepartment || "Select Parent Department"}
+                {formData.department || "Select Department"}
               </div>
 
               {open && (
@@ -73,13 +81,38 @@ function AddSubDepartment({ isOpen, onClose, onAdd, department }: any) {
                       onClick={() => {
                         setFormData({
                           ...formData,
-                          parentDepartment: dept.name,
+                          department: dept.name,
                         });
                         setOpen(false);
                       }}
                       className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
                     >
                       {dept.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="relative">
+              <div
+                onClick={() => setOpen(!open)}
+                className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
+              >
+                {formData.manager || "Select manager"}
+              </div>
+              {open && (
+                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
+                  {manager.map((managers: any) => (
+                    <div
+                      key={managers.id}
+                      onClick={() => {
+                        setFormData({ ...formData, manager: managers.name });
+                        setOpen(false);
+                      }}
+                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                    >
+                      {managers.name}
                     </div>
                   ))}
                 </div>

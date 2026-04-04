@@ -1,4 +1,5 @@
 "use client";
+import { X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 function UpdateAssetCategories({
@@ -9,15 +10,22 @@ function UpdateAssetCategories({
 }: any) {
   const [form, setForm] = useState({
     name: "",
-    code: "",
-    head: "",
+    description: "",
+    isActive: true,
   });
 
   useEffect(() => {
-    if (department) setForm(department);
-  }, [department]);
+    if (selectedAssetCategories) {
+      setForm(selectedAssetCategories);
+    }
+  }, [selectedAssetCategories]);
 
   if (!isOpen) return null;
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
 
   return (
     <>
@@ -26,7 +34,7 @@ function UpdateAssetCategories({
           {/* Header */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">
-              Update Department
+              Update Asset Categories
             </h2>
 
             <button
@@ -41,25 +49,42 @@ function UpdateAssetCategories({
           <div className="h-px bg-gray-100 mb-5"></div>
           <div className="space-y-3">
             <input
+              name="name"
               value={form.name}
-              placeholder="Department name"
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="Asset categories"
+              onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
 
-            <input
-              value={form.code}
-              placeholder="Cost center code"
-              onChange={(e) => setForm({ ...form, code: e.target.value })}
+            <textarea
+              name="description"
+              value={form.description}
+              placeholder="Asset Description"
+              onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
 
-            <input
-              value={form.head}
-              placeholder="Department head email"
-              onChange={(e) => setForm({ ...form, head: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            />
+            <div className="flex justify-between items-center w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400">
+              <span className="text-sm text-gray-600">Active</span>
+
+              <button
+                onClick={() =>
+                  setForm((prev) => ({
+                    ...prev,
+                    isActive: !prev.isActive,
+                  }))
+                }
+                className={`w-10 h-5 flex items-center rounded-full p-1 transition ${
+                  form.isActive ? "bg-green-500" : "bg-gray-300"
+                }`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow transform transition ${
+                    form.isActive ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
           </div>
 
           {/* Footer */}

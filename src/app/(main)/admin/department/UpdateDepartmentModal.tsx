@@ -12,7 +12,6 @@ export default function UpdateDepartmentModal({
   const [form, setForm] = useState({
     name: "",
     code: "",
-    head: "",
   });
 
   useEffect(() => {
@@ -52,13 +51,6 @@ export default function UpdateDepartmentModal({
             value={form.code}
             placeholder="Cost center code"
             onChange={(e) => setForm({ ...form, code: e.target.value })}
-            className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-          />
-
-          <input
-            value={form.head}
-            placeholder="Department head email"
-            onChange={(e) => setForm({ ...form, head: e.target.value })}
             className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
           />
         </div>

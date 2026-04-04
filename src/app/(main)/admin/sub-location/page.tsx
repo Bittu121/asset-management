@@ -127,6 +127,7 @@ function SubLocation() {
     return searchMatch && statusMatch && locationMatch;
   });
 
+  //pagination step-2
   const totalPages = Math.ceil(filteredSubLocations.length / itemsPerPage);
 
   const paginatedsubLocation = filteredSubLocations.slice(
@@ -176,10 +177,7 @@ function SubLocation() {
       <div className="mb-4 space-y-3">
         {/* TITLE */}
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">
-            {" "}
-            Sub Location
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900"> Sub Location</h1>
         </div>
 
         {/* CONTROLS */}

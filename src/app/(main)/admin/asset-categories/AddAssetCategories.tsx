@@ -1,12 +1,12 @@
-"use cient";
+"use client";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 
 function AddAssetCategories({ isOpen, onClose, onAdd }: any) {
   const [formData, setFormData] = useState({
     name: "",
-    code: "",
-    head: "",
+    description: "",
+    isActive: true,
   });
 
   if (!isOpen) return null;
@@ -17,7 +17,7 @@ function AddAssetCategories({ isOpen, onClose, onAdd }: any) {
 
   const handleSubmit = () => {
     onAdd(formData);
-    setFormData({ name: "", code: "", head: "" });
+    setFormData({ name: "", description: "", isActive: true });
     onClose();
   };
   return (
@@ -26,7 +26,7 @@ function AddAssetCategories({ isOpen, onClose, onAdd }: any) {
         <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">
-              Add Department
+              Add Asset Categories
             </h2>
 
             <button
@@ -42,27 +42,41 @@ function AddAssetCategories({ isOpen, onClose, onAdd }: any) {
           <div className="space-y-3">
             <input
               name="name"
-              placeholder="Department name"
+              placeholder="Asset categories"
               value={formData.name}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
 
-            <input
-              name="code"
-              placeholder="Cost center code"
-              value={formData.code}
+            <textarea
+              name="description"
+              placeholder="Description"
+              value={formData.description}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
 
-            <input
-              name="head"
-              placeholder="Department head email"
-              value={formData.head}
-              onChange={handleChange}
-              className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            />
+            <div className="flex justify-between items-center w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400">
+              <span className="text-sm text-gray-600">Active</span>
+
+              <button
+                onClick={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isActive: !prev.isActive,
+                  }))
+                }
+                className={`w-10 h-5 flex items-center rounded-full p-1 transition ${
+                  formData.isActive ? "bg-green-500" : "bg-gray-300"
+                }`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow transform transition ${
+                    formData.isActive ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
           </div>
 
           {/* Footer */}

@@ -7,7 +7,6 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
   const [formData, setFormData] = useState({
     name: "",
     code: "",
-    head: "",
   });
 
   if (!isOpen) return null;
@@ -18,7 +17,7 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
 
   const handleSubmit = () => {
     onAdd(formData);
-    setFormData({ name: "", code: "", head: "" });
+    setFormData({ name: "", code: "" });
     onClose();
   };
 
@@ -53,14 +52,6 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
             name="code"
             placeholder="Cost center code"
             value={formData.code}
-            onChange={handleChange}
-            className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-          />
-
-          <input
-            name="head"
-            placeholder="Department head email"
-            value={formData.head}
             onChange={handleChange}
             className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
           />

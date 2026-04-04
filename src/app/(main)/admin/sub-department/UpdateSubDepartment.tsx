@@ -8,10 +8,12 @@ function UpdateSubDepartment({
   selectedSubDepartment,
   onUpdate,
   department,
+  manager,
 }: any) {
   const [form, setForm] = useState({
     name: "",
-    parentDepartment: "",
+    department: "",
+    manager: "",
     description: "",
     isActive: true,
   });
@@ -54,12 +56,11 @@ function UpdateSubDepartment({
             />
 
             <div className="relative">
-              {/* Selected Value */}
               <div
                 onClick={() => setOpen(!open)}
                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
               >
-                {form.parentDepartment || "Select Parent Location"}
+                {form.department || "Select Parent Location"}
               </div>
 
               {/* Dropdown */}
@@ -69,12 +70,37 @@ function UpdateSubDepartment({
                     <div
                       key={dept.id}
                       onClick={() => {
-                        setForm({ ...form, parentDepartment: dept.name });
+                        setForm({ ...form, department: dept.name });
                         setOpen(false);
                       }}
                       className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
                     >
                       {dept.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="relative">
+              <div
+                onClick={() => setOpen(!open)}
+                className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
+              >
+                {form.manager || "Select manager"}
+              </div>
+              {open && (
+                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
+                  {manager.map((managers: any) => (
+                    <div
+                      key={managers.id}
+                      onClick={() => {
+                        setForm({ ...form, manager: managers.name });
+                        setOpen(false);
+                      }}
+                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                    >
+                      {managers.name}
                     </div>
                   ))}
                 </div>

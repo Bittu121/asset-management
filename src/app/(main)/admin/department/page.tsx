@@ -12,7 +12,6 @@ type Department = {
   id: number;
   name: string;
   code: string;
-  head: string;
   createdAt: string;
 };
 
@@ -22,36 +21,31 @@ function Department() {
       id: 1,
       name: "Accounts",
       code: "CC-ACC",
-      head: "admin@gmail.com",
       createdAt: "Dec 17, 2025",
     },
     {
       id: 2,
       name: "Administration",
       code: "CC-ADMIN",
-      head: "",
       createdAt: "Dec 17, 2025",
     },
     {
       id: 3,
       name: "HR",
       code: "CC-HR",
-      head: "hr@gmail.com",
       createdAt: "Dec 17, 2025",
     },
-    { id: 4, name: "IT", code: "CC-IT", head: "", createdAt: "Dec 17, 2025" },
+    { id: 4, name: "IT", code: "CC-IT", createdAt: "Dec 17, 2025" },
     {
       id: 5,
       name: "Finance",
       code: "CC-FIN",
-      head: "",
       createdAt: "Dec 17, 2025",
     },
     {
       id: 6,
       name: "Legal",
       code: "CC-LEGAL",
-      head: "",
       createdAt: "Dec 17, 2025",
     },
   ]);
@@ -59,25 +53,43 @@ function Department() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedDept, setSelectedDept] = useState<Department | null>(null);
 
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(departments.length / itemsPerPage);
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("");
 
-  const paginatedDepartments = departments.slice(
+  //filter step-2
+  const filteredDepartments = departments.filter((depts) => {
+    const searchMatch =
+      search === "" ||
+      depts.name.toLowerCase().includes(search.toLowerCase()) ||
+      depts.code.toLowerCase().includes(search.toLowerCase());
+
+    const departmentMatch =
+      departmentFilter === "" ||
+      depts.name.toLowerCase() === departmentFilter.toLowerCase();
+
+    return searchMatch && departmentMatch;
+  });
+
+  //pagination step-2
+  const totalPages = Math.ceil(filteredDepartments.length / itemsPerPage);
+  const paginatedDepartments = filteredDepartments.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //Add Api
   const handleAdd = (data: Omit<Department, "id" | "createdAt">) => {
-    //Add Api
     const newDept: Department = {
       ...data,
-      id: Date.now(),
+      id: departments.length + 1,
       createdAt: new Date().toDateString(),
     };
     toast.success("Department added successfully");
-
     setDepartments((prev) => [newDept, ...prev]);
   };
 
@@ -86,8 +98,8 @@ function Department() {
     setIsUpdateOpen(true);
   };
 
+  //Update Api
   const handleUpdate = (updatedData: any) => {
-    //Update Api
     setDepartments((prev) =>
       prev.map((d) =>
         d.id === selectedDept?.id ? { ...d, ...updatedData } : d,
@@ -96,12 +108,13 @@ function Department() {
     toast.success("Department updated successfully");
   };
 
+  //Delete Api
   const handleDelete = (id: number) => {
-    //Delete Api
     toast.success("Department deleted successfully");
     setDepartments((prev) => prev.filter((d) => d.id !== id));
   };
 
+  //export
   const handleExport = () => {};
 
   return (
@@ -121,19 +134,22 @@ function Department() {
             {/* LEFT */}
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search..."
                 className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
-
-              <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
-                <option>All Departments</option>
-                <option>Assigned</option>
-                <option>Unassigned</option>
-              </select>
-              <select className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white">
-                <option>All Departments</option>
-                <option>Assigned</option>
-                <option>Unassigned</option>
+              <select
+                value={departmentFilter}
+                onChange={(e) => setDepartmentFilter(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+              >
+                <option value="">Select Departments</option>
+                {departments.map((dept) => (
+                  <option key={dept.id} value={dept.name}>
+                    {dept.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -162,13 +178,12 @@ function Department() {
 
         {/* Table */}
         <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
-          <table className="min-w-[1100px] w-full">
+          <table className="min-w-[1000px] w-full">
             <thead>
               <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
                 <th className="text-left px-6 py-4 ">ID</th>
                 <th className="text-left px-6 py-4 ">Department</th>
                 <th className="text-left px-6 py-4">Code</th>
-                <th className="text-left px-6 py-4">Head</th>
                 <th className="text-left px-6 py-4">Created</th>
                 <th className="text-right px-6 py-4">Action</th>
               </tr>
@@ -176,62 +191,81 @@ function Department() {
 
             {/* Body */}
             <tbody className="divide-y divide-gray-100">
-              {paginatedDepartments.map((dept) => (
-                <tr
-                  key={dept.id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
-                  <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {dept.id}
-                    </div>
-                  </td>
-                  <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {dept.name}
-                    </div>
-                  </td>
+              {paginatedDepartments.length === 0 ? (
+                <>
+                  <tr>
+                    <td colSpan={6} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                          📍
+                        </div>
 
-                  <td className="px-6 py-5 text-sm text-gray-600">
-                    {dept.code}
-                  </td>
+                        <h3 className="text-sm font-semibold text-gray-700">
+                          No Department Found
+                        </h3>
 
-                  <td className="px-6 py-5">
-                    {dept.head ? (
-                      <span className="text-sm text-gray-700">{dept.head}</span>
-                    ) : (
-                      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-md">
-                        Unassigned
-                      </span>
-                    )}
-                  </td>
+                        <p className="text-xs text-gray-500">
+                          You haven’t added any department yet.
+                        </p>
 
-                  <td className="px-6 py-5 text-sm text-gray-500">
-                    {dept.createdAt}
-                  </td>
+                        <button
+                          onClick={() => setIsAddOpen(true)}
+                          className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                        >
+                          + Add Department
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </>
+              ) : (
+                paginatedDepartments.map((dept) => (
+                  <tr
+                    key={dept.id}
+                    className="hover:bg-gray-50 transition-all duration-150"
+                  >
+                    <td className="px-6 py-5">
+                      <div className="text-sm font-medium text-gray-900">
+                        {dept.id}
+                      </div>
+                    </td>
+                    <td className="px-6 py-5">
+                      <div className="text-sm font-medium text-gray-900">
+                        {dept.name}
+                      </div>
+                    </td>
 
-                  {/* Actions */}
-                  <td className="px-6 py-5">
-                    <div className="flex justify-end items-center gap-3">
-                      <button
-                        onClick={() => handleEdit(dept)}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-700"
-                      >
-                        <HiPencilSquare size={19} />
-                      </button>
-                      {/* Divider */}
-                      <div className="w-px h-4 bg-gray-200"></div>
-                      <button
-                        onClick={() => handleDelete(dept.id)}
-                        className="p-1.5 rounded-md hover:bg-red-50 text-red-800 transition"
-                        title="Delete"
-                      >
-                        <Trash2 size={19} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-6 py-5 text-sm text-gray-600">
+                      {dept.code}
+                    </td>
+
+                    <td className="px-6 py-5 text-sm text-gray-500">
+                      {dept.createdAt}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-6 py-5">
+                      <div className="flex justify-end items-center gap-3">
+                        <button
+                          onClick={() => handleEdit(dept)}
+                          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                        >
+                          <HiPencilSquare size={19} />
+                        </button>
+                        {/* Divider */}
+                        <div className="w-px h-4 bg-gray-200"></div>
+                        <button
+                          onClick={() => handleDelete(dept.id)}
+                          className="p-1.5 rounded-md hover:bg-red-50 text-red-800 transition"
+                          title="Delete"
+                        >
+                          <Trash2 size={19} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

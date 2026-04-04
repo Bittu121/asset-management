@@ -3,25 +3,41 @@ import React, { useState } from "react";
 import AddSubDepartment from "./AddSubDepartment";
 import UpdateSubDepartment from "./UpdateSubDepartment";
 import Pagination from "../../../components/common/Pagination";
-import { Trash2 } from "lucide-react";
+import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 
-type SubDepartment = {
+type SubDepartmentType = {
   id: number;
   name: string;
-  parentDepartment: string;
+  department: string;
+  manager: string;
   description?: string;
   isActive: boolean;
   createdAt?: string;
 };
 
 function SubDepartment() {
-  const [subDepartment, setSubDepartment] = useState<SubDepartment[]>([
+  const [department] = useState([
+    { id: 1, name: "Accounts" },
+    { id: 2, name: "Administration" },
+    { id: 3, name: "HR" },
+    { id: 4, name: "Finance" },
+    { id: 5, name: "Legal" },
+  ]);
+  const [manager] = useState([
+    { id: 1, name: "bittu@gmail.com" },
+    { id: 2, name: "" },
+    { id: 3, name: "" },
+    { id: 4, name: "" },
+    { id: 5, name: "" },
+  ]);
+  const [subDepartment, setSubDepartment] = useState<SubDepartmentType[]>([
     {
       id: 1,
       name: "Visual Design",
-      parentDepartment: "Accounts",
+      department: "Accounts",
+      manager: "bittu@gmail.com",
       description:
         "Handles UI/UX design, branding, and visual assets for digital products.",
       isActive: true,
@@ -30,7 +46,8 @@ function SubDepartment() {
     {
       id: 2,
       name: "Vendor Procurement",
-      parentDepartment: "Hr",
+      department: "Hr",
+      manager: "bittu1@gmail.com",
       description:
         "Manages vendor sourcing, onboarding, and procurement processes.",
       isActive: true,
@@ -39,7 +56,8 @@ function SubDepartment() {
     {
       id: 3,
       name: "Recruitment",
-      parentDepartment: "Hr",
+      department: "Hr",
+      manager: "",
       description:
         "Responsible for hiring, interviews, and talent acquisition.",
       isActive: true,
@@ -48,7 +66,8 @@ function SubDepartment() {
     {
       id: 4,
       name: "Payroll Management",
-      parentDepartment: "Accounts",
+      department: "Accounts",
+      manager: "bk@gmail.com",
       description:
         "Handles employee salary processing, deductions, and payslips.",
       isActive: true,
@@ -57,7 +76,8 @@ function SubDepartment() {
     {
       id: 5,
       name: "IT Support",
-      parentDepartment: "Engineering",
+      department: "Engineering",
+      manager: "",
       description:
         "Provides technical support, system maintenance, and issue resolution.",
       isActive: true,
@@ -66,7 +86,8 @@ function SubDepartment() {
     {
       id: 6,
       name: "Quality Assurance",
-      parentDepartment: "Engineering",
+      department: "Engineering",
+      manager: "",
       description:
         "Ensures product quality through testing and validation processes.",
       isActive: false,
@@ -76,48 +97,57 @@ function SubDepartment() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedSubDepartment, setSelectedSubDepartment] =
-    useState<SubDepartment | null>(null);
+    useState<SubDepartmentType | null>(null);
 
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
-
-  const [department] = useState([
-    { id: 1, name: "UI / UX Design" },
-    { id: 2, name: "Procurement" },
-    { id: 3, name: "Engineering" },
-    { id: 4, name: "HR" },
-    { id: 5, name: "Product" },
-  ]);
-
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(subDepartment.length / itemsPerPage);
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [subDepartmentFilter, setSubDepartmentFilter] = useState("");
 
-  const paginatedsubDepartment = subDepartment.slice(
+  //filter step-2
+  const filteredSubDepartments = subDepartment.filter((subdepts) => {
+    const searchMatch =
+      search === "" ||
+      subdepts.name.toLowerCase().includes(search.toLowerCase()) ||
+      subdepts.department.toLowerCase().includes(search.toLowerCase());
+
+    const departmentMatch =
+      subDepartmentFilter === "" ||
+      subdepts.department.toLowerCase() === subDepartmentFilter.toLowerCase();
+
+    return searchMatch && departmentMatch;
+  });
+
+  //pagination step-2
+  const totalPages = Math.ceil(filteredSubDepartments.length / itemsPerPage);
+  const paginatedsubDepartment = filteredSubDepartments.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //Create Api
   const handleAddSubDepartment = (
-    data: Omit<SubDepartment, "id" | "createdAt">,
+    data: Omit<SubDepartmentType, "id" | "createdAt">,
   ) => {
-    //Create Api
-    const newSubDept: SubDepartment = {
+    const newSubDept: SubDepartmentType = {
       ...data,
       id: subDepartment.length + 1,
       createdAt: new Date().toDateString(),
     };
     toast.success("Department added successfully");
-
     setSubDepartment((prev) => [newSubDept, ...prev]);
   };
 
-  const handleEdit = (subDept: SubDepartment) => {
+  const handleEdit = (subDept: SubDepartmentType) => {
     setSelectedSubDepartment(subDept);
     setIsUpdateOpen(true);
   };
 
+  //Update Api
   const handleUpdateSubDepartment = (updatedData: any) => {
-    //Update Api
     setSubDepartment((prev) =>
       prev.map((d) =>
         d.id === selectedSubDepartment?.id ? { ...d, ...updatedData } : d,
@@ -126,56 +156,82 @@ function SubDepartment() {
     toast.success("Department updated successfully");
   };
 
+  //Delete Api
   const handleDelete = (id: number) => {
-    //Delete Api
     toast.success("Sub Department deleted successfully");
     setSubDepartment((prev) => prev.filter((d) => d.id !== id));
   };
 
+  //export
+  const handleExport = () => {};
+
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 space-y-3">
+        {/* TITLE */}
+        <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">
-            Sub-Department
+            {" "}
+            Sub Department
           </h1>
-          <button
-            onClick={() => setIsAddOpen(true)}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
-          >
-            + Sub-Department
-          </button>
         </div>
-        {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Search..."
-            className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
 
-          {/* Filter */}
-          <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-            <option>All Sub Departments</option>
-            <option>Assigned</option>
-            <option>Unassigned</option>
-          </select>
-          <button
-            onClick={() => console.log("Bulk Upload Clicked")}
-            className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-          >
-            Bulk Upload
-          </button>
+        {/* CONTROLS */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* LEFT */}
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+            <select
+              value={subDepartmentFilter}
+              onChange={(e) => setSubDepartmentFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+            >
+              <option value="">Select Departments</option>
+              {department.map((dept) => (
+                <option key={dept.id} value={dept.name}>
+                  {dept.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              <FileSpreadsheet size={16} />
+              Export Excel
+            </button>
+            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+              Bulk Upload
+            </button>
+
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+            >
+              + Add Department
+            </button>
+          </div>
         </div>
       </div>
-      {/* Table */}
 
+      {/* Table */}
       <div className="bg-white rounded-xl w-full overflow-x-auto scroll-smooth table-scroll">
         <table className="min-w-[1100px] w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
               <th className="px-6 py-4 text-left">ID</th>
               <th className="px-6 py-4 text-left">Sub Department</th>
-              <th className="px-6 py-4 text-left">Parent Department</th>
+              <th className="px-6 py-4 text-left">Department</th>
+              <th className="px-6 py-4 text-left">Manager</th>
               <th className="px-6 py-4 text-left">Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
@@ -191,18 +247,18 @@ function SubDepartment() {
                       </div>
 
                       <h3 className="text-sm font-semibold text-gray-700">
-                        No Sub-Department Found
+                        No Sub Department Found
                       </h3>
 
                       <p className="text-xs text-gray-500">
-                        You haven’t added any Sub-Department yet.
+                        You haven’t added any Sub Department yet.
                       </p>
 
                       <button
                         onClick={() => setIsAddOpen(true)}
                         className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
                       >
-                        + Add Sub-Department
+                        + Add Sub Department
                       </button>
                     </div>
                   </td>
@@ -226,7 +282,12 @@ function SubDepartment() {
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subDept.parentDepartment}
+                      {subDept.department}
+                    </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="text-sm font-medium text-gray-900">
+                      {subDept.manager}
                     </div>
                   </td>
                   <td className="px-6 py-5">
@@ -273,6 +334,7 @@ function SubDepartment() {
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAddSubDepartment}
         department={department}
+        manager={manager}
       />
       <UpdateSubDepartment
         isOpen={isUpdateOpen}
@@ -280,6 +342,7 @@ function SubDepartment() {
         selectedSubDepartment={selectedSubDepartment}
         onUpdate={handleUpdateSubDepartment}
         department={department}
+        manager={manager}
       />
       <div className="bg-white border border-gray-200 rounded-b-xl px-6 py-4">
         <Pagination
