@@ -7,8 +7,8 @@ function Login() {
 
   const handleLogin = () => {
     localStorage.setItem("isLoggedIn", "true");
-    // localStorage.setItem("role", "admin");
-    localStorage.setItem("role", "user");
+    localStorage.setItem("role", "admin");
+    // localStorage.setItem("role", "user");
     //  localStorage.setItem("role", "technician");
     router.push("/admin");
   };

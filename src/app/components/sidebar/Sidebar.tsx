@@ -113,7 +113,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
                 path: "/admin/department",
                 icon: Building2,
               },
-              { name: "Units", path: "/admin/sub-department", icon: Building2 },
+              { name: "Sub Departments", path: "/admin/sub-department", icon: Building2 },
               {
                 name: "Categories",
                 path: "/admin/asset-categories",

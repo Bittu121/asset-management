@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 
 import AddDepartmentModal from "./AddDepartmentModal";
@@ -102,40 +102,61 @@ function Department() {
     setDepartments((prev) => prev.filter((d) => d.id !== id));
   };
 
+  const handleExport = () => {};
+
   return (
     <>
       <div className="p-4 bg-[#f8fafc] min-h-screen">
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-lg font-semibold text-gray-900">Departments</h1>
-
-            <button
-              onClick={() => setIsAddOpen(true)}
-              className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
-            >
-              + Add Department
-            </button>
+        <div className="mb-4 space-y-3">
+          {/* TITLE */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-gray-900">
+              {" "}
+              Add Department
+            </h1>
           </div>
 
-          {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-          <div className="flex items-center gap-4">
-            <input
-              placeholder="Search..."
-              className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* CONTROLS */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            {/* LEFT */}
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <input
+                placeholder="Search..."
+                className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+              />
 
-            {/* Filter */}
-            <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-              <option>All Departments</option>
-              <option>Assigned</option>
-              <option>Unassigned</option>
-            </select>
-            <button
-              onClick={() => console.log("Bulk Upload Clicked")}
-              className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-            >
-              Bulk Upload
-            </button>
+              <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
+                <option>All Departments</option>
+                <option>Assigned</option>
+                <option>Unassigned</option>
+              </select>
+              <select className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white">
+                <option>All Departments</option>
+                <option>Assigned</option>
+                <option>Unassigned</option>
+              </select>
+            </div>
+
+            {/* RIGHT */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExport}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                <FileSpreadsheet size={16} />
+                Export Excel
+              </button>
+              <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+                Bulk Upload
+              </button>
+
+              <button
+                onClick={() => setIsAddOpen(true)}
+                className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+              >
+                + Add Department
+              </button>
+            </div>
           </div>
         </div>
 

@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UpdateLocation from "./UpdateLocation";
 import AddLocation from "./AddLocation";
 import Pagination from "../../../components/common/Pagination";
 import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
+import { FileSpreadsheet } from "lucide-react";
 
 type Location = {
   id: number;
@@ -73,25 +74,53 @@ function Location() {
     null,
   );
 
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(location.length / itemsPerPage);
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [locationFilter, setLocationFilter] = useState("");
 
-  const paginatedLocation = location.slice(
+  //filter step-2
+  const filteredLocations = location.filter((loc) => {
+    const searchMatch =
+      search === "" ||
+      loc.name.toLowerCase().includes(search.toLowerCase()) ||
+      loc.city.toLowerCase().includes(search.toLowerCase()) ||
+      loc.address.toLowerCase().includes(search.toLowerCase());
+
+    const statusMatch =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && loc.isActive) ||
+      (statusFilter === "Inactive" && !loc.isActive);
+
+    const locationMatch =
+      locationFilter === "" ||
+      loc.name.toLowerCase().includes(locationFilter.toLowerCase()) ||
+      loc.city.toLowerCase().includes(locationFilter.toLowerCase()) ||
+      loc.address.toLowerCase().includes(locationFilter.toLowerCase());
+
+    return searchMatch && statusMatch && locationMatch;
+  });
+
+  //pagination step-2
+  const totalPages = Math.ceil(filteredLocations.length / itemsPerPage);
+
+  const paginatedLocation = filteredLocations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //Create Api
   const handleAddLocation = (data: Omit<Location, "id" | "createdAt">) => {
-    //Create Api
     const newLoc: Location = {
       ...data,
       id: Date.now(),
       createdAt: new Date().toDateString(),
     };
     toast.success("Department added successfully");
-
     setLocation((prev) => [newLoc, ...prev]);
   };
 
@@ -100,8 +129,8 @@ function Location() {
     setIsUpdateOpen(true);
   };
 
+  //Update Api
   const handleUpdateLocation = (updatedData: any) => {
-    //Update Api
     setLocation((prev) =>
       prev.map((d) =>
         d.id === selectedLocation?.id ? { ...d, ...updatedData } : d,
@@ -110,50 +139,84 @@ function Location() {
     toast.success("Department updated successfully");
   };
 
+  //Delete Api
   const handleDelete = (id: number) => {
-    //Delete Api
     toast.success("Location deleted successfully");
     setLocation((prev) => prev.filter((d) => d.id !== id));
   };
 
+  //export
+  const handleExport = () => {};
+
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-lg font-semibold text-gray-900">Location</h1>
-          <button
-            onClick={() => setIsAddOpen(true)}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
-          >
-            + Location
-          </button>
+      <div className="mb-4 space-y-3">
+        {/* TITLE */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-900">Locations</h1>
         </div>
-        {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Search..."
-            className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
 
-          {/* Filter */}
-          <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-            <option>All Location</option>
-            <option>Assigned</option>
-            <option>Unassigned</option>
-          </select>
-          <button
-            onClick={() => console.log("Bulk Upload Clicked")}
-            className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-          >
-            Bulk Upload
-          </button>
+        {/* CONTROLS */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* LEFT */}
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+            >
+              <option value="All">All</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <select
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+            >
+              <option value="">Select Location</option>
+              {location.map((loc) => (
+                <option key={loc.id} value={loc.name}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              <FileSpreadsheet size={16} />
+              Export Excel
+            </button>
+            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+              Bulk Upload
+            </button>
+
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+            >
+              + Add Location
+            </button>
+          </div>
         </div>
       </div>
       {/* Table */}
       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
         <table className="min-w-[1100px] w-full">
           <thead>
-            <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+            <tr className="bg-white text-xs text-gray-500 uppercase tracking-wide">
               <th className="text-left px-6 py-4">ID</th>
               <th className="text-left px-6 py-4 ">Location</th>
               <th className="text-left px-6 py-4 ">City</th>
