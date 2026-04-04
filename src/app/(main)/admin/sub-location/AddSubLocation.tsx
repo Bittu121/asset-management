@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 
-function AddSubLocation({ isOpen, onClose, onAdd, locations }: any) {
+function AddSubLocation({ isOpen, onClose, onAdd, location }: any) {
   const [formData, setFormData] = useState({
     name: "",
-    parentLocation: "",
+    location: "",
     floor: "",
     isActive: true,
   });
@@ -21,7 +21,7 @@ function AddSubLocation({ isOpen, onClose, onAdd, locations }: any) {
     onAdd(formData);
     setFormData({
       name: "",
-      parentLocation: "",
+      location: "",
       floor: "",
       isActive: true,
     });
@@ -62,16 +62,16 @@ function AddSubLocation({ isOpen, onClose, onAdd, locations }: any) {
                 onClick={() => setOpen(!open)}
                 className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm cursor-pointer bg-white"
               >
-                {formData.parentLocation || "Select Parent Location"}
+                {formData.location || "Select Location"}
               </div>
 
               {open && (
                 <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-md max-h-40 overflow-y-auto z-50 custom-scroll">
-                  {locations.map((loc: any) => (
+                  {location.map((loc: any) => (
                     <div
                       key={loc.id}
                       onClick={() => {
-                        setFormData({ ...formData, parentLocation: loc.name });
+                        setFormData({ ...formData, location: loc.name });
                         setOpen(false);
                       }}
                       className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"

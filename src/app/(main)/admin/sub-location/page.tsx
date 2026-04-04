@@ -10,7 +10,7 @@ import { HiPencilSquare } from "react-icons/hi2";
 type SubLocation = {
   id: number;
   name: string;
-  parentLocation: string;
+  location: string;
   floor?: string;
   isActive: boolean;
   createdAt?: string;
@@ -21,7 +21,7 @@ function SubLocation() {
     {
       id: 1,
       name: "Ahmedabad Office",
-      parentLocation: "Ahmedabad",
+      location: "Ahmedabad",
       floor: "11th Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
@@ -29,7 +29,7 @@ function SubLocation() {
     {
       id: 2,
       name: "Bangalore Office",
-      parentLocation: "Bangalore",
+      location: "Bangalore",
       floor: "1st Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
@@ -37,7 +37,7 @@ function SubLocation() {
     {
       id: 3,
       name: "Mumbai Office",
-      parentLocation: "Mumbai",
+      location: "Mumbai",
       floor: "3rd Floor",
       isActive: false,
       createdAt: new Date().toDateString(),
@@ -45,7 +45,7 @@ function SubLocation() {
     {
       id: 4,
       name: "Delhi HQ",
-      parentLocation: "Delhi",
+      location: "Delhi",
       floor: "Ground Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
@@ -53,7 +53,7 @@ function SubLocation() {
     {
       id: 5,
       name: "Chennai Support",
-      parentLocation: "Chennai",
+      location: "Chennai",
       floor: "2nd Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
@@ -61,7 +61,7 @@ function SubLocation() {
     {
       id: 6,
       name: "Hyderabad Tech Park",
-      parentLocation: "Hyderabad",
+      location: "Hyderabad",
       floor: "5th Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
@@ -98,27 +98,52 @@ function SubLocation() {
   const [selectedSubLocation, setSelectedSubLocation] =
     useState<SubLocation | null>(null);
 
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(subLocation.length / itemsPerPage);
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [subLocationFilter, setSubLocationFilter] = useState("");
 
-  const paginatedsubLocation = subLocation.slice(
+  //filter step-2
+  const filteredSubLocations = subLocation.filter((loc) => {
+    const searchMatch =
+      search === "" ||
+      loc.name.toLowerCase().includes(search.toLowerCase()) ||
+      loc.location.toLowerCase().includes(search.toLowerCase()) ||
+      (loc.floor?.toLowerCase().includes(search.toLowerCase()) ?? false);
+
+    const statusMatch =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && loc.isActive) ||
+      (statusFilter === "Inactive" && !loc.isActive);
+
+    const locationMatch =
+      subLocationFilter === "" ||
+      loc.location.toLowerCase() === subLocationFilter.toLowerCase();
+
+    return searchMatch && statusMatch && locationMatch;
+  });
+
+  const totalPages = Math.ceil(filteredSubLocations.length / itemsPerPage);
+
+  const paginatedsubLocation = filteredSubLocations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //Create Api
   const handleAddSubLocation = (
     data: Omit<SubLocation, "id" | "createdAt">,
   ) => {
-    //Create Api
     const newSubLoc: SubLocation = {
       ...data,
       id: Date.now(),
       createdAt: new Date().toDateString(),
     };
     toast.success("Department added successfully");
-
     setSubLocation((prev) => [newSubLoc, ...prev]);
   };
 
@@ -127,8 +152,8 @@ function SubLocation() {
     setIsUpdateOpen(true);
   };
 
+  //Update Api
   const handleUpdateSubLocation = (updatedData: any) => {
-    //Update Api
     setSubLocation((prev) =>
       prev.map((d) =>
         d.id === selectedSubLocation?.id ? { ...d, ...updatedData } : d,
@@ -137,12 +162,13 @@ function SubLocation() {
     toast.success("Department updated successfully");
   };
 
+  //Delete Api
   const handleDelete = (id: number) => {
-    //Delete Api
     toast.success("Sub-Location deleted successfully");
     setSubLocation((prev) => prev.filter((d) => d.id !== id));
   };
 
+  //export
   const handleExport = () => {};
 
   return (
@@ -152,7 +178,7 @@ function SubLocation() {
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">
             {" "}
-            + Sub Location
+            Sub Location
           </h1>
         </div>
 
@@ -161,19 +187,32 @@ function SubLocation() {
           {/* LEFT */}
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search..."
               className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
 
-            <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+            >
               <option>All</option>
               <option>Active</option>
               <option>Inactive</option>
             </select>
-            <select className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white">
+            <select
+              value={subLocationFilter}
+              onChange={(e) => setSubLocationFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+            >
               <option value="">Select Location</option>
-              <option>Assigned</option>
-              <option>Unassigned</option>
+              {location.map((loc) => (
+                <option key={loc.id} value={loc.name}>
+                  {loc.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -205,7 +244,7 @@ function SubLocation() {
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
               <th className="px-6 py-4 text-left">Sub Location</th>
-              <th className="px-6 py-4 text-left">Parent Location</th>
+              <th className="px-6 py-4 text-left">Location</th>
               <th className="px-6 py-4 text-left">Floor</th>
               <th className="px-6 py-4 text-left">Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
@@ -251,7 +290,7 @@ function SubLocation() {
 
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subLoc.parentLocation || "-"}
+                      {subLoc.location || "-"}
                     </div>
                   </td>
 
@@ -304,14 +343,14 @@ function SubLocation() {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAddSubLocation}
-        locations={location}
+        location={location}
       />
       <UpdateSubLocation
         isOpen={isUpdateOpen}
         onClose={() => setIsUpdateOpen(false)}
         selectedSubLocation={selectedSubLocation}
         onUpdate={handleUpdateSubLocation}
-        locations={location}
+        location={location}
       />
       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-4">
         <Pagination

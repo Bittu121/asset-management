@@ -7,11 +7,11 @@ function UpdateSubLocation({
   onClose,
   selectedSubLocation,
   onUpdate,
-  locations,
+  location,
 }: any) {
   const [form, setForm] = useState({
     name: "",
-    parentLocation: "",
+    location: "",
     floor: "",
     isActive: true,
   });
@@ -58,17 +58,17 @@ function UpdateSubLocation({
                 onClick={() => setOpen(!open)}
                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
               >
-                {form.parentLocation || "Select Parent Location"}
+                {form.location || "Select Parent Location"}
               </div>
 
               {/* Dropdown */}
               {open && (
                 <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-                  {locations.map((loc: any) => (
+                  {location.map((loc: any) => (
                     <div
                       key={loc.id}
                       onClick={() => {
-                        setForm({ ...form, parentLocation: loc.name });
+                        setForm({ ...form, location: loc.name });
                         setOpen(false);
                       }}
                       className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
