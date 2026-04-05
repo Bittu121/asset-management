@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import AddRoles from "./AddRoles";
 import UpdateRoles from "./UpdateRoles";
 import Pagination from "../../../components/common/Pagination";
-import { Trash2 } from "lucide-react";
+import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 
@@ -40,24 +40,43 @@ function Roles() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState<Role | null>(null);
 
+   //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(role.length / itemsPerPage);
-
-  const paginatedRoles = role.slice(
+   //filter step-1
+    const [search, setSearch] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
+    const [roleAndPermissionFilter, setRoleAndPermissionFilter] = useState("");
+  
+    //filter step-2
+  const filteredRoleAndPermission = role.filter((rol) => {
+    const matchesSearch =
+      search === "" ||
+      rol.name.toLowerCase().includes(search.toLowerCase()) ||
+      rol.description.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && rol.isActive) ||
+      (statusFilter === "Inactive" && !rol.isActive);
+    const matchesRole = roleAndPermissionFilter === "" || rol.name === roleAndPermissionFilter;
+    return matchesSearch && matchesStatus && matchesRole;
+  });
+  
+   //pagination step-2
+  const totalPages = Math.ceil(filteredRoleAndPermission.length / itemsPerPage);
+  const paginatedRoles = filteredRoleAndPermission.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //api call
   const handleAddRoles = (data: Omit<Role, "id" | "createdAt">) => {
-    //api call
     const newRole: Role = {
       ...data,
       id: role.length + 1,
       createdAt: new Date().toDateString(),
     };
-
     setRole((prev) => [newRole, ...prev]);
     toast.success("Role added successfully");
   };
@@ -67,8 +86,8 @@ function Roles() {
     setIsUpdateOpen(true);
   };
 
+  //api call
   const handleUpdateRoles = (updatedData: Role) => {
-    //api call
     setRole((prev) =>
       prev.map((r) =>
         r.id === selectedRoles?.id ? { ...r, ...updatedData } : r,
@@ -77,45 +96,74 @@ function Roles() {
     toast.success("Role updated successfully");
   };
 
+  //Delete Api
   const handleDelete = (id: number) => {
-    //Delete Api
     toast.success("User role deleted successfully");
     setRole((prev) => prev.filter((r) => r.id !== id));
   };
 
+  //export
+  const handleExport = () => {};
+
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-lg font-semibold text-gray-900">
-            Roles & Permissions
-          </h1>
-          <button
-            onClick={() => setIsAddOpen(true)}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
-          >
-            + Roles & Permissions
-          </button>
-        </div>
-        {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Search..."
-            className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
 
-          {/* Filter */}
-          <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-            <option>All Roles</option>
-            <option>Assigned</option>
-            <option>Unassigned</option>
-          </select>
-          <button
-            onClick={() => console.log("Bulk Upload Clicked")}
-            className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-          >
-            Bulk Upload
-          </button>
+      <div className="mb-4 space-y-3">
+        {/* TITLE */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-900">Roles & Permissions</h1>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+            >
+              <option value="All">All</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <select
+              value={roleAndPermissionFilter}
+              onChange={(e) => setRoleAndPermissionFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+            >
+              <option value="">Select Roles & Permissions</option>
+              {role.map((rol) => (
+                <option key={rol.id} value={rol.name}>
+                  {rol.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              <FileSpreadsheet size={16} />
+              Export Excel
+            </button>
+            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+              Bulk Upload
+            </button>
+
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+            >
+            + Roles & Permissions
+            </button>
+          </div>
         </div>
       </div>
       {/* Table */}
