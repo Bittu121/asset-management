@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import AddSupportGroup from "./AddSupportGroup";
 import UpdateSupportGroup from "./UpdateSupportGroup";
 import Pagination from "../../../components/common/Pagination";
-import { Trash2 } from "lucide-react";
+import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 
@@ -66,16 +66,38 @@ function SupportGroup() {
   const [selectedSupportGroup, setSelectedSupportGroup] =
     useState<SupportGroup | null>(null);
 
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(supportGroup.length / itemsPerPage);
+     //filter step-1
+      const [search, setSearch] = useState("");
+      const [statusFilter, setStatusFilter] = useState("All");
+      const [supportGroupFilter, setSupportGroupFilter] = useState("");
 
-  const paginatedSupportGroup = supportGroup.slice(
+      //filter step-2
+  const filteredSupportGroup = supportGroup.filter((sup) => {
+    const matchesSearch =
+      search === "" ||
+      sup.name.toLowerCase().includes(search.toLowerCase()) ||
+      sup.code.toLowerCase().includes(search.toLowerCase()) ||
+      sup.description.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && sup.isActive) ||
+      (statusFilter === "Inactive" && !sup.isActive);
+    const matchesGroup = supportGroupFilter === "" || sup.name === supportGroupFilter;
+    return matchesSearch && matchesStatus && matchesGroup;
+  });
+
+  //pagination step-2
+  const totalPages = Math.ceil(filteredSupportGroup.length / itemsPerPage);
+  const paginatedSupportGroup = filteredSupportGroup.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //api call
   const handleAddSupportGroup = (
     data: Omit<SupportGroup, "id" | "createdAt">,
   ) => {
@@ -84,7 +106,6 @@ function SupportGroup() {
       id: supportGroup.length + 1,
       createdAt: new Date().toDateString(),
     };
-
     setSupportGroup((prev) => [newGroup, ...prev]);
     toast.success("Support group added successfully");
   };
@@ -94,6 +115,7 @@ function SupportGroup() {
     setIsUpdateOpen(true);
   };
 
+  //api call
   const handleUpdateSupportGroup = (updatedData: any) => {
     setSupportGroup((prev) =>
       prev.map((g) =>
@@ -103,42 +125,72 @@ function SupportGroup() {
     toast.success("Support group updated successfully");
   };
 
+  //api call
   const handleDelete = (id: number) => {
     setSupportGroup((prev) => prev.filter((g) => g.id !== id));
     toast.success("Support group deleted successfully");
   };
+  //export
+  const handleExport = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
+       <div className="mb-4 space-y-3">
+        {/* TITLE */}
+        <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">Support Group</h1>
-          <button
-            onClick={() => setIsAddOpen(true)}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
-          >
-            + Support Group
-          </button>
         </div>
-        {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Search..."
-            className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+            >
+              <option value="All">All</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <select
+              value={supportGroupFilter}
+              onChange={(e) => setSupportGroupFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+            >
+              <option value="">Select Roles & Permissions</option>
+              {supportGroup.map((supgroup) => (
+                <option key={supgroup.id} value={supgroup.name}>
+                  {supgroup.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          {/* Filter */}
-          <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-            <option>All Support Group</option>
-            <option>Assigned</option>
-            <option>Unassigned</option>
-          </select>
-          <button
-            onClick={() => console.log("Bulk Upload Clicked")}
-            className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-          >
-            Bulk Upload
-          </button>
+          {/* RIGHT */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              <FileSpreadsheet size={16} />
+              Export Excel
+            </button>
+            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+              Bulk Upload
+            </button>
+
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+            >
+           + Support Group
+            </button>
+          </div>
         </div>
       </div>
       {/* Table */}
