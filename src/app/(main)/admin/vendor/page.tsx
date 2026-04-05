@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import CreateVendor from "./CreateVendor";
 import UpdateVendor from "./UpdateVendor";
 import Pagination from "../../../components/common/Pagination";
-import { Trash2 } from "lucide-react";
+import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 
@@ -92,21 +92,41 @@ function Vendor() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
 
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const totalPages = Math.ceil(vendor.length / itemsPerPage);
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [vendorFilter, setVendorFilter] = useState("");
 
-  const paginatedVendor = vendor.slice(
+  //filter step-2
+  const filteredVendor = vendor.filter((ven) => {
+    const matchesSearch =
+      search === "" ||
+      ven.name.toLowerCase().includes(search.toLowerCase()) ||
+      ven.email.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && ven.isActive) ||
+      (statusFilter === "Inactive" && !ven.isActive);
+    const matchesVendor = vendorFilter === "" || ven.name === vendorFilter;
+    return matchesSearch && matchesStatus && matchesVendor;
+  });
+
+  //pagination step-2
+  const totalPages = Math.ceil(filteredVendor.length / itemsPerPage);
+  const paginatedVendor = filteredVendor.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
+  //Create Api
   const handleAddVendor = (data: Omit<Vendor, "id" | "createdAt">) => {
-    //Create Api
     const newVendor: Vendor = {
       ...data,
-      id: vendor.length+1,
+      id: vendor.length + 1,
       createdAt: new Date().toDateString(),
     };
     setVendor((prev) => [newVendor, ...prev]);
@@ -118,8 +138,8 @@ function Vendor() {
     setIsUpdateOpen(true);
   };
 
+  //Update Api
   const handleUpdateVendor = (updatedData: Vendor) => {
-    //Update Api
     setVendor((prev) =>
       prev.map((v) =>
         v.id === selectedVendor?.id ? { ...v, ...updatedData } : v,
@@ -128,45 +148,76 @@ function Vendor() {
     toast.success("Vendor updated successfully");
   };
 
+  //Delete Api
   const handleDelete = (id: number) => {
-    //Delete Api
     toast.success("Vendor deleted successfully");
     setVendor((prev) => prev.filter((v) => v.id !== id));
   };
 
+  //export
+  const handleExport = () => {};
+
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-lg font-semibold text-gray-900">Vendor</h1>
-          <button
-            onClick={() => setIsAddOpen(true)}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition"
-          >
-            + Vendor
-          </button>
+      <div className="mb-4 space-y-3">
+        {/* TITLE */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-900"> Vendor</h1>
         </div>
-        {/* Row 2: Search + Filter (LEFT ALIGNED) */}
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Search..."
-            className="w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+            >
+              <option value="All">All</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <select
+              value={vendorFilter}
+              onChange={(e) => setVendorFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
+            >
+              <option value="">Select Vendor</option>
+              {vendor.map((ven) => (
+                <option key={ven.id} value={ven.name}>
+                  {ven.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          {/* Filter */}
-          <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
-            <option>All Vendor</option>
-            <option>Assigned</option>
-            <option>Unassigned</option>
-          </select>
-          <button
-            onClick={() => console.log("Bulk Upload Clicked")}
-            className="px-4 py-2 text-sm rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-          >
-            Bulk Upload
-          </button>
+          {/* RIGHT */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              <FileSpreadsheet size={16} />
+              Export Excel
+            </button>
+            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+              Bulk Upload
+            </button>
+
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+            >
+              + Vendor
+            </button>
+          </div>
         </div>
       </div>
+
       {/* Table */}
       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
         <table className="min-w-[1600px] w-full">
