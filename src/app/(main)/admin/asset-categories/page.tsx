@@ -6,6 +6,7 @@ import Pagination from "../../../components/common/Pagination";
 import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
+import ExcelActions from "../../../components/common/ExcelActions";
 
 type AssetCategories = {
   id: number;
@@ -157,8 +158,15 @@ function AssetCategories() {
     setAssetCategories((prev) => prev.filter((d) => d.id !== id));
   };
 
-  //export
-  const handleExport = () => {};
+  //bulk upload
+  const handleBulkUpload = (uploadedData: any[]) => {
+    try {
+      toast.success("Successfully uploaded asset categories");
+    } catch (error) {
+      toast.error("Failed to process uploaded data");
+      console.error("Upload processing error:", error);
+    }
+  };
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -203,17 +211,12 @@ function AssetCategories() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-            >
-              <FileSpreadsheet size={16} />
-              Export Excel
-            </button>
-            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-              Bulk Upload
-            </button>
-
+            <ExcelActions
+              data={assetCategories}
+              fileName="asset-categories"
+              headers={["ID", "Name", "Status", "Description"]}
+              onUpload={handleBulkUpload}
+            />
             <button
               onClick={() => setIsAddOpen(true)}
               className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"

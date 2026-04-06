@@ -6,6 +6,7 @@ import Pagination from "../../../components/common/Pagination";
 import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
+import ExcelActions from "@/app/components/common/ExcelActions";
 
 const roles = ["Admin", "Manager", "User"];
 
@@ -126,8 +127,7 @@ function UserAccount() {
     setUserAccount((prev) => prev.filter((u) => u.id !== id));
     toast.success("User deleted successfully");
   };
-  //export
-  const handleExport = () => {};
+  const bulkUploadHandler = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -160,16 +160,21 @@ function UserAccount() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-            >
-              <FileSpreadsheet size={16} />
-              Export Excel
-            </button>
-            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-              Bulk Upload
-            </button>
+            <ExcelActions
+              data={userAccount}
+              fileName="user-account"
+              headers={[
+                { label: "ID", key: "id" },
+                { label: "Name", key: "name" },
+                { label: "Email", key: "email" },
+                { label: "Role", key: "role" },
+                { label: "Employee Code", key: "employeeCode" },
+                { label: "Department", key: "department" },
+                { label: "Support Group", key: "supportGroup" },
+                { label: "Created At", key: "createdAt" },
+              ]}
+              onUpload={bulkUploadHandler}
+            />
 
             <button
               onClick={() => setIsAddOpen(true)}

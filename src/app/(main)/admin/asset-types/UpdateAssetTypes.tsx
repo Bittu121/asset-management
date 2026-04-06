@@ -75,7 +75,7 @@ function UpdateAssetTypes({
             <input
               name="name"
               placeholder="Asset type"
-              value={form.name}
+              value={form.name|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -134,7 +134,7 @@ function UpdateAssetTypes({
             <textarea
               name="description"
               placeholder="Description"
-              value={form.description}
+              value={form.description|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />

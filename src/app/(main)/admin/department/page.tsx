@@ -7,6 +7,7 @@ import AddDepartmentModal from "./AddDepartmentModal";
 import UpdateDepartmentModal from "./UpdateDepartmentModal";
 import Pagination from "../../../components/common/Pagination";
 import { HiPencilSquare } from "react-icons/hi2";
+import ExcelActions from "@/app/components/common/ExcelActions";
 
 type Department = {
   id: number;
@@ -114,8 +115,7 @@ function Department() {
     setDepartments((prev) => prev.filter((d) => d.id !== id));
   };
 
-  //export
-  const handleExport = () => {};
+  const bulkUploadHandler = () => {};
 
   return (
     <>
@@ -155,16 +155,12 @@ function Department() {
 
             {/* RIGHT */}
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleExport}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-              >
-                <FileSpreadsheet size={16} />
-                Export Excel
-              </button>
-              <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-                Bulk Upload
-              </button>
+              <ExcelActions
+                data={departments}
+                fileName="department"
+                headers={["ID", "Department", "Code", "Created"]}
+                onUpload={bulkUploadHandler}
+              />
 
               <button
                 onClick={() => setIsAddOpen(true)}

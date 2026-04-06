@@ -6,6 +6,7 @@ import Pagination from "../../../components/common/Pagination";
 import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
+import ExcelActions from "@/app/components/common/ExcelActions";
 
 const levels = [
   "L1 - First Line Support",
@@ -70,12 +71,12 @@ function SupportGroup() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-     //filter step-1
-      const [search, setSearch] = useState("");
-      const [statusFilter, setStatusFilter] = useState("All");
-      const [supportGroupFilter, setSupportGroupFilter] = useState("");
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [supportGroupFilter, setSupportGroupFilter] = useState("");
 
-      //filter step-2
+  //filter step-2
   const filteredSupportGroup = supportGroup.filter((sup) => {
     const matchesSearch =
       search === "" ||
@@ -86,7 +87,8 @@ function SupportGroup() {
       statusFilter === "All" ||
       (statusFilter === "Active" && sup.isActive) ||
       (statusFilter === "Inactive" && !sup.isActive);
-    const matchesGroup = supportGroupFilter === "" || sup.name === supportGroupFilter;
+    const matchesGroup =
+      supportGroupFilter === "" || sup.name === supportGroupFilter;
     return matchesSearch && matchesStatus && matchesGroup;
   });
 
@@ -130,12 +132,11 @@ function SupportGroup() {
     setSupportGroup((prev) => prev.filter((g) => g.id !== id));
     toast.success("Support group deleted successfully");
   };
-  //export
-  const handleExport = () => {};
+  const bulkUploadHandler = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-       <div className="mb-4 space-y-3">
+      <div className="mb-4 space-y-3">
         {/* TITLE */}
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">Support Group</h1>
@@ -162,7 +163,7 @@ function SupportGroup() {
               onChange={(e) => setSupportGroupFilter(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 text-xs bg-white"
             >
-              <option value="">Select Roles & Permissions</option>
+              <option value="">Select Support Group</option>
               {supportGroup.map((supgroup) => (
                 <option key={supgroup.id} value={supgroup.name}>
                   {supgroup.name}
@@ -173,22 +174,28 @@ function SupportGroup() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-            >
-              <FileSpreadsheet size={16} />
-              Export Excel
-            </button>
-            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-              Bulk Upload
-            </button>
+            <ExcelActions
+              data={supportGroup}
+              fileName="support-Group"
+              headers={[
+                { label: "ID", key: "id" },
+                { label: "Group Name", key: "name" },
+                { label: "Code", key: "code" },
+                { label: "Level", key: "level" },
+                { label: "Manager", key: "manager" },
+                { label: "Services", key: "services" },
+                { label: "Max Tickets", key: "maxTickets" },
+                { label: "Status", key: "isActive" },
+                { label: "Created At", key: "createdAt" },
+              ]}
+              onUpload={bulkUploadHandler}
+            />
 
             <button
               onClick={() => setIsAddOpen(true)}
               className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
             >
-           + Support Group
+              + Support Group
             </button>
           </div>
         </div>

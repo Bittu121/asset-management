@@ -47,7 +47,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
             <input
               name="name"
               placeholder="Location name"
-              value={formData.name}
+              value={formData.name|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -55,7 +55,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
             <input
               name="address"
               placeholder="Address"
-              value={formData.address}
+              value={formData.address|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -63,7 +63,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
             <input
               name="city"
               placeholder="City"
-              value={formData.city}
+              value={formData.city|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />

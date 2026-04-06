@@ -108,7 +108,7 @@ function UpdateUserAccount({
           <div className="grid grid-cols-3 gap-4">
             {/* Role */}
             <select
-              value={form.role}
+              value={form.role|| ""}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             >
@@ -121,7 +121,7 @@ function UpdateUserAccount({
             {/* Full Name */}
             <input
               placeholder="Full Name"
-              value={form.name}
+              value={form.name|| ""}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -129,7 +129,7 @@ function UpdateUserAccount({
             {/* Employee Code */}
             <input
               placeholder="Employee Code"
-              value={form.employeeCode}
+              value={form.employeeCode|| ""}
               onChange={(e) =>
                 setForm({ ...form, employeeCode: e.target.value })
               }
@@ -139,7 +139,7 @@ function UpdateUserAccount({
             {/* Email */}
             <input
               placeholder="Email"
-              value={form.email}
+              value={form.email|| ""}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -147,7 +147,7 @@ function UpdateUserAccount({
             {/* Phone */}
             <input
               placeholder="Phone"
-              value={form.phone}
+              value={form.phone|| ""}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -312,7 +312,7 @@ function UpdateUserAccount({
             <input
               type="password"
               placeholder="Password"
-              value={form.password}
+              value={form.password|| ""}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />

@@ -45,14 +45,14 @@ function AddSupportGroup({ isOpen, onClose, onAdd, levels, managers }: any) {
           <div className="h-px bg-gray-100 mb-5"></div>
           <div className="space-y-3">
             <input
-              value={form.name}
+              value={form.name|| ""}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Support Group Name"
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
 
             <input
-              value={form.code}
+              value={form.code|| ""}
               onChange={(e) => setForm({ ...form, code: e.target.value })}
               placeholder="Support Group Code"
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -112,7 +112,7 @@ function AddSupportGroup({ isOpen, onClose, onAdd, levels, managers }: any) {
 
             <input
               type="number"
-              value={form.maxTickets}
+              value={form.maxTickets|| ""}
               placeholder="Max Tickets"
               onChange={(e) =>
                 setForm({ ...form, maxTickets: Number(e.target.value) })
@@ -121,7 +121,7 @@ function AddSupportGroup({ isOpen, onClose, onAdd, levels, managers }: any) {
             />
 
             <input
-              value={form.services}
+              value={form.services|| ""}
               placeholder="Supported Services"
               onChange={(e) => setForm({ ...form, services: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"

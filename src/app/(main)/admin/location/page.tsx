@@ -7,6 +7,7 @@ import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import { FileSpreadsheet } from "lucide-react";
+import ExcelActions from "@/app/components/common/ExcelActions";
 
 type Location = {
   id: number;
@@ -145,8 +146,7 @@ function Location() {
     setLocation((prev) => prev.filter((d) => d.id !== id));
   };
 
-  //export
-  const handleExport = () => {};
+  const bulkUploadHandler = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -192,16 +192,12 @@ function Location() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-            >
-              <FileSpreadsheet size={16} />
-              Export Excel
-            </button>
-            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-              Bulk Upload
-            </button>
+            <ExcelActions
+              data={location}
+              fileName="location"
+              headers={["ID", "Location", "City", "Address", "Status"]}
+              onUpload={bulkUploadHandler}
+            />
 
             <button
               onClick={() => setIsAddOpen(true)}

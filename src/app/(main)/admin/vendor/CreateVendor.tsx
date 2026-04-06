@@ -52,32 +52,32 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
           <div className="space-y-3">
             <input
               placeholder="Vendor Name"
-              value={form.name}
+              value={form.name|| ""}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
             <div className="grid grid-cols-2 gap-3">
               <input
                 placeholder="Email"
-                value={form.email}
+                value={form.email|| ""}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
               <input
                 placeholder="Phone"
-                value={form.phone}
+                value={form.phone|| ""}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
               <input
                 placeholder="Address"
-                value={form.address}
+                value={form.address|| ""}
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
               <input
                 placeholder="GST Number"
-                value={form.gstNumber}
+                value={form.gstNumber|| ""}
                 onChange={(e) =>
                   setForm({ ...form, gstNumber: e.target.value })
                 }
@@ -86,7 +86,7 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
             </div>
             <input
               placeholder="Contract Expiry"
-              value={form.contractExpiry}
+              value={form.contractExpiry|| ""}
               onChange={(e) =>
                 setForm({ ...form, contractExpiry: e.target.value })
               }

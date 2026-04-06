@@ -59,7 +59,7 @@ function AddSubDepartment({
             <input
               name="name"
               placeholder="Sub Department Name"
-              value={formData.name}
+              value={formData.name|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -120,7 +120,7 @@ function AddSubDepartment({
             </div>
             <textarea
               placeholder="Description"
-              value={formData.description}
+              value={formData.description|| ""}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }

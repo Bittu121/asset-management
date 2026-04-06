@@ -43,7 +43,7 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
           <input
             name="name"
             placeholder="Department name"
-            value={formData.name}
+            value={formData.name|| ""}
             onChange={handleChange}
             className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
           />
@@ -51,7 +51,7 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
           <input
             name="code"
             placeholder="Cost center code"
-            value={formData.code}
+            value={formData.code|| ""}
             onChange={handleChange}
             className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
           />

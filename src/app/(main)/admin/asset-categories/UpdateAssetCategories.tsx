@@ -50,7 +50,7 @@ function UpdateAssetCategories({
           <div className="space-y-3">
             <input
               name="name"
-              value={form.name}
+              value={form.name|| ""}
               placeholder="Asset categories"
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -58,7 +58,7 @@ function UpdateAssetCategories({
 
             <textarea
               name="description"
-              value={form.description}
+              value={form.description|| ""}
               placeholder="Asset Description"
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"

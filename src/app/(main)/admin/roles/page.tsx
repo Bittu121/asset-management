@@ -6,6 +6,7 @@ import Pagination from "../../../components/common/Pagination";
 import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
+import ExcelActions from "@/app/components/common/ExcelActions";
 
 type Role = {
   id: number;
@@ -40,16 +41,16 @@ function Roles() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState<Role | null>(null);
 
-   //pagination step-1
+  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-   //filter step-1
-    const [search, setSearch] = useState("");
-    const [statusFilter, setStatusFilter] = useState("All");
-    const [roleAndPermissionFilter, setRoleAndPermissionFilter] = useState("");
-  
-    //filter step-2
+  //filter step-1
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [roleAndPermissionFilter, setRoleAndPermissionFilter] = useState("");
+
+  //filter step-2
   const filteredRoleAndPermission = role.filter((rol) => {
     const matchesSearch =
       search === "" ||
@@ -59,11 +60,12 @@ function Roles() {
       statusFilter === "All" ||
       (statusFilter === "Active" && rol.isActive) ||
       (statusFilter === "Inactive" && !rol.isActive);
-    const matchesRole = roleAndPermissionFilter === "" || rol.name === roleAndPermissionFilter;
+    const matchesRole =
+      roleAndPermissionFilter === "" || rol.name === roleAndPermissionFilter;
     return matchesSearch && matchesStatus && matchesRole;
   });
-  
-   //pagination step-2
+
+  //pagination step-2
   const totalPages = Math.ceil(filteredRoleAndPermission.length / itemsPerPage);
   const paginatedRoles = filteredRoleAndPermission.slice(
     (currentPage - 1) * itemsPerPage,
@@ -102,16 +104,16 @@ function Roles() {
     setRole((prev) => prev.filter((r) => r.id !== id));
   };
 
-  //export
-  const handleExport = () => {};
+  const bulkUploadHandler = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
-
       <div className="mb-4 space-y-3">
         {/* TITLE */}
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">Roles & Permissions</h1>
+          <h1 className="text-lg font-semibold text-gray-900">
+            Roles & Permissions
+          </h1>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -146,22 +148,24 @@ function Roles() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-            >
-              <FileSpreadsheet size={16} />
-              Export Excel
-            </button>
-            <button className="px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-              Bulk Upload
-            </button>
+            <ExcelActions
+              data={role}
+              fileName="asset-subcategories"
+              headers={[
+                "ID",
+                "Role Name",
+                "Description",
+                "Permissions",
+                "Status",
+              ]}
+              onUpload={bulkUploadHandler}
+            />
 
             <button
               onClick={() => setIsAddOpen(true)}
               className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
             >
-            + Roles & Permissions
+              + Roles & Permissions
             </button>
           </div>
         </div>

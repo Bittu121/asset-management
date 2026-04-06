@@ -51,7 +51,7 @@ function AddSubLocation({ isOpen, onClose, onAdd, location }: any) {
             <input
               name="name"
               placeholder="Sub Location Name"
-              value={formData.name}
+              value={formData.name|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
@@ -85,7 +85,7 @@ function AddSubLocation({ isOpen, onClose, onAdd, location }: any) {
             <input
               name="floor"
               placeholder="Floor / Level"
-              value={formData.floor}
+              value={formData.floor|| ""}
               onChange={handleChange}
               className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />

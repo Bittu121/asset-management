@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ToastContainer
           position="top-right"
           autoClose={3000}
@@ -29,6 +29,10 @@ export default function RootLayout({
           newestOnTop
           closeOnClick
           pauseOnHover
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="light"
         />
         {children}
       </body>
