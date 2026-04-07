@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import { FileSpreadsheet } from "lucide-react";
 import ExcelActions from "@/app/components/common/ExcelActions";
+import { GoPlusCircle } from "react-icons/go";
 
 type Location = {
   id: number;
@@ -146,7 +147,9 @@ function Location() {
     setLocation((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const bulkUploadHandler = () => {};
+  // const bulkUploadHandler = () => {
+  //   console.log("pdf download")
+  // };
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -195,15 +198,31 @@ function Location() {
             <ExcelActions
               data={location}
               fileName="location"
-              headers={["ID", "Location", "City", "Address", "Status"]}
-              onUpload={bulkUploadHandler}
+              // headers={["ID", "Location", "City", "Address", "Status"]}
+              // onUpload={bulkUploadHandler}
+              headers={[
+                { label: "ID", key: "id" },
+                { label: "Location", key: "name" },
+                { label: "City", key: "city" },
+                { label: "Address", key: "address" },
+                { label: "Status", key: "isActive" },
+              ]}
+              onUpload={(uploadedData) => {
+                const mapped = uploadedData.map((item) => ({
+                  ...item,
+                  id: item.id || Date.now(),
+                  isActive: item.Status === "Active" || item.isActive === true,
+                }));
+                setLocation(mapped);
+              }}
             />
 
             <button
               onClick={() => setIsAddOpen(true)}
-              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+              className="flex items-center gap-1 px-3 py-2 text-sm font-normal rounded-md bg-black text-white hover:bg-gray-900"
             >
-              + Add Location
+              <GoPlusCircle size={18} />
+              Create
             </button>
           </div>
         </div>

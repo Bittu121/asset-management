@@ -8,6 +8,7 @@ import UpdateDepartmentModal from "./UpdateDepartmentModal";
 import Pagination from "../../../components/common/Pagination";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
+import { GoPlusCircle } from "react-icons/go";
 
 type Department = {
   id: number;
@@ -164,9 +165,10 @@ function Department() {
 
               <button
                 onClick={() => setIsAddOpen(true)}
-                className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+                className="flex items-center gap-1 px-3 py-2 text-sm font-normal rounded-md bg-black text-white hover:bg-gray-900"
               >
-                + Add Department
+               <GoPlusCircle size={18} />
+              Create
               </button>
             </div>
           </div>

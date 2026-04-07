@@ -9,6 +9,7 @@ import UpdateAssetModal from "./UpdateAssetModal";
 import Pagination from "../../../components/common/Pagination";
 import AddAssetModal from "./AddAssetModal";
 import QRModal from "./QRModal";
+import { GoPlusCircle } from "react-icons/go";
 
 export type Asset = {
   //step-0
@@ -279,9 +280,10 @@ export default function Page() {
 
           <button
             onClick={handleCreate}
-            className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition w-full sm:w-auto"
+            className="flex items-center gap-1 bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition w-full sm:w-auto"
           >
-            + Add Asset
+            <GoPlusCircle size={18} />
+              Create
           </button>
         </div>
 

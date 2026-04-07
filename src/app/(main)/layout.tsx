@@ -36,7 +36,7 @@ export default function MainLayout({
       {/* Fixed Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-screen z-40 transition-all duration-300 ${
-          sidebarCollapsed ? "w-20" : "w-72"
+          sidebarCollapsed ? "w-20" : "w-64"
         }`}
       >
         <Sidebar onCollapseChange={setSidebarCollapsed} />
@@ -45,7 +45,7 @@ export default function MainLayout({
       {/* Content area — offset to match sidebar width */}
       <div
         className={`flex flex-col flex-1 min-h-screen layout-scroll min-w-0 transition-all duration-300 ${
-          sidebarCollapsed ? "ml-20" : "ml-72"
+          sidebarCollapsed ? "ml-20" : "ml-64"
         }`}
       >
         {/* Sticky Header */}
@@ -54,7 +54,7 @@ export default function MainLayout({
         </header>
 
         {/* Scrollable Page Content */}
-        <main className="flex-1 bg-gray-100 p-4 overflow-y-auto layout-scroll">
+        <main className="flex-1 bg-[#EAEFF5] p-4 overflow-y-auto layout-scroll">
           {children}
         </main>
       </div>

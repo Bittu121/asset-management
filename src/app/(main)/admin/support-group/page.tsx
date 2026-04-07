@@ -7,6 +7,7 @@ import { FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
+import { GoPlusCircle } from "react-icons/go";
 
 const levels = [
   "L1 - First Line Support",
@@ -193,9 +194,10 @@ function SupportGroup() {
 
             <button
               onClick={() => setIsAddOpen(true)}
-              className="px-3 py-2 text-xs font-bold rounded-md bg-black text-white hover:bg-gray-900"
+              className="flex items-center gap-1 px-3 py-2 text-sm font-normal rounded-md bg-black text-white hover:bg-gray-900"
             >
-              + Support Group
+              <GoPlusCircle size={18} />
+              Create
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -113,7 +114,11 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
                 path: "/admin/department",
                 icon: Building2,
               },
-              { name: "Sub Departments", path: "/admin/sub-department", icon: Building2 },
+              {
+                name: "Sub Departments",
+                path: "/admin/sub-department",
+                icon: Building2,
+              },
               {
                 name: "Categories",
                 path: "/admin/asset-categories",
@@ -203,7 +208,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
     <>
       <div
         className={`h-screen ${
-          collapsed ? "w-20" : "w-72"
+          collapsed ? "w-20" : "w-64"
         } bg-linear-to-b from-[#0f172a] via-[#111827] to-[#020617] border-r border-white/10 text-gray-300 px-3 py-6 flex flex-col
         transition-all duration-300`}
       >
@@ -220,10 +225,16 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
             </div>
           )}
 
-          <Menu
+          {/* <Menu
             size={20}
             className="cursor-pointer text-gray-400 hover:text-white transition"
             onClick={handleToggle}
+          /> */}
+          <img
+            src="/icons/sidebarToggleIcon.svg"
+            alt="sidebar-toggle-icon"
+            onClick={handleToggle}
+            className="cursor-pointer w-6 h-6 text-gray-400 hover:text-white transition filter invert"
           />
         </div>
 
