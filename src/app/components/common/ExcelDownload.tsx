@@ -59,9 +59,9 @@ function ExcelDownload({ data, fileName, headers }: any) {
     <>
       <button
         onClick={handleExport}
-        className="flex items-center gap-2 px-3 py-2 text-xs font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-green-500 text-white hover:bg-green-600 active:bg-green-800 transition"
       >
-        <FileSpreadsheet size={16} />
+        <FileSpreadsheet size={18} />
         Export Excel
       </button>
     </>

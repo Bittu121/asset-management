@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ExcelDownload from "./ExcelDownload";
 import BulkUploadModal from "./BulkUploadModal";
 import PdfDownload from "./PdfDownload";
+import { TbCloudUpload } from "react-icons/tb";
 
 // Support both string[] and object[] formats
 type HeaderConfig = string | { label: string; key: string };
@@ -26,8 +27,9 @@ const ExcelActions = ({ data, fileName, headers, onUpload }: Props) => {
 
         <button
           onClick={() => setOpenBulkUploadModal(true)}
-          className="px-3 py-2 text-xs font-bold border rounded-md cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-50"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 transition"
         >
+          <TbCloudUpload size={18} />
           Bulk Upload
         </button>
       </div>

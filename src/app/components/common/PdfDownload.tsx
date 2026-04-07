@@ -531,7 +531,7 @@ function PdfDownload({
           setIsOpen((prev) => !prev);
         }}
         disabled={isExporting}
-        className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
       >
         <FileText size={14} />
         {isExporting ? "Exporting..." : "Export PDF"}
