@@ -163,7 +163,7 @@ function UserAccount() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={userAccount}
+              data={filteredUserAccount}
               fileName="user-account"
               headers={[
                 { label: "ID", key: "id" },
@@ -175,7 +175,32 @@ function UserAccount() {
                 { label: "Support Group", key: "supportGroup" },
                 { label: "Created At", key: "createdAt" },
               ]}
-              onUpload={bulkUploadHandler}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: UserAccount[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    role: item.Role || item.role || "User",
+                    name: item.Name || item.name || "",
+                    employeeCode:
+                      item["Employee Code"] || item.employeeCode || "",
+                    email: item.Email || item.email || "",
+                    phone: item.Phone || item.phone || "",
+                    designation: item.Designation || item.designation || "",
+                    reportingTo: item["Reporting To"] || item.reportingTo || "",
+                    department: item.Department || item.department || "",
+                    subDepartment:
+                      item["Sub Department"] || item.subDepartment || "",
+                    location: item.Location || item.location || "",
+                    subLocation: item["Sub Location"] || item.subLocation || "",
+                    supportGroup:
+                      item["Support Group"] || item.supportGroup || "",
+                    password: item.Password || "123456",
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+                setUserAccount((prev) => [...formattedData, ...prev]);
+                toast.success("User accounts uploaded successfully");
+              }}
             />
 
             <button

@@ -156,8 +156,6 @@ function Vendor() {
     setVendor((prev) => prev.filter((v) => v.id !== id));
   };
 
-  const bulkUploadHandler = () => {};
-
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
@@ -200,7 +198,7 @@ function Vendor() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={vendor}
+              data={filteredVendor}
               fileName="vendor"
               headers={[
                 { label: "ID", key: "id" },
@@ -212,7 +210,27 @@ function Vendor() {
                 { label: "Contract Expiry", key: "contractExpiry" },
                 { label: "Created At", key: "createdAt" },
               ]}
-              onUpload={bulkUploadHandler}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: Vendor[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item["Vendor Name"] || item.name || "",
+                    email: item.Email || item.email || "",
+                    phone: item.Phone || item.phone || "",
+                    address: item.Address || item.address || "",
+                    gstNumber: item["GST Number"] || item.gstNumber || "",
+                    contractExpiry:
+                      item["Contract Expiry"] || item.contractExpiry || "",
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+                setVendor((prev) => [...formattedData, ...prev]);
+                toast.success("Vendors uploaded successfully");
+              }}
             />
 
             <button

@@ -116,8 +116,6 @@ function Department() {
     setDepartments((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const bulkUploadHandler = () => {};
-
   return (
     <>
       <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -158,10 +156,28 @@ function Department() {
             {/* RIGHT */}
             <div className="flex items-center gap-2">
               <ExcelActions
-                data={departments}
+                data={filteredDepartments}
                 fileName="department"
-                headers={["ID", "Department", "Code", "Created"]}
-                onUpload={bulkUploadHandler}
+                headers={[
+                  { label: "ID", key: "id" },
+                  { label: "Department", key: "name" },
+                  { label: "Code", key: "code" },
+                  { label: "Created", key: "createdAt" },
+                ]}
+                onUpload={(uploadedData: any[]) => {
+                  const formattedData: Department[] = uploadedData.map(
+                    (item, index) => ({
+                      id: Date.now() + index,
+                      name: item.Department || item.name || "",
+                      code: item.Code || item.code || "",
+                      createdAt: new Date().toDateString(),
+                    }),
+                  );
+
+                  setDepartments((prev) => [...formattedData, ...prev]);
+
+                  toast.success("Departments uploaded successfully");
+                }}
               />
 
               <button

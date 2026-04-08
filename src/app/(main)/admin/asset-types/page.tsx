@@ -165,8 +165,6 @@ function AssetTypes() {
     setAssetTypes((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const bulkUploadHandler = () => {};
-
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
@@ -212,16 +210,35 @@ function AssetTypes() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={assetTypes}
+              data={filteredAssetTypes}
               fileName="asset-types"
               headers={[
-                "Asset Type",
-                "Category",
-                "Sub Category",
-                "Description",
-                "Status",
+                { label: "Asset Type", key: "name" },
+                { label: "Category", key: "category" },
+                { label: "Sub Category", key: "subCategory" },
+                { label: "Description", key: "description" },
+                { label: "Status", key: "isActive" },
               ]}
-              onUpload={bulkUploadHandler}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: AssetTypes[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item["Asset Type"] || item.name || "",
+                    category: item.Category || item.category || "",
+                    subCategory: item["Sub Category"] || item.subCategory || "",
+                    description: item.Description || item.description || "",
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+
+                setAssetTypes((prev) => [...formattedData, ...prev]);
+
+                toast.success("Asset types uploaded successfully");
+              }}
             />
             <button
               onClick={() => setIsAddOpen(true)}

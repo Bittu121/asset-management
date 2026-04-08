@@ -1017,7 +1017,7 @@ function Page() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <ExcelActions
-              data={assets}
+              data={filteredAssets}
               fileName="asset"
               headers={[
                 { label: "Asset Tag", key: "assetTag" },

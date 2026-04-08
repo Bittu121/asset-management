@@ -147,10 +147,6 @@ function Location() {
     setLocation((prev) => prev.filter((d) => d.id !== id));
   };
 
-  // const bulkUploadHandler = () => {
-  //   console.log("pdf download")
-  // };
-
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
@@ -197,10 +193,9 @@ function Location() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={location}
+              data={filteredLocations}
               fileName="location"
               // headers={["ID", "Location", "City", "Address", "Status"]}
-              // onUpload={bulkUploadHandler}
               headers={[
                 { label: "ID", key: "id" },
                 { label: "Location", key: "name" },

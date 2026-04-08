@@ -159,16 +159,6 @@ function AssetCategories() {
     setAssetCategories((prev) => prev.filter((d) => d.id !== id));
   };
 
-  //bulk upload
-  const handleBulkUpload = (uploadedData: any[]) => {
-    try {
-      toast.success("Successfully uploaded asset categories");
-    } catch (error) {
-      toast.error("Failed to process uploaded data");
-      console.error("Upload processing error:", error);
-    }
-  };
-
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
@@ -214,10 +204,32 @@ function AssetCategories() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={assetCategories}
+              data={filteredAssetSubCategories}
               fileName="asset-categories"
-              headers={["ID", "Name", "Status", "Description"]}
-              onUpload={handleBulkUpload}
+              headers={[
+                { label: "ID", key: "id" },
+                { label: "Name", key: "name" },
+                { label: "Status", key: "isActive" },
+                { label: "Description", key: "description" },
+              ]}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: AssetCategories[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item.Name || item.name || "",
+                    description: item.Description || item.description || "",
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+
+                setAssetCategories((prev) => [...formattedData, ...prev]);
+
+                toast.success("Asset categories uploaded successfully");
+              }}
             />
             <button
               onClick={() => setIsAddOpen(true)}

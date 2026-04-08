@@ -186,7 +186,6 @@ function AssetSubCategories() {
     toast.success("Asset Subcategories deleted successfully");
     setAssetSubCategories((prev) => prev.filter((d) => d.id !== id));
   };
-  const bulkUploadHandler = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -236,16 +235,34 @@ function AssetSubCategories() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={assetSubCategories}
+              data={filteredAssetSubCategories}
               fileName="asset-subcategories"
               headers={[
-                "ID",
-                "Sub Category",
-                "Category",
-                "Description",
-                "Status",
+                { label: "ID", key: "id" },
+                { label: "Sub Category", key: "name" },
+                { label: "Category", key: "category" },
+                { label: "Description", key: "description" },
+                { label: "Status", key: "isActive" },
               ]}
-              onUpload={bulkUploadHandler}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: AssetSubCategories[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item["Sub Category"] || item.name || "",
+                    category: item.Category || item.category || "",
+                    description: item.Description || item.description || "",
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+
+                setAssetSubCategories((prev) => [...formattedData, ...prev]);
+
+                toast.success("Asset subcategories uploaded successfully");
+              }}
             />
 
             <button

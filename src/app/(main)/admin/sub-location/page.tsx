@@ -171,8 +171,6 @@ function SubLocation() {
     setSubLocation((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const bulkUploadHandler = () => {};
-
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
@@ -219,10 +217,31 @@ function SubLocation() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={subLocation}
+              data={filteredSubLocations}
               fileName="sub-Location"
-              headers={["Sub Location", "Location", "Floor", "Status"]}
-              onUpload={bulkUploadHandler}
+              headers={[
+                { label: "Sub Location", key: "name" },
+                { label: "Location", key: "location" },
+                { label: "Floor", key: "floor" },
+                { label: "Status", key: "isActive" },
+              ]}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: SubLocation[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item["Sub Location"] || item.name || "",
+                    location: item.Location || item.location || "",
+                    floor: item.Floor || item.floor || "",
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+                setSubLocation((prev) => [...formattedData, ...prev]);
+                toast.success("Sub Locations uploaded successfully");
+              }}
             />
             <button
               onClick={() => setIsAddOpen(true)}

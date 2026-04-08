@@ -105,8 +105,6 @@ function Roles() {
     setRole((prev) => prev.filter((r) => r.id !== id));
   };
 
-  const bulkUploadHandler = () => {};
-
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
@@ -151,16 +149,37 @@ function Roles() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={role}
+              data={filteredRoleAndPermission}
               fileName="asset-subcategories"
               headers={[
-                "ID",
-                "Role Name",
-                "Description",
-                "Permissions",
-                "Status",
+                { label: "ID", key: "id" },
+                { label: "Role Name", key: "name" },
+                { label: "Description", key: "description" },
+                { label: "Permissions", key: "permissions" },
+                { label: "Status", key: "isActive" },
               ]}
-              onUpload={bulkUploadHandler}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: Role[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item["Role Name"] || item.name || "",
+                    description: item.Description || item.description || "",
+                    permissions:
+                      typeof item.Permissions === "string"
+                        ? item.Permissions.split(",").map((p: string) =>
+                            p.trim(),
+                          )
+                        : item.permissions || [],
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+                setRole((prev) => [...formattedData, ...prev]);
+                toast.success("Roles uploaded successfully");
+              }}
             />
 
             <button

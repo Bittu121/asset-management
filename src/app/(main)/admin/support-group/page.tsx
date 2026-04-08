@@ -133,7 +133,6 @@ function SupportGroup() {
     setSupportGroup((prev) => prev.filter((g) => g.id !== id));
     toast.success("Support group deleted successfully");
   };
-  const bulkUploadHandler = () => {};
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
@@ -177,7 +176,7 @@ function SupportGroup() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={supportGroup}
+              data={filteredSupportGroup}
               fileName="support-Group"
               headers={[
                 { label: "ID", key: "id" },
@@ -190,7 +189,29 @@ function SupportGroup() {
                 { label: "Status", key: "isActive" },
                 { label: "Created At", key: "createdAt" },
               ]}
-              onUpload={bulkUploadHandler}
+              onUpload={(uploadedData: any[]) => {
+                const formattedData: SupportGroup[] = uploadedData.map(
+                  (item, index) => ({
+                    id: Date.now() + index,
+                    name: item["Group Name"] || item.name || "",
+                    code: item.Code || item.code || "",
+                    level: item.Level || item.level || "",
+                    manager: item.Manager || item.manager || "",
+                    services: item.Services || item.services || "",
+                    maxTickets: Number(
+                      item["Max Tickets"] || item.maxTickets || 0,
+                    ),
+                    description: item.Description || item.description || "",
+                    isActive:
+                      item.Status === "Active" ||
+                      item.status === "Active" ||
+                      item.isActive === true,
+                    createdAt: new Date().toDateString(),
+                  }),
+                );
+                setSupportGroup((prev) => [...formattedData, ...prev]);
+                toast.success("Support groups uploaded successfully");
+              }}
             />
 
             <button
