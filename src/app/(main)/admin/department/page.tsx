@@ -12,7 +12,7 @@ import { GoPlusCircle } from "react-icons/go";
 
 type Department = {
   id: number;
-  name: string;
+  departmentName: string;
   code: string;
   createdAt: string;
 };
@@ -21,32 +21,32 @@ function Department() {
   const [departments, setDepartments] = useState<Department[]>([
     {
       id: 1,
-      name: "Accounts",
+      departmentName: "Accounts",
       code: "CC-ACC",
       createdAt: "Dec 17, 2025",
     },
     {
       id: 2,
-      name: "Administration",
+      departmentName: "Administration",
       code: "CC-ADMIN",
       createdAt: "Dec 17, 2025",
     },
     {
       id: 3,
-      name: "HR",
+      departmentName: "HR",
       code: "CC-HR",
       createdAt: "Dec 17, 2025",
     },
-    { id: 4, name: "IT", code: "CC-IT", createdAt: "Dec 17, 2025" },
+    { id: 4, departmentName: "IT", code: "CC-IT", createdAt: "Dec 17, 2025" },
     {
       id: 5,
-      name: "Finance",
+      departmentName: "Finance",
       code: "CC-FIN",
       createdAt: "Dec 17, 2025",
     },
     {
       id: 6,
-      name: "Legal",
+      departmentName: "Legal",
       code: "CC-LEGAL",
       createdAt: "Dec 17, 2025",
     },
@@ -67,12 +67,12 @@ function Department() {
   const filteredDepartments = departments.filter((depts) => {
     const searchMatch =
       search === "" ||
-      depts.name.toLowerCase().includes(search.toLowerCase()) ||
+      depts.departmentName.toLowerCase().includes(search.toLowerCase()) ||
       depts.code.toLowerCase().includes(search.toLowerCase());
 
     const departmentMatch =
       departmentFilter === "" ||
-      depts.name.toLowerCase() === departmentFilter.toLowerCase();
+      depts.departmentName.toLowerCase() === departmentFilter.toLowerCase();
 
     return searchMatch && departmentMatch;
   });
@@ -124,7 +124,7 @@ function Department() {
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-semibold text-gray-900">
               {" "}
-              Add Department
+              Department
             </h1>
           </div>
 
@@ -146,8 +146,8 @@ function Department() {
               >
                 <option value="">Select Departments</option>
                 {departments.map((dept) => (
-                  <option key={dept.id} value={dept.name}>
-                    {dept.name}
+                  <option key={dept.id} value={dept.departmentName}>
+                    {dept.departmentName}
                   </option>
                 ))}
               </select>
@@ -160,7 +160,7 @@ function Department() {
                 fileName="department"
                 headers={[
                   { label: "ID", key: "id" },
-                  { label: "Department", key: "name" },
+                  { label: "Department", key: "departmentName" },
                   { label: "Code", key: "code" },
                   { label: "Created", key: "createdAt" },
                 ]}
@@ -168,7 +168,7 @@ function Department() {
                   const formattedData: Department[] = uploadedData.map(
                     (item, index) => ({
                       id: Date.now() + index,
-                      name: item.Department || item.name || "",
+                      departmentName: item.Department || item.departmentName || "",
                       code: item.Code || item.code || "",
                       createdAt: new Date().toDateString(),
                     }),
@@ -246,7 +246,7 @@ function Department() {
                     </td>
                     <td className="px-6 py-5">
                       <div className="text-sm font-medium text-gray-900">
-                        {dept.name}
+                        {dept.departmentName}
                       </div>
                     </td>
 

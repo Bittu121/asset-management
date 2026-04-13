@@ -1,22 +1,22 @@
 "use client";
+
 import React, { useState } from "react";
-import { X } from "lucide-react";
+import { Autocomplete, TextField } from "@mui/material";
 
 function AddSubDepartment({
   isOpen,
   onClose,
   onAdd,
-  department,
+  departmentName,
   manager,
 }: any) {
   const [formData, setFormData] = useState({
-    name: "",
-    department: "",
+    subDepartmentName: "",
+    departmentName: "",
     manager: "",
     description: "",
     isActive: true,
   });
-  const [open, setOpen] = useState(false);
 
   if (!isOpen) return null;
 
@@ -27,8 +27,8 @@ function AddSubDepartment({
   const handleSubmit = () => {
     onAdd(formData);
     setFormData({
-      name: "",
-      department: "",
+      subDepartmentName: "",
+      departmentName: "",
       manager: "",
       description: "",
       isActive: true,
@@ -36,99 +36,181 @@ function AddSubDepartment({
     onClose();
   };
 
+  const deptOptions = Array.from(
+    new Map(
+      departmentName
+        .filter((d: any) => d.name && d.name.trim() !== "")
+        .map((d: any) => [d.id, { id: d.id, label: d.name }]),
+    ).values(),
+  );
+
+  const managerOptions = Array.from(
+    new Map(
+      manager
+        .filter((m: any) => m.name && m.name.trim() !== "")
+        .map((m: any) => [m.id, { id: m.id, label: m.name }]),
+    ).values(),
+  );
+
   return (
-    <>
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
-        <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-white w-full max-w-lg rounded-lg shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">
               Add Sub Department
             </h2>
-
-            <button
-              onClick={onClose}
-              className="p-1 rounded-md hover:bg-gray-100"
-            >
-              <X size={18} />
-            </button>
+            <p className="text-gray-500 text-sm mt-1">
+              Create a new sub department
+            </p>
           </div>
 
-          {/* Light Divider */}
-          <div className="h-px bg-gray-100 mb-5"></div>
+          <button
+            onClick={onClose}
+            className="text-black text-xl font-bold cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-5">
           <div className="space-y-3">
-            <input
-              name="name"
-              placeholder="Sub Department Name"
-              value={formData.name|| ""}
-              onChange={handleChange}
-              className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            />
-
-            {/* Custom Dropdown */}
-            <div className="relative">
-              <div
-                onClick={() => setOpen(!open)}
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm cursor-pointer bg-white"
-              >
-                {formData.department || "Select Department"}
-              </div>
-
-              {open && (
-                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-md max-h-40 overflow-y-auto z-50 custom-scroll">
-                  {department.map((dept: any) => (
-                    <div
-                      key={dept.id}
-                      onClick={() => {
-                        setFormData({
-                          ...formData,
-                          department: dept.name,
-                        });
-                        setOpen(false);
-                      }}
-                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                    >
-                      {dept.name}
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* Name */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">
+                Sub Department Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                name="subDepartmentName"
+                value={formData.subDepartmentName || ""}
+                onChange={handleChange}
+                placeholder="Sub Department Name"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
             </div>
 
-            <div className="relative">
-              <div
-                onClick={() => setOpen(!open)}
-                className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-              >
-                {formData.manager || "Select manager"}
-              </div>
-              {open && (
-                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-                  {manager.map((managers: any) => (
-                    <div
-                      key={managers.id}
-                      onClick={() => {
-                        setFormData({ ...formData, manager: managers.name });
-                        setOpen(false);
-                      }}
-                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                    >
-                      {managers.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <textarea
-              placeholder="Description"
-              value={formData.description|| ""}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            />
+            {/* Department */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">
+                Department <span className="text-red-500">*</span>
+              </label>
 
-            <div className="flex justify-between items-center w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400">
-              <span className="text-sm text-gray-600">Active</span>
+              <Autocomplete
+                options={deptOptions}
+                getOptionLabel={(option: any) => option.label}
+                isOptionEqualToValue={(option, value: any) =>
+                  option.id === value.id
+                }
+                value={
+                  deptOptions.find(
+                    (d: any) => d.label === formData.departmentName,
+                  ) || null
+                }
+                onChange={(e, value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    departmentName: value?.label || "",
+                  }))
+                }
+                fullWidth
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Select Department"
+                    size="small"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "0.5rem",
+                        backgroundColor: "#f9fafb",
+                        height: "42px",
+                        "& fieldset": { borderColor: "#e5e7eb" },
+                        "&:hover fieldset": { borderColor: "#e5e7eb" },
+                        "&.Mui-focused": {
+                          boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
+                        },
+                        "& input": {
+                          padding: "10px 16px",
+                          fontSize: "14px",
+                        },
+                      },
+                    }}
+                  />
+                )}
+              />
+            </div>
+
+            {/* Manager */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">
+                Manager
+              </label>
+
+              <Autocomplete
+                options={managerOptions}
+                getOptionLabel={(option: any) => option.label}
+                isOptionEqualToValue={(option, value: any) =>
+                  option.id === value.id
+                }
+                value={
+                  managerOptions.find(
+                    (m: any) => m.label === formData.manager,
+                  ) || null
+                }
+                onChange={(e, value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    manager: value?.label || "",
+                  }))
+                }
+                fullWidth
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Select Manager"
+                    size="small"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "0.5rem",
+                        backgroundColor: "#f9fafb",
+                        height: "42px",
+                        "& fieldset": { borderColor: "#e5e7eb" },
+                        "&:hover fieldset": { borderColor: "#e5e7eb" },
+                        "&.Mui-focused": {
+                          boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
+                        },
+                        "& input": {
+                          padding: "10px 16px",
+                          fontSize: "14px",
+                        },
+                      },
+                    }}
+                  />
+                )}
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">
+                Description
+              </label>
+              <textarea
+                value={formData.description || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                placeholder="Description"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+            </div>
+
+            {/* Toggle */}
+            <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-5">
+              <span className="text-sm font-semibold text-gray-500">
+                Active Status
+              </span>
 
               <button
                 onClick={() =>
@@ -137,8 +219,8 @@ function AddSubDepartment({
                     isActive: !prev.isActive,
                   }))
                 }
-                className={`w-10 h-5 flex items-center rounded-full p-1 transition ${
-                  formData.isActive ? "bg-green-500" : "bg-gray-300"
+                className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
+                  formData.isActive ? "bg-indigo-600" : "bg-gray-300"
                 }`}
               >
                 <div
@@ -149,26 +231,26 @@ function AddSubDepartment({
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Footer */}
-          <div className="flex justify-end gap-3 mt-6">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-sm rounded-md border border-gray-200 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+        {/* Footer */}
+        <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+          >
+            Cancel
+          </button>
 
-            <button
-              onClick={handleSubmit}
-              className="px-4 py-2 text-sm rounded-md bg-gray-900 text-white hover:bg-gray-800"
-            >
-              Create
-            </button>
-          </div>
+          <button
+            onClick={handleSubmit}
+            className="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
+          >
+            Create
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

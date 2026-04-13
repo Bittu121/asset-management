@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
 
 export default function UpdateDepartmentModal({
   isOpen,
@@ -10,7 +9,7 @@ export default function UpdateDepartmentModal({
   onUpdate,
 }: any) {
   const [form, setForm] = useState({
-    name: "",
+    departmentName: "",
     code: "",
   });
 
@@ -22,44 +21,64 @@ export default function UpdateDepartmentModal({
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
+      <div className="bg-white w-full max-w-md rounded-lg shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Update Department
-          </h2>
+        <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">
+              Update Department
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Update department details
+            </p>
+          </div>
 
           <button
             onClick={onClose}
-            className="p-1 rounded-md hover:bg-gray-100"
+            className="text-black text-xl font-bold cursor-pointer"
           >
-            <X size={18} />
+            ✕
           </button>
         </div>
 
-        {/* Light Divider */}
-        <div className="h-px bg-gray-100 mb-5"></div>
-        <div className="space-y-3">
-          <input
-            value={form.name|| ""}
-            placeholder="Department name"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-          />
+        {/* Body */}
+        <div className="px-6 py-5">
+          <div className="space-y-3">
+            {/* Department Name */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">
+                Department Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                value={form.departmentName || ""}
+                onChange={(e) =>
+                  setForm({ ...form, departmentName: e.target.value })
+                }
+                placeholder="Department name"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+            </div>
 
-          <input
-            value={form.code|| ""}
-            placeholder="Cost center code"
-            onChange={(e) => setForm({ ...form, code: e.target.value })}
-            className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-          />
+            {/* Code */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">
+                Cost Center Code
+              </label>
+              <input
+                value={form.code || ""}
+                onChange={(e) => setForm({ ...form, code: e.target.value })}
+                placeholder="Cost center code"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 mt-6">
+        <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm rounded-md border border-gray-200 hover:bg-gray-50"
+            className="px-6 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancel
           </button>
@@ -69,7 +88,7 @@ export default function UpdateDepartmentModal({
               onUpdate(form);
               onClose();
             }}
-            className="px-4 py-2 text-sm rounded-md bg-gray-900 text-white hover:bg-gray-800"
+            className="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
           >
             Update
           </button>

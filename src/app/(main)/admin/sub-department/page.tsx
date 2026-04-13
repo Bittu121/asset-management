@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import AddSubDepartment from "./AddSubDepartment";
 import UpdateSubDepartment from "./UpdateSubDepartment";
 import Pagination from "../../../components/common/Pagination";
-import { FileSpreadsheet, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
@@ -11,8 +11,8 @@ import { GoPlusCircle } from "react-icons/go";
 
 type SubDepartmentType = {
   id: number;
-  name: string;
-  department: string;
+  subDepartmentName: string;
+  departmentName: string;
   manager: string;
   description?: string;
   isActive: boolean;
@@ -20,7 +20,7 @@ type SubDepartmentType = {
 };
 
 function SubDepartment() {
-  const [department] = useState([
+  const [departmentName] = useState([
     { id: 1, name: "Accounts" },
     { id: 2, name: "Administration" },
     { id: 3, name: "HR" },
@@ -37,8 +37,8 @@ function SubDepartment() {
   const [subDepartment, setSubDepartment] = useState<SubDepartmentType[]>([
     {
       id: 1,
-      name: "Visual Design",
-      department: "Accounts",
+      subDepartmentName: "Visual Design",
+      departmentName: "Accounts",
       manager: "bittu@gmail.com",
       description:
         "Handles UI/UX design, branding, and visual assets for digital products.",
@@ -47,8 +47,8 @@ function SubDepartment() {
     },
     {
       id: 2,
-      name: "Vendor Procurement",
-      department: "Hr",
+      subDepartmentName: "Vendor Procurement",
+      departmentName: "Hr",
       manager: "bittu1@gmail.com",
       description:
         "Manages vendor sourcing, onboarding, and procurement processes.",
@@ -57,8 +57,8 @@ function SubDepartment() {
     },
     {
       id: 3,
-      name: "Recruitment",
-      department: "Hr",
+      subDepartmentName: "Recruitment",
+      departmentName: "Hr",
       manager: "",
       description:
         "Responsible for hiring, interviews, and talent acquisition.",
@@ -67,8 +67,8 @@ function SubDepartment() {
     },
     {
       id: 4,
-      name: "Payroll Management",
-      department: "Accounts",
+      subDepartmentName: "Payroll Management",
+      departmentName: "Accounts",
       manager: "bk@gmail.com",
       description:
         "Handles employee salary processing, deductions, and payslips.",
@@ -77,8 +77,8 @@ function SubDepartment() {
     },
     {
       id: 5,
-      name: "IT Support",
-      department: "Engineering",
+      subDepartmentName: "IT Support",
+      departmentName: "Engineering",
       manager: "",
       description:
         "Provides technical support, system maintenance, and issue resolution.",
@@ -87,8 +87,8 @@ function SubDepartment() {
     },
     {
       id: 6,
-      name: "Quality Assurance",
-      department: "Engineering",
+      subDepartmentName: "Quality Assurance",
+      departmentName: "Engineering",
       manager: "",
       description:
         "Ensures product quality through testing and validation processes.",
@@ -113,12 +113,13 @@ function SubDepartment() {
   const filteredSubDepartments = subDepartment.filter((subdepts) => {
     const searchMatch =
       search === "" ||
-      subdepts.name.toLowerCase().includes(search.toLowerCase()) ||
-      subdepts.department.toLowerCase().includes(search.toLowerCase());
+      subdepts.subDepartmentName.toLowerCase().includes(search.toLowerCase()) ||
+      subdepts.subDepartmentName.toLowerCase().includes(search.toLowerCase());
 
     const departmentMatch =
       subDepartmentFilter === "" ||
-      subdepts.department.toLowerCase() === subDepartmentFilter.toLowerCase();
+      subdepts.departmentName.toLowerCase() ===
+        subDepartmentFilter.toLowerCase();
 
     return searchMatch && departmentMatch;
   });
@@ -191,8 +192,8 @@ function SubDepartment() {
               onChange={(e) => setSubDepartmentFilter(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
-              <option value="">Select Sub Departments</option>
-              {department.map((dept) => (
+              <option value="">Select Departments</option>
+              {departmentName.map((dept) => (
                 <option key={dept.id} value={dept.name}>
                   {dept.name}
                 </option>
@@ -207,8 +208,8 @@ function SubDepartment() {
               fileName="sub-Department"
               headers={[
                 { label: "ID", key: "id" },
-                { label: "Sub Department", key: "name" },
-                { label: "Department", key: "department" },
+                { label: "Sub Department", key: "subDepartmentName" },
+                { label: "Department", key: "departmentName" },
                 { label: "Manager", key: "manager" },
                 { label: "Status", key: "isActive" },
               ]}
@@ -216,8 +217,10 @@ function SubDepartment() {
                 const formattedData: SubDepartmentType[] = uploadedData.map(
                   (item, index) => ({
                     id: Date.now() + index,
-                    name: item["Sub Department"] || item.name || "",
-                    department: item.Department || item.department || "",
+                    subDepartmentName:
+                      item["Sub Department"] || item.subDepartmentName || "",
+                    departmentName:
+                      item.Department || item.departmentName || "",
                     manager: item.Manager || item.manager || "",
                     isActive:
                       item.Status === "Active" ||
@@ -296,12 +299,12 @@ function SubDepartment() {
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subDept.name}
+                      {subDept.subDepartmentName}
                     </div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subDept.department}
+                      {subDept.departmentName}
                     </div>
                   </td>
                   <td className="px-6 py-5">
@@ -352,7 +355,7 @@ function SubDepartment() {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAddSubDepartment}
-        department={department}
+        departmentName={departmentName}
         manager={manager}
       />
       <UpdateSubDepartment
@@ -360,7 +363,7 @@ function SubDepartment() {
         onClose={() => setIsUpdateOpen(false)}
         selectedSubDepartment={selectedSubDepartment}
         onUpdate={handleUpdateSubDepartment}
-        department={department}
+        departmentName={departmentName}
         manager={manager}
       />
       <div className="bg-white border border-gray-200 rounded-b-xl px-6 py-4">
