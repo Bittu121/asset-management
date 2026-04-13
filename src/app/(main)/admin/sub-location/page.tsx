@@ -11,8 +11,8 @@ import { GoPlusCircle } from "react-icons/go";
 
 type SubLocation = {
   id: number;
-  name: string;
-  location: string;
+  subLocationName: string;
+  locationName: string;
   floor?: string;
   isActive: boolean;
   createdAt?: string;
@@ -22,54 +22,54 @@ function SubLocation() {
   const [subLocation, setSubLocation] = useState<SubLocation[]>([
     {
       id: 1,
-      name: "Ahmedabad Office",
-      location: "Ahmedabad",
+      subLocationName: "Ahmedabad Office",
+      locationName: "Ahmedabad",
       floor: "11th Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
     },
     {
       id: 2,
-      name: "Bangalore Office",
-      location: "Bangalore",
+      subLocationName: "Bangalore Office",
+      locationName: "Bangalore",
       floor: "1st Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
     },
     {
       id: 3,
-      name: "Mumbai Office",
-      location: "Mumbai",
+      subLocationName: "Mumbai Office",
+      locationName: "Mumbai",
       floor: "3rd Floor",
       isActive: false,
       createdAt: new Date().toDateString(),
     },
     {
       id: 4,
-      name: "Delhi HQ",
-      location: "Delhi",
+      subLocationName: "Delhi HQ",
+      locationName: "Delhi",
       floor: "Ground Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
     },
     {
       id: 5,
-      name: "Chennai Support",
-      location: "Chennai",
+      subLocationName: "Chennai Support",
+      locationName: "Chennai",
       floor: "2nd Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
     },
     {
       id: 6,
-      name: "Hyderabad Tech Park",
-      location: "Hyderabad",
+      subLocationName: "Hyderabad Tech Park",
+      locationName: "Hyderabad",
       floor: "5th Floor",
       isActive: true,
       createdAt: new Date().toDateString(),
     },
   ]);
-  const [location] = useState([
+  const [locationName] = useState([
     {
       id: 1,
       name: "Ahmedabad",
@@ -113,8 +113,8 @@ function SubLocation() {
   const filteredSubLocations = subLocation.filter((loc) => {
     const searchMatch =
       search === "" ||
-      loc.name.toLowerCase().includes(search.toLowerCase()) ||
-      loc.location.toLowerCase().includes(search.toLowerCase()) ||
+      loc.subLocationName.toLowerCase().includes(search.toLowerCase()) ||
+      loc.locationName.toLowerCase().includes(search.toLowerCase()) ||
       (loc.floor?.toLowerCase().includes(search.toLowerCase()) ?? false);
 
     const statusMatch =
@@ -124,7 +124,7 @@ function SubLocation() {
 
     const locationMatch =
       subLocationFilter === "" ||
-      loc.location.toLowerCase() === subLocationFilter.toLowerCase();
+      loc.locationName.toLowerCase() === subLocationFilter.toLowerCase();
 
     return searchMatch && statusMatch && locationMatch;
   });
@@ -206,7 +206,7 @@ function SubLocation() {
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="">Select Sub Location</option>
-              {location.map((loc) => (
+              {locationName.map((loc) => (
                 <option key={loc.id} value={loc.name}>
                   {loc.name}
                 </option>
@@ -220,8 +220,8 @@ function SubLocation() {
               data={filteredSubLocations}
               fileName="sub-Location"
               headers={[
-                { label: "Sub Location", key: "name" },
-                { label: "Location", key: "location" },
+                { label: "Sub Location", key: "subLocationName" },
+                { label: "Location", key: "locationName" },
                 { label: "Floor", key: "floor" },
                 { label: "Status", key: "isActive" },
               ]}
@@ -229,8 +229,9 @@ function SubLocation() {
                 const formattedData: SubLocation[] = uploadedData.map(
                   (item, index) => ({
                     id: Date.now() + index,
-                    name: item["Sub Location"] || item.name || "",
-                    location: item.Location || item.location || "",
+                    subLocationName:
+                      item["Sub Location"] || item.subLocationName || "",
+                    locationName: item.locationName || item.locationName || "",
                     floor: item.Floor || item.floor || "",
                     isActive:
                       item.Status === "Active" ||
@@ -299,13 +300,13 @@ function SubLocation() {
                 >
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subLoc.name}
+                      {subLoc.subLocationName}
                     </div>
                   </td>
 
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subLoc.location || "-"}
+                      {subLoc.locationName || "-"}
                     </div>
                   </td>
 
@@ -358,14 +359,14 @@ function SubLocation() {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAddSubLocation}
-        location={location}
+        locationName={locationName}
       />
       <UpdateSubLocation
         isOpen={isUpdateOpen}
         onClose={() => setIsUpdateOpen(false)}
         selectedSubLocation={selectedSubLocation}
         onUpdate={handleUpdateSubLocation}
-        location={location}
+        locationName={locationName}
       />
       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-4">
         <Pagination

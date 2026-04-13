@@ -5,7 +5,7 @@ import { Autocomplete, TextField } from "@mui/material";
 
 function AddLocation({ isOpen, onClose, onAdd }: any) {
   const [formData, setFormData] = useState({
-    name: "",
+    locationName: "",
     address: "",
     city: "",
     isActive: true,
@@ -32,7 +32,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
       ...formData,
       isActive: true,
     });
-    setFormData({ name: "", address: "", city: "", isActive: true });
+    setFormData({ locationName: "", address: "", city: "", isActive: true });
     onClose();
   };
 
@@ -65,7 +65,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
                 <input
                   name="name"
                   placeholder="Location name"
-                  value={formData.name || ""}
+                  value={formData.locationName || ""}
                   onChange={handleChange}
                   className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
                 />

@@ -5,7 +5,7 @@ import { Autocomplete, TextField } from "@mui/material";
 
 function UpdateLocation({ isOpen, onClose, selectedLocation, onUpdate }: any) {
   const [formData, setFormData] = useState({
-    name: "",
+    locationName: "",
     address: "",
     city: "",
     isActive: true,
@@ -60,9 +60,9 @@ function UpdateLocation({ isOpen, onClose, selectedLocation, onUpdate }: any) {
                   Location Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  value={formData.name || ""}
+                  value={formData.locationName || ""}
                   onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
+                    setFormData({ ...formData, locationName: e.target.value })
                   }
                   placeholder="Location name"
                   className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"

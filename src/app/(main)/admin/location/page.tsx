@@ -12,7 +12,7 @@ import { GoPlusCircle } from "react-icons/go";
 
 type Location = {
   id: number;
-  name: string;
+  locationName: string;
   address: string;
   city: string;
   isActive?: boolean;
@@ -23,7 +23,7 @@ function Location() {
   const [location, setLocation] = useState<Location[]>([
     {
       id: 1,
-      name: "Head Office",
+      locationName: "Head Office",
       city: "Delhi",
       address: "Connaught Place, New Delhi",
       isActive: true,
@@ -31,7 +31,7 @@ function Location() {
     },
     {
       id: 2,
-      name: "Branch Office",
+      locationName: "Branch Office",
       city: "Mumbai",
       address: "Andheri East, Mumbai",
       isActive: true,
@@ -39,7 +39,7 @@ function Location() {
     },
     {
       id: 3,
-      name: "Warehouse",
+      locationName: "Warehouse",
       city: "Bangalore",
       address: "Whitefield, Bangalore",
       isActive: false,
@@ -47,7 +47,7 @@ function Location() {
     },
     {
       id: 4,
-      name: "Corporate Office",
+      locationName: "Corporate Office",
       city: "Hyderabad",
       address: "Hitech City, Hyderabad",
       isActive: true,
@@ -55,7 +55,7 @@ function Location() {
     },
     {
       id: 5,
-      name: "Regional Office",
+      locationName: "Regional Office",
       city: "Chennai",
       address: "T Nagar, Chennai",
       isActive: true,
@@ -63,7 +63,7 @@ function Location() {
     },
     {
       id: 6,
-      name: "Support Center",
+      locationName: "Support Center",
       city: "Pune",
       address: "Hinjewadi, Pune",
       isActive: false,
@@ -89,7 +89,7 @@ function Location() {
   const filteredLocations = location.filter((loc) => {
     const searchMatch =
       search === "" ||
-      loc.name.toLowerCase().includes(search.toLowerCase()) ||
+      loc.locationName.toLowerCase().includes(search.toLowerCase()) ||
       loc.city.toLowerCase().includes(search.toLowerCase()) ||
       loc.address.toLowerCase().includes(search.toLowerCase());
 
@@ -100,7 +100,7 @@ function Location() {
 
     const locationMatch =
       locationFilter === "" ||
-      loc.name.toLowerCase().includes(locationFilter.toLowerCase()) ||
+      loc.locationName.toLowerCase().includes(locationFilter.toLowerCase()) ||
       loc.city.toLowerCase().includes(locationFilter.toLowerCase()) ||
       loc.address.toLowerCase().includes(locationFilter.toLowerCase());
 
@@ -183,8 +183,8 @@ function Location() {
             >
               <option value="">Select Location</option>
               {location.map((loc) => (
-                <option key={loc.id} value={loc.name}>
-                  {loc.name}
+                <option key={loc.id} value={loc.locationName}>
+                  {loc.locationName}
                 </option>
               ))}
             </select>
@@ -198,7 +198,7 @@ function Location() {
               // headers={["ID", "Location", "City", "Address", "Status"]}
               headers={[
                 { label: "ID", key: "id" },
-                { label: "Location", key: "name" },
+                { label: "Location", key: "locationName" },
                 { label: "City", key: "city" },
                 { label: "Address", key: "address" },
                 { label: "Status", key: "isActive" },
@@ -276,7 +276,7 @@ function Location() {
                     </td>
                     <td className="px-6 py-5">
                       <div className="text-sm font-medium text-gray-900">
-                        {loc.name}
+                        {loc.locationName}
                       </div>
                     </td>
                     <td className="px-6 py-5">
