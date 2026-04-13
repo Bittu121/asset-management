@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
 import { AiOutlineClose } from "react-icons/ai";
+import { MdDownload } from "react-icons/md";
 
 export default function Page() {
   const router = useRouter();
@@ -129,9 +130,9 @@ export default function Page() {
 
             <button
               onClick={handleDownloadTemplate}
-              className="px-4 py-2 text-sm rounded-lg border border-indigo-500 text-indigo-600 hover:bg-indigo-50"
+              className="flex gap-1 cursor-pointer px-4 py-2 text-sm rounded-lg border border-indigo-500 text-indigo-600 hover:bg-indigo-50"
             >
-              ↓ Download Template
+              <MdDownload size={20}/> Download Template
             </button>
           </div>
 

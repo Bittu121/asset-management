@@ -17,11 +17,21 @@ type User = {
 type Props = {
   assets: Asset[];
   users: User[];
-  onSubmit: (data: { assetId: number; userId: number; returnDate: string; notes: string }) => void;
+  onSubmit: (data: {
+    assetId: number;
+    userId: number;
+    returnDate: string;
+    notes: string;
+  }) => void;
   onClose: () => void;
 };
 
-export default function AllocateAssetForm({ assets, users, onSubmit, onClose }: Props) {
+export default function AllocateAssetForm({
+  assets,
+  users,
+  onSubmit,
+  onClose,
+}: Props) {
   const [form, setForm] = useState({
     assetId: "",
     userId: "",
@@ -35,14 +45,18 @@ export default function AllocateAssetForm({ assets, users, onSubmit, onClose }: 
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const canSubmit = form.assetId !== "" && form.userId !== "" && form.returnDate !== "";
+  const canSubmit =
+    form.assetId !== "" && form.userId !== "" && form.returnDate !== "";
 
   return (
     <div className="space-y-5">
       <Select
         label="Asset *"
         value={form.assetId}
-        options={availableAssets.map((a) => ({ label: `${a.assetTag} - ${a.assetName}`, value: `${a.id}` }))}
+        options={availableAssets.map((a) => ({
+          label: `${a.assetTag} - ${a.assetName}`,
+          value: `${a.id}`,
+        }))}
         onChange={(v: string) => handleChange("assetId", v)}
         placeholder="Select an asset"
       />
@@ -89,7 +103,9 @@ export default function AllocateAssetForm({ assets, users, onSubmit, onClose }: 
           }}
           disabled={!canSubmit}
           className={`px-5 py-2 text-sm rounded-md text-white ${
-            canSubmit ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"
+            canSubmit
+              ? "bg-blue-600 hover:bg-blue-700"
+              : "bg-blue-300 cursor-not-allowed"
           }`}
         >
           Allocate

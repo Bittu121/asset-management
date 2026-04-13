@@ -25,6 +25,8 @@ import {
   ClipboardList,
   BarChart3,
 } from "lucide-react";
+import { RiAdminLine } from "react-icons/ri";
+
 
 interface SidebarProps {
   onCollapseChange?: (collapsed: boolean) => void;
@@ -94,7 +96,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
           },
           {
             name: "Admin",
-            icon: Layers,
+            icon: RiAdminLine,
             children: [
               { name: "Roles", path: "/admin/roles", icon: Users },
               {
