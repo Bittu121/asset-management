@@ -11,7 +11,7 @@ import { GoPlusCircle } from "react-icons/go";
 
 type Vendor = {
   id: number;
-  name: string;
+  vendorName: string;
   email: string;
   phone: string;
   address?: string;
@@ -25,7 +25,7 @@ function Vendor() {
   const [vendor, setVendor] = useState<Vendor[]>([
     {
       id: 1,
-      name: "Acme Technologies",
+      vendorName: "Acme Technologies",
       email: "contact@acmetech.com",
       phone: "+91-9876543210",
       address: "123 Tech Park, Bangalore, India",
@@ -36,7 +36,7 @@ function Vendor() {
     },
     {
       id: 2,
-      name: "Danish Naseem",
+      vendorName: "Danish Naseem",
       email: "danish.naseem@vservit.com",
       phone: "+91-9113468996",
       address: "2514, 5th Floor, Tower 2",
@@ -47,7 +47,7 @@ function Vendor() {
     },
     {
       id: 3,
-      name: "Global IT Services",
+      vendorName: "Global IT Services",
       email: "info@globalit.com",
       phone: "+91-9123456780",
       address: "456, Cyber City, Gurgaon",
@@ -58,7 +58,7 @@ function Vendor() {
     },
     {
       id: 4,
-      name: "TechNova Solutions",
+      vendorName: "TechNova Solutions",
       email: "support@technova.com",
       phone: "+91-9988776655",
       address: "IT Hub, Hyderabad",
@@ -69,7 +69,7 @@ function Vendor() {
     },
     {
       id: 5,
-      name: "NextGen Systems",
+      vendorName: "NextGen Systems",
       email: "sales@nextgen.com",
       phone: "+91-8877665544",
       address: "Sector 62, Noida",
@@ -80,7 +80,7 @@ function Vendor() {
     },
     {
       id: 6,
-      name: "Vertex Infotech",
+      vendorName: "Vertex Infotech",
       email: "contact@vertex.com",
       phone: "+91-7766554433",
       address: "Salt Lake, Kolkata",
@@ -107,13 +107,13 @@ function Vendor() {
   const filteredVendor = vendor.filter((ven) => {
     const matchesSearch =
       search === "" ||
-      ven.name.toLowerCase().includes(search.toLowerCase()) ||
+      ven.vendorName.toLowerCase().includes(search.toLowerCase()) ||
       ven.email.toLowerCase().includes(search.toLowerCase());
     const matchesStatus =
       statusFilter === "All" ||
       (statusFilter === "Active" && ven.isActive) ||
       (statusFilter === "Inactive" && !ven.isActive);
-    const matchesVendor = vendorFilter === "" || ven.name === vendorFilter;
+    const matchesVendor = vendorFilter === "" || ven.vendorName === vendorFilter;
     return matchesSearch && matchesStatus && matchesVendor;
   });
 
@@ -188,8 +188,8 @@ function Vendor() {
             >
               <option value="">Select Vendor</option>
               {vendor.map((ven) => (
-                <option key={ven.id} value={ven.name}>
-                  {ven.name}
+                <option key={ven.id} value={ven.vendorName}>
+                  {ven.vendorName}
                 </option>
               ))}
             </select>
@@ -202,7 +202,7 @@ function Vendor() {
               fileName="vendor"
               headers={[
                 { label: "ID", key: "id" },
-                { label: "Vendor Name", key: "name" },
+                { label: "Vendor Name", key: "vendorName" },
                 { label: "Email", key: "email" },
                 { label: "Phone", key: "phone" },
                 { label: "Address", key: "address" },
@@ -214,7 +214,7 @@ function Vendor() {
                 const formattedData: Vendor[] = uploadedData.map(
                   (item, index) => ({
                     id: Date.now() + index,
-                    name: item["Vendor Name"] || item.name || "",
+                    vendorName: item["Vendor Name"] || item.vendorName || "",
                     email: item.Email || item.email || "",
                     phone: item.Phone || item.phone || "",
                     address: item.Address || item.address || "",
@@ -250,7 +250,7 @@ function Vendor() {
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
               <th className="px-6 py-4 text-left">ID</th>
-              <th className="px-6 py-4 text-left">Vendor</th>
+              <th className="px-6 py-4 text-left">Vendor Name</th>
               <th className="px-6 py-4 text-left">Contact</th>
               <th className="px-6 py-4 text-left">Email</th>
               <th className="px-6 py-4 text-left">Phone</th>
@@ -301,7 +301,7 @@ function Vendor() {
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {vendors.name}
+                      {vendors.vendorName}
                     </div>
                   </td>
                   <td className="px-6 py-5">
