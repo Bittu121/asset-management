@@ -951,7 +951,7 @@ function Page() {
               value={statusFilter}
               onChange={handleStatusChange}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-              text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+              text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500
               focus:border-blue-500 transition cursor-pointer"
             >
               <option value="All">All Status</option>
@@ -964,7 +964,7 @@ function Page() {
               value={categoryFilter}
               onChange={handleCategoryChange}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-              text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+              text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500
               focus:border-blue-500 transition cursor-pointer"
             >
               {uniqueCategories.map((cat) => (
@@ -979,7 +979,7 @@ function Page() {
               value={vendorFilter}
               onChange={handleVendorChange}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-              text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+              text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500
               focus:border-blue-500 transition cursor-pointer"
             >
               {uniqueVendors.map((vendor) => (

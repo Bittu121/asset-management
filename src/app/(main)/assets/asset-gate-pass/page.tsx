@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import GatePassDetailModal from "./GatePassDetailModal";
 import ActionModal from "./ActionModal";
 import GatePassRequestModal from "./GatePassRequestModal";
+import { FaCheck } from "react-icons/fa6";
+import { RxCross2 } from "react-icons/rx";
 
 //Types
 type Status = "PENDING" | "APPROVED" | "ISSUED" | "RETURNED" | "REJECTED";
@@ -232,7 +234,7 @@ function AssetGatePass() {
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-800">
+          <h1 className="text-xl font-semibold text-gray-600">
             Gate Pass Management
           </h1>
           <p className="text-gray-400 text-sm mt-0.5">
@@ -249,9 +251,9 @@ function AssetGatePass() {
           </button>
           <button
             onClick={() => setShowNewModal(true)}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-indigo-700 transition text-sm"
+            className="flex items-center cursor-pointer gap-2 bg-black text-white px-5 py-2.5 rounded-md font-semibold transition text-sm"
           >
-            + New Gate Pass
+            New Gate Pass
           </button>
         </div>
       </div>
@@ -387,16 +389,16 @@ function AssetGatePass() {
                       className="text-blue-500 hover:text-blue-700 text-xl"
                       title="Approve"
                     >
-                      ✅
+                      <FaCheck size={25} className="cursor-pointer"/>
                     </button>
                     <button
                       onClick={() =>
                         setActionModal({ type: "reject", id: gp.id })
                       }
-                      className="text-red-400 hover:text-red-600 text-xl"
+                      className="text-red-500 hover:text-red-700 text-xl"
                       title="Reject"
                     >
-                      ❌
+                      <RxCross2 size={24} className="cursor-pointer"/>
                     </button>
                   </div>
                 </td>

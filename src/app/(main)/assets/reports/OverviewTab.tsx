@@ -215,7 +215,7 @@ const OverviewTab: React.FC = () => {
                 </p>
                 <p className="text-xs text-gray-400 truncate">{entry.detail}</p>
               </div>
-              <span className="text-xs text-gray-400 flex-shrink-0">
+              <span className="text-xs text-gray-400 shrink-0">
                 {entry.date}
               </span>
             </div>

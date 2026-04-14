@@ -210,7 +210,7 @@ const GatePassRequestModal: React.FC<GatePassRequestModalProps> = ({
               </label>
               <textarea
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50 min-h-[90px] resize-y"
-                placeholder="Reason For Movement............"
+                placeholder="Reason For Movement..."
                 value={form.purpose}
                 onChange={(e) => set("purpose", e.target.value)}
               />
@@ -334,13 +334,13 @@ const GatePassRequestModal: React.FC<GatePassRequestModalProps> = ({
         <div className="px-8 py-5 flex justify-end gap-4 bg-white border-t border-gray-100 rounded-b-2xl">
           <button
             onClick={onClose}
-            className="px-6 py-2.5 text-gray-700 font-semibold bg-gray-100 rounded-md cursor-pointer"
+            className="px-4 py-2 text-sm text-gray-700 font-normal bg-gray-100 rounded-md cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={() => onSubmit(form)}
-            className="px-8 py-2.5 bg-indigo-600 text-white rounded-md cursor-pointer font-semibold hover:bg-indigo-700 transition"
+            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md cursor-pointer font-normal hover:bg-indigo-700 transition"
           >
             Submit
           </button>

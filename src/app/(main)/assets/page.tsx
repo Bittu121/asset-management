@@ -431,7 +431,7 @@ function StatCard({ card }: { card: StatCard }) {
           <p className="text-sm text-gray-500 font-medium mb-1">
             {card.title}
           </p>
-          <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {card.value}
           </h3>
           {card.trend && (
@@ -445,8 +445,8 @@ function StatCard({ card }: { card: StatCard }) {
             </div>
           )}
         </div>
-        <div className={`${card.iconBg} p-3 rounded-lg`}>
-          <Icon className={`w-6 h-6 ${card.iconColor}`} />
+        <div className={`${card.iconBg} p-2 rounded-lg`}>
+          <Icon className={`w-5 h-5 ${card.iconColor}`} />
         </div>
       </div>
     </div>
@@ -489,7 +489,7 @@ function StatusBreakdown({ items }: { items: StatusItem[] }) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-semibold text-gray-900">
+        <h3 className="text-base font-semibold text-gray-700">
           Status Breakdown
         </h3>
         <ChartBarIcon className="w-5 h-5 text-gray-400" />
@@ -522,7 +522,7 @@ function WarrantyStatus({ items }: { items: WarrantyItem[] }) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-semibold text-gray-900">
+        <h3 className="text-base font-semibold text-gray-700">
           Warranty Status
         </h3>
         <ClockIcon className="w-5 h-5 text-gray-400" />
@@ -555,14 +555,14 @@ function CategoryCard({ title, count, icon: Icon }: { title: string; count: numb
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+        <h3 className="text-base font-semibold text-gray-700">{title}</h3>
         <Icon className="w-5 h-5 text-gray-400" />
       </div>
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">Total Items</span>
-          <span className="text-2xl font-bold text-gray-900">{count}</span>
+          <span className="text-xl font-semibold text-gray-700">{count}</span>
         </div>
         <ProgressBar percentage={percentage} color="bg-slate-600" />
         <p className="text-xs text-gray-500 text-right">
@@ -584,11 +584,11 @@ function ValueOverview() {
       <div className="grid grid-cols-2 gap-6 mb-5">
         <div>
           <p className="text-xs text-gray-500 mb-1">Total Purchase</p>
-          <h4 className="text-2xl font-bold text-gray-900">₹1,00,055</h4>
+          <h4 className="text-xl font-semibold text-gray-600">₹1,00,055</h4>
         </div>
         <div>
           <p className="text-xs text-gray-500 mb-1">Current Value</p>
-          <h4 className="text-2xl font-bold text-gray-900">₹89,110</h4>
+          <h4 className="text-xl font-semibold text-gray-700">₹89,110</h4>
         </div>
       </div>
 
@@ -616,11 +616,11 @@ function AssignmentOverview() {
       <div className="grid grid-cols-2 gap-6 mb-5">
         <div>
           <p className="text-xs text-gray-500 mb-1">Assigned</p>
-          <h4 className="text-2xl font-bold text-gray-900">8</h4>
+          <h4 className="text-xl font-semibold text-gray-700">8</h4>
         </div>
         <div>
           <p className="text-xs text-gray-500 mb-1">Unassigned</p>
-          <h4 className="text-2xl font-bold text-gray-900">8</h4>
+          <h4 className="text-xl font-semibold text-gray-700">8</h4>
         </div>
       </div>
 
@@ -725,12 +725,9 @@ function Dashboard() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl font-semibold text-gray-700">
               Asset Management Dashboard
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Monitor and manage your organization's assets in real-time
-            </p>
+            </h2>
           </div>
 
           <div className="flex flex-wrap gap-3">

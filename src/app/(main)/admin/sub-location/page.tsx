@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
+import { CiLocationOn } from "react-icons/ci";
+
 
 type SubLocation = {
   id: number;
@@ -272,7 +274,7 @@ function SubLocation() {
                 <td colSpan={6} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                      📍
+                    <CiLocationOn size={18}/>
                     </div>
 
                     <h3 className="text-sm font-semibold text-gray-700">

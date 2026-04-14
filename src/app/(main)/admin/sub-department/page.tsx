@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
+import { FcDepartment } from "react-icons/fc";
 
 type SubDepartmentType = {
   id: number;
@@ -265,7 +266,7 @@ function SubDepartment() {
                   <td colSpan={6} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                        📍
+                        <FcDepartment size={18} />
                       </div>
 
                       <h3 className="text-sm font-semibold text-gray-700">
@@ -280,7 +281,7 @@ function SubDepartment() {
                         onClick={() => setIsAddOpen(true)}
                         className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
                       >
-                        + Add Sub Department
+                        Sub Department
                       </button>
                     </div>
                   </td>

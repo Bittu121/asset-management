@@ -522,7 +522,7 @@ function CreateUserAccount({
         </div>
 
         <div className="px-10 py-6">
-          <h2 className="text-2xl font-bold text-violet-600 mb-6">
+          <h2 className="text-lg font-bold text-violet-600 mb-6">
             {STEPS[currentStep - 1].label}
           </h2>
 
@@ -748,7 +748,7 @@ function CreateUserAccount({
         <div className="px-10 py-5 bg-white border-t border-gray-100 flex justify-between items-center">
           <button
             onClick={onClose}
-            className="text-xs text-gray-400 hover:text-gray-600 transition"
+            className="px-4 py-2 text-xs text-gray-400 border-violet-300 rounded-md hover:text-gray-600 transition"
           >
             Cancel
           </button>
@@ -757,23 +757,23 @@ function CreateUserAccount({
             {currentStep > 1 && (
               <button
                 onClick={handleBack}
-                className="px-6 py-2.5 text-sm font-semibold text-violet-600 border border-violet-300 rounded-lg hover:bg-violet-50 transition"
+                className="px-4 py-2 text-sm font-semibold text-violet-600 border border-violet-300 rounded-md hover:bg-violet-50 transition"
               >
-                Back
+                Previous
               </button>
             )}
 
             {currentStep < STEPS.length ? (
               <button
                 onClick={handleNext}
-                className="px-6 py-2.5 text-sm font-semibold text-white bg-violet-600 rounded-lg hover:bg-violet-700 transition shadow-md shadow-violet-200"
+                className="px-4 py-2 text-sm font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700 transition shadow-md shadow-violet-200"
               >
                 Next
               </button>
             ) : (
               <button
                 onClick={handleSubmit}
-                className="px-6 py-2.5 text-sm font-semibold text-white bg-violet-600 rounded-lg hover:bg-violet-700 transition shadow-md shadow-violet-200"
+                className="px-4 py-2 text-sm font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700 transition shadow-md shadow-violet-200"
               >
                 Submit
               </button>

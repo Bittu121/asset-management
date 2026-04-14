@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import AddSupportGroup from "./AddSupportGroup";
 import UpdateSupportGroup from "./UpdateSupportGroup";
 import Pagination from "../../../components/common/Pagination";
-import { FileSpreadsheet, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
+import { FiUser } from "react-icons/fi";
 
 const levels = [
   "L1 - First Line Support",
@@ -248,7 +249,7 @@ function SupportGroup() {
                   <td colSpan={6} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                        📍
+                        <FiUser size={18}/>
                       </div>
 
                       <h3 className="text-sm font-semibold text-gray-700">
@@ -263,7 +264,7 @@ function SupportGroup() {
                         onClick={() => setIsAddOpen(true)}
                         className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
                       >
-                        + Add Support Group
+                        Add Support Group
                       </button>
                     </div>
                   </td>

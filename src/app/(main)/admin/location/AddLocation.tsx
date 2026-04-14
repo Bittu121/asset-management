@@ -168,14 +168,14 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
           <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
             <button
               onClick={onClose}
-              className="px-6 py-2 text-gray-700 font-medium bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200 transition"
+              className="px-4 py-2 text-sm text-gray-700 font-medium bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200 transition"
             >
               Cancel
             </button>
 
             <button
               onClick={handleSubmit}
-              className="px-6 py-2 bg-indigo-500 text-white rounded-md cursor-pointer font-medium hover:bg-indigo-700 transition"
+              className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md cursor-pointer font-medium hover:bg-indigo-700 transition"
             >
               Create
             </button>

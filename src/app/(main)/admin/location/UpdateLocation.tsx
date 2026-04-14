@@ -175,7 +175,7 @@ function UpdateLocation({ isOpen, onClose, selectedLocation, onUpdate }: any) {
           <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
             <button
               onClick={onClose}
-              className="px-6 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+              className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
             >
               Cancel
             </button>
@@ -185,7 +185,7 @@ function UpdateLocation({ isOpen, onClose, selectedLocation, onUpdate }: any) {
                 onUpdate(formData);
                 onClose();
               }}
-              className="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
+              className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
             >
               Update
             </button>
