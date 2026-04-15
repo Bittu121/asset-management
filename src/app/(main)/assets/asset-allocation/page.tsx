@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import AllocateAssetModal from "./AllocateAssetModal";
 import ReturnAssetModal from "./ReturnAssetModal";
 import DragDropArea from "./DragDropArea";
+import ActiveAllocations from "./ActiveAllocations";
+import OverdueAllocations from "./OverdueAllocations";
+import ReturnHistory from "./ReturnHistory";
 
 type User = {
   id: number;
@@ -145,7 +148,7 @@ const initialAllocations: Allocation[] = [
   },
 ];
 
- function Page() {
+function Page() {
   const [activeTab, setActiveTab] = useState<
     "active" | "overdue" | "dragdrop" | "return"
   >("active");
@@ -180,26 +183,6 @@ const initialAllocations: Allocation[] = [
       ),
     );
   }, [allocations]);
-
-  const getComputedStatus = (item: Allocation) => {
-    if (item.status === "RETURNED") return "RETURNED";
-    const expected = new Date(item.expectedReturn);
-    const today = new Date();
-    if (!isNaN(expected.getTime()) && expected < today) return "OVERDUE";
-    return item.status;
-  };
-
-  const filteredAllocations = useMemo(
-    () =>
-      allocations.filter((item) => {
-        const status = getComputedStatus(item);
-        if (activeTab === "active") return status === "ACTIVE";
-        if (activeTab === "overdue") return status === "OVERDUE";
-        if (activeTab === "return") return status === "RETURNED";
-        return true;
-      }),
-    [allocations, activeTab],
-  );
 
   const addAudit = (entry: Audit) => setAuditTrail((prev) => [entry, ...prev]);
 
@@ -267,6 +250,12 @@ const initialAllocations: Allocation[] = [
     });
 
     setReturnOpen(false);
+    setSelectedAllocation(null);
+  };
+
+  const handleReturnClick = (allocation: Allocation) => {
+    setSelectedAllocation(allocation);
+    setReturnOpen(true);
   };
 
   const totalAssigned = allocations.filter(
@@ -274,6 +263,108 @@ const initialAllocations: Allocation[] = [
   ).length;
 
   return (
+    // <div className="p-6 bg-[#f8fafc] min-h-screen">
+    //   <div className="flex flex-wrap justify-between items-center mb-6 gap-3">
+    //     <h1 className="text-xl font-semibold text-gray-900">
+    //       Asset Allocation
+    //     </h1>
+    //     <button
+    //       onClick={() => setAllocateOpen(true)}
+    //       className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+    //     >
+    //       Allocate Asset
+    //     </button>
+    //   </div>
+
+    //   <div className="flex gap-4 border-b mb-4 text-sm">
+    //     <button
+    //       onClick={() => setActiveTab("active")}
+    //       className={`pb-2 ${
+    //         activeTab === "active"
+    //           ? "text-blue-600 border-b-2 border-blue-600"
+    //           : "text-gray-500"
+    //       }`}
+    //     >
+    //       Active
+    //     </button>
+    //     <button
+    //       onClick={() => setActiveTab("overdue")}
+    //       className={`pb-2 ${
+    //         activeTab === "overdue"
+    //           ? "text-blue-600 border-b-2 border-blue-600"
+    //           : "text-gray-500"
+    //       }`}
+    //     >
+    //       Overdue
+    //     </button>
+    //     <button
+    //       onClick={() => setActiveTab("dragdrop")}
+    //       className={`pb-2 ${
+    //         activeTab === "dragdrop"
+    //           ? "text-blue-600 border-b-2 border-blue-600"
+    //           : "text-gray-500"
+    //       }`}
+    //     >
+    //       Drag & Drop
+    //     </button>
+    //     <button
+    //       onClick={() => setActiveTab("return")}
+    //       className={`pb-2 ${
+    //         activeTab === "return"
+    //           ? "text-blue-600 border-b-2 border-blue-600"
+    //           : "text-gray-500"
+    //       }`}
+    //     >
+    //       Return History
+    //     </button>
+    //   </div>
+
+    //   <div className="mb-4 text-xs text-gray-600">
+    //     Total assigned assets: {totalAssigned}
+    //   </div>
+
+    //   {activeTab === "dragdrop" ? (
+    //     <DragDropArea
+    //       assets={assets}
+    //       users={initialUsers}
+    //       allocations={allocations}
+    //       draggingAssetId={draggingAssetId}
+    //       setDraggingAssetId={setDraggingAssetId}
+    //       onAssign={handleAssign}
+    //     />
+    //   ) : activeTab === "return" ? (
+    //     <ReturnHistory auditTrail={auditTrail} />
+    //   ) : activeTab === "active" ? (
+    //     <ActiveAllocations
+    //       allocations={allocations}
+    //       onReturn={handleReturnClick}
+    //     />
+    //   ) : (
+    //     <OverdueAllocations
+    //       allocations={allocations}
+    //       onReturn={handleReturnClick}
+    //     />
+    //   )}
+
+    //   <AllocateAssetModal
+    //     isOpen={allocateOpen}
+    //     onClose={() => setAllocateOpen(false)}
+    //     assets={assets}
+    //     users={initialUsers}
+    //     onSubmit={(payload) => {
+    //       handleAssign(payload.assetId, payload.userId);
+    //       setAllocateOpen(false);
+    //     }}
+    //   />
+
+    //   <ReturnAssetModal
+    //     isOpen={returnOpen}
+    //     onClose={() => setReturnOpen(false)}
+    //     onSubmit={handleReturn}
+    //     assetName={selectedAllocation?.assetTag || ""}
+    //   />
+    // </div>
+
     <div className="p-6 bg-[#f8fafc] min-h-screen">
       <div className="flex flex-wrap justify-between items-center mb-6 gap-3">
         <h1 className="text-xl font-semibold text-gray-900">
@@ -287,31 +378,52 @@ const initialAllocations: Allocation[] = [
         </button>
       </div>
 
-      <div className="flex gap-4 border-b mb-4 text-sm">
-        <button
-          onClick={() => setActiveTab("active")}
-          className={`pb-2 ${activeTab === "active" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"}`}
-        >
-          Active
-        </button>
-        <button
-          onClick={() => setActiveTab("overdue")}
-          className={`pb-2 ${activeTab === "overdue" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"}`}
-        >
-          Overdue
-        </button>
-        <button
-          onClick={() => setActiveTab("dragdrop")}
-          className={`pb-2 ${activeTab === "dragdrop" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"}`}
-        >
-          Drag & Drop
-        </button>
-        <button
-          onClick={() => setActiveTab("return")}
-          className={`pb-2 ${activeTab === "return" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"}`}
-        >
-          Return History
-        </button>
+      <div className="mb-6">
+        <div className="inline-flex bg-gray-100 p-1 rounded-xl">
+          <button
+            onClick={() => setActiveTab("active")}
+            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+              activeTab === "active"
+                ? "bg-white text-blue-600 shadow-sm font-medium"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Active
+          </button>
+
+          <button
+            onClick={() => setActiveTab("overdue")}
+            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+              activeTab === "overdue"
+                ? "bg-white text-blue-600 shadow-sm font-medium"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Overdue
+          </button>
+
+          <button
+            onClick={() => setActiveTab("dragdrop")}
+            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+              activeTab === "dragdrop"
+                ? "bg-white text-blue-600 shadow-sm font-medium"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Drag & Drop
+          </button>
+
+          <button
+            onClick={() => setActiveTab("return")}
+            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+              activeTab === "return"
+                ? "bg-white text-blue-600 shadow-sm font-medium"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Return History
+          </button>
+        </div>
       </div>
 
       <div className="mb-4 text-xs text-gray-600">
@@ -328,95 +440,17 @@ const initialAllocations: Allocation[] = [
           onAssign={handleAssign}
         />
       ) : activeTab === "return" ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <h2 className="text-sm font-semibold mb-3">Return Audit Trail</h2>
-          {auditTrail.filter((entry) => entry.type === "return").length ===
-          0 ? (
-            <p className="text-xs text-gray-500">No returns logged yet.</p>
-          ) : (
-            <ul className="space-y-2">
-              {auditTrail
-                .filter((entry) => entry.type === "return")
-                .map((entry) => (
-                  <li key={entry.id} className="border p-3 rounded-lg">
-                    <div className="text-sm font-medium">
-                      {entry.assetTag} returned
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {entry.date}: {entry.message}
-                    </div>
-                  </li>
-                ))}
-            </ul>
-          )}
-        </div>
+        <ReturnHistory auditTrail={auditTrail} />
+      ) : activeTab === "active" ? (
+        <ActiveAllocations
+          allocations={allocations}
+          onReturn={handleReturnClick}
+        />
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
-          <table className="min-w-225 w-full">
-            <thead>
-              <tr className="text-xs text-gray-500 uppercase bg-gray-50">
-                <th className="px-6 py-4 text-left">Asset Tag</th>
-                <th className="px-6 py-4 text-left">Asset Name</th>
-                <th className="px-6 py-4 text-left">Allocated To</th>
-                <th className="px-6 py-4 text-left">Allocation Date</th>
-                <th className="px-6 py-4 text-left">Expected Return</th>
-                <th className="px-6 py-4 text-left">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAllocations.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="px-6 py-4 text-center text-sm text-gray-500"
-                  >
-                    No allocations in this tab.
-                  </td>
-                </tr>
-              ) : (
-                filteredAllocations.map((item) => {
-                  const status = getComputedStatus(item);
-                  return (
-                    <tr key={item.id} className="border-t hover:bg-gray-50">
-                      <td className="px-6 py-4 font-medium">{item.assetTag}</td>
-                      <td className="px-6 py-4">{item.assetName}</td>
-                      <td className="px-6 py-4">{item.allocatedTo}</td>
-                      <td className="px-6 py-4">{item.allocationDate}</td>
-                      <td className="px-6 py-4">{item.expectedReturn}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 text-xs rounded-full ${
-                            status === "ACTIVE"
-                              ? "bg-green-100 text-green-700"
-                              : status === "OVERDUE"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        {status !== "RETURNED" && (
-                          <button
-                            onClick={() => {
-                              setSelectedAllocation(item);
-                              setReturnOpen(true);
-                            }}
-                            className="text-blue-600 hover:text-blue-700 text-sm"
-                          >
-                            Return
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <OverdueAllocations
+          allocations={allocations}
+          onReturn={handleReturnClick}
+        />
       )}
 
       <AllocateAssetModal
@@ -440,4 +474,4 @@ const initialAllocations: Allocation[] = [
   );
 }
 
-export default Page
+export default Page;
