@@ -1,225 +1,232 @@
 "use client";
-import React from "react";
-import {
-  SAMPLE_ASSETS,
-  SAMPLE_ALLOCATIONS,
-  SAMPLE_GATE_PASSES,
-  AUDIT_LOG,
-} from "./sampleData";
+
+import React, { useState } from "react";
+import { SAMPLE_ASSETS, SAMPLE_GATE_PASSES, AUDIT_LOG } from "./sampleData";
 import { StatCard, SectionHeader } from "./SharedComponents";
+import Pagination from "../../../components/common/Pagination";
+
+const ITEMS_PER_PAGE = 4;
 
 const OverviewTab: React.FC = () => {
+  const [gatePage, setGatePage] = useState(1);
+  const [categoryPage, setCategoryPage] = useState(1);
+  const [activityPage, setActivityPage] = useState(1);
+
   const totalAssets = SAMPLE_ASSETS.length;
+
   const allocated = SAMPLE_ASSETS.filter(
     (a) => a.status === "ALLOCATED",
   ).length;
+
   const available = SAMPLE_ASSETS.filter(
     (a) => a.status === "AVAILABLE",
   ).length;
-  const totalValue = SAMPLE_ASSETS.reduce((s, a) => s + a.value, 0);
-  const activeAllocations = SAMPLE_ALLOCATIONS.filter(
-    (a) => a.status === "ACTIVE",
-  ).length;
-  const overdueAllocations = SAMPLE_ALLOCATIONS.filter(
-    (a) => a.status === "OVERDUE",
-  ).length;
-  const returnedAllocations = SAMPLE_ALLOCATIONS.filter(
-    (a) => a.status === "RETURNED",
-  ).length;
-  const pendingGP = SAMPLE_GATE_PASSES.filter(
-    (g) => g.status === "PENDING",
-  ).length;
-  const approvedGP = SAMPLE_GATE_PASSES.filter(
-    (g) => g.status === "APPROVED",
-  ).length;
-  const issuedGP = SAMPLE_GATE_PASSES.filter(
-    (g) => g.status === "ISSUED",
-  ).length;
 
-  const categories = Array.from(new Set(SAMPLE_ASSETS.map((a) => a.category)));
+  const totalValue = SAMPLE_ASSETS.reduce((sum, item) => sum + item.value, 0);
+
+  const gatePassData = [
+    {
+      label: "Pending",
+      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "PENDING").length,
+      color: "bg-amber-300",
+    },
+    {
+      label: "Approved",
+      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "APPROVED").length,
+      color: "bg-sky-400",
+    },
+    {
+      label: "Issued",
+      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "ISSUED").length,
+      color: "bg-violet-400",
+    },
+    {
+      label: "Returned",
+      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "RETURNED").length,
+      color: "bg-emerald-400",
+    },
+    {
+      label: "Rejected",
+      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "REJECTED").length,
+      color: "bg-rose-400",
+    },
+  ];
+
+  const categories = Array.from(
+    new Set(SAMPLE_ASSETS.map((item) => item.category)),
+  );
+
   const categoryData = categories.map((cat) => ({
     cat,
     count: SAMPLE_ASSETS.filter((a) => a.category === cat).length,
   }));
 
+  const activityData = AUDIT_LOG.slice(0, 8);
+
+  const paginate = <T,>(data: T[], page: number) =>
+    data.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  const card =
+    "bg-white border border-gray-200 rounded-2xl flex flex-col min-h-[320px]";
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           label="Total Assets"
           value={totalAssets}
           sub="All registered assets"
-          color="bg-indigo-100 text-indigo-600"
+          color="bg-indigo-50 text-indigo-500"
           icon="📦"
         />
+
         <StatCard
           label="Allocated"
           value={allocated}
-          sub={`${((allocated / totalAssets) * 100).toFixed(0)}% of total`}
-          color="bg-orange-100 text-orange-600"
+          sub={`${((allocated / totalAssets) * 100).toFixed(0)}% utilized`}
+          color="bg-orange-50 text-orange-500"
           icon="🔗"
         />
+
         <StatCard
           label="Available"
           value={available}
-          sub="Ready to allocate"
-          color="bg-green-100 text-green-600"
+          sub="Ready for use"
+          color="bg-emerald-50 text-emerald-500"
           icon="✅"
         />
+
         <StatCard
-          label="Total Value"
+          label="Asset Value"
           value={`₹${(totalValue / 1000).toFixed(0)}K`}
-          sub="Portfolio value"
-          color="bg-purple-100 text-purple-600"
+          sub="Inventory worth"
+          color="bg-violet-50 text-violet-500"
           icon="💰"
         />
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Active Allocations"
-          value={activeAllocations}
-          color="bg-blue-100 text-blue-600"
-          icon="📋"
-        />
-        <StatCard
-          label="Overdue Returns"
-          value={overdueAllocations}
-          color="bg-red-100 text-red-600"
-          icon="⚠️"
-        />
-        <StatCard
-          label="Returned"
-          value={returnedAllocations}
-          color="bg-gray-100 text-gray-600"
-          icon="↩️"
-        />
-        <StatCard
-          label="Pending Gate Passes"
-          value={pendingGP}
-          color="bg-yellow-100 text-yellow-600"
-          icon="🎫"
-        />
-      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 items-stretch">
+        {/* Gate Pass */}
+        <div className={card}>
+          <div className="p-6 flex-1">
+            <SectionHeader
+              title="Gate Pass Summary"
+              subtitle="Status overview"
+            />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <SectionHeader
-            title="Gate Pass Summary"
-            subtitle="Current status distribution"
-          />
-          <div className="space-y-3 mt-2">
-            {[
-              {
-                label: "Pending",
-                count: pendingGP,
-                color: "bg-yellow-400",
-                total: SAMPLE_GATE_PASSES.length,
-              },
-              {
-                label: "Approved",
-                count: approvedGP,
-                color: "bg-blue-400",
-                total: SAMPLE_GATE_PASSES.length,
-              },
-              {
-                label: "Issued",
-                count: issuedGP,
-                color: "bg-purple-400",
-                total: SAMPLE_GATE_PASSES.length,
-              },
-              {
-                label: "Returned",
-                count: SAMPLE_GATE_PASSES.filter((g) => g.status === "RETURNED")
-                  .length,
-                color: "bg-green-400",
-                total: SAMPLE_GATE_PASSES.length,
-              },
-              {
-                label: "Rejected",
-                count: SAMPLE_GATE_PASSES.filter((g) => g.status === "REJECTED")
-                  .length,
-                color: "bg-red-400",
-                total: SAMPLE_GATE_PASSES.length,
-              },
-            ].map(({ label, count, color, total }) => (
-              <div key={label}>
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>{label}</span>
-                  <span className="font-semibold text-gray-700">{count}</span>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div
-                    className={`${color} h-2 rounded-full transition-all`}
-                    style={{ width: `${total ? (count / total) * 100 : 0}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+            <div className="space-y-5 mt-5">
+              {paginate(gatePassData, gatePage).map((item) => (
+                <div key={item.label}>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-500">{item.label}</span>
+                    <span className="font-medium text-gray-700">
+                      {item.count}
+                    </span>
+                  </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <SectionHeader
-            title="Assets by Category"
-            subtitle="Distribution across categories"
-          />
-          <div className="space-y-3 mt-2">
-            {categoryData.map(({ cat, count }) => (
-              <div key={cat}>
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>{cat}</span>
-                  <span className="font-semibold text-gray-700">{count}</span>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`${item.color} h-full rounded-full`}
+                      style={{
+                        width: `${
+                          (item.count / SAMPLE_GATE_PASSES.length) * 100
+                        }%`,
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div
-                    className="bg-indigo-400 h-2 rounded-full transition-all"
-                    style={{ width: `${(count / totalAssets) * 100}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-        <SectionHeader
-          title="Recent Activity"
-          subtitle="Latest 5 audit entries"
-        />
-        <div className="space-y-2">
-          {AUDIT_LOG.slice(0, 5).map((entry) => (
-            <div
-              key={entry.id}
-              className="flex items-start gap-3 py-2.5 border-b border-gray-50 last:border-0"
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
-                  entry.type === "allocation"
-                    ? "bg-blue-100 text-blue-600"
-                    : entry.type === "return"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-purple-100 text-purple-600"
-                }`}
-              >
-                {entry.type === "allocation"
-                  ? "🔗"
-                  : entry.type === "return"
-                    ? "↩"
-                    : "🎫"}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-800">
-                  {entry.action}
-                </p>
-                <p className="text-xs text-gray-400 truncate">{entry.detail}</p>
-              </div>
-              <span className="text-xs text-gray-400 shrink-0">
-                {entry.date}
-              </span>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <div className="border-t border-gray-100 px-6 py-4 mt-auto">
+            <Pagination
+              currentPage={gatePage}
+              totalPages={Math.ceil(gatePassData.length / ITEMS_PER_PAGE)}
+              onPageChange={setGatePage}
+            />
+          </div>
+        </div>
+
+        {/* Category */}
+        <div className={card}>
+          <div className="p-6 flex-1">
+            <SectionHeader
+              title="Assets by Category"
+              subtitle="Inventory split"
+            />
+
+            <div className="space-y-5 mt-5">
+              {paginate(categoryData, categoryPage).map((item) => (
+                <div key={item.cat}>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-500">{item.cat}</span>
+                    <span className="font-medium text-gray-700">
+                      {item.count}
+                    </span>
+                  </div>
+
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="bg-indigo-300 h-full rounded-full"
+                      style={{
+                        width: `${(item.count / totalAssets) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 px-6 py-4 mt-auto">
+            <Pagination
+              currentPage={categoryPage}
+              totalPages={Math.ceil(categoryData.length / ITEMS_PER_PAGE)}
+              onPageChange={setCategoryPage}
+            />
+          </div>
+        </div>
+
+        {/* Activity */}
+        <div className={card}>
+          <div className="p-6 flex-1">
+            <SectionHeader
+              title="Recent Activity"
+              subtitle="Latest internal logs"
+            />
+
+            <div className="space-y-3 mt-5">
+              {paginate(activityData, activityPage).map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50"
+                >
+                  <div className="w-10 h-10 rounded-2xl bg-violet-50 text-violet-500 flex items-center justify-center shrink-0">
+                    📋
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-800">
+                      {item.action}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {item.detail}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 px-6 py-4 mt-auto">
+            <Pagination
+              currentPage={activityPage}
+              totalPages={Math.ceil(activityData.length / ITEMS_PER_PAGE)}
+              onPageChange={setActivityPage}
+            />
+          </div>
         </div>
       </div>
     </div>

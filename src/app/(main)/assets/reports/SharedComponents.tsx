@@ -15,7 +15,7 @@ export const StatCard: React.FC<{
       {icon}
     </div>
     <div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <p className="text-xl font-bold text-gray-800">{value}</p>
       <p className="text-sm text-gray-500 mt-0.5">{label}</p>
       {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
     </div>
@@ -35,9 +35,10 @@ export const SectionHeader: React.FC<{
     {onExport && (
       <button
         onClick={onExport}
-        className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition"
+        className="inline-flex items-center gap-2 h-9 px-4 rounded-xl border border-indigo-200 bg-indigo-50 text-sm font-medium text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
       >
-        ⬇ Export CSV
+        <span className="text-sm">📄</span>
+        <span>Export CSV</span>
       </button>
     )}
   </div>

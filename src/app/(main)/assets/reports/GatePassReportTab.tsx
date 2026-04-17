@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SAMPLE_GATE_PASSES } from "./sampleData";
 import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
+import Pagination from "../../../components/common/Pagination";
 
 type GatePassStatus =
   | "PENDING"
@@ -16,6 +17,10 @@ const GatePassReportTab: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [search, setSearch] = useState("");
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 4;
+
   const filtered = SAMPLE_GATE_PASSES.filter((g) => {
     const matchStatus = statusFilter === "ALL" || g.status === statusFilter;
     const matchType = typeFilter === "ALL" || g.type === typeFilter;
@@ -23,8 +28,18 @@ const GatePassReportTab: React.FC = () => {
       g.id.toLowerCase().includes(search.toLowerCase()) ||
       g.assetTag.toLowerCase().includes(search.toLowerCase()) ||
       g.carrierName.toLowerCase().includes(search.toLowerCase());
+
     return matchStatus && matchType && matchSearch;
   });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, typeFilter, search]);
+
+  const paginatedData = filtered.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage,
+  );
 
   const handleExport = () => {
     exportToCSV(
@@ -74,6 +89,7 @@ const GatePassReportTab: React.FC = () => {
             RETURNED: "bg-green-100 text-green-600",
             REJECTED: "bg-red-100 text-red-600",
           };
+
           const icons: Record<GatePassStatus, string> = {
             PENDING: "⏳",
             APPROVED: "✔️",
@@ -81,6 +97,7 @@ const GatePassReportTab: React.FC = () => {
             RETURNED: "↩️",
             REJECTED: "❌",
           };
+
           return (
             <StatCard
               key={s}
@@ -99,16 +116,17 @@ const GatePassReportTab: React.FC = () => {
             ⊕
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{outCount}</p>
+            <p className="text-xl font-bold text-gray-900">{outCount}</p>
             <p className="text-sm text-gray-500">OUT Movements</p>
           </div>
         </div>
+
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-center gap-4">
           <div className="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
             ⊕
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{inCount}</p>
+            <p className="text-xl font-bold text-gray-900">{inCount}</p>
             <p className="text-sm text-gray-500">IN Movements</p>
           </div>
         </div>
@@ -120,11 +138,13 @@ const GatePassReportTab: React.FC = () => {
           subtitle="All gate pass records"
           onExport={handleExport}
         />
+
         <div className="flex flex-wrap gap-3 mb-4">
           <div className="relative flex-1 min-w-48">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
               🔍
             </span>
+
             <input
               className="w-full pl-8 pr-4 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               placeholder="Search gate pass, asset, carrier..."
@@ -132,12 +152,14 @@ const GatePassReportTab: React.FC = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+
           <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="ALL">All Status</option>
+
             {["PENDING", "APPROVED", "ISSUED", "RETURNED", "REJECTED"].map(
               (s) => (
                 <option key={s} value={s}>
@@ -146,6 +168,7 @@ const GatePassReportTab: React.FC = () => {
               ),
             )}
           </select>
+
           <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200"
             value={typeFilter}
@@ -156,6 +179,7 @@ const GatePassReportTab: React.FC = () => {
             <option value="IN">IN only</option>
           </select>
         </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -178,6 +202,7 @@ const GatePassReportTab: React.FC = () => {
                 ))}
               </tr>
             </thead>
+
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
@@ -189,7 +214,7 @@ const GatePassReportTab: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                filtered.map((g) => (
+                paginatedData.map((g) => (
                   <tr
                     key={g.id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition"
@@ -197,22 +222,32 @@ const GatePassReportTab: React.FC = () => {
                     <td className="py-3 px-4 font-semibold text-indigo-600">
                       {g.id}
                     </td>
+
                     <td className="py-3 px-4">
                       <p className="font-medium text-gray-800">{g.assetTag}</p>
                       <p className="text-xs text-gray-400">{g.assetModel}</p>
                     </td>
+
                     <td className="py-3 px-4">
                       <span
-                        className={`px-2 py-0.5 rounded text-xs font-semibold border ${g.type === "OUT" ? "bg-yellow-50 text-yellow-700 border-yellow-300" : "bg-blue-50 text-blue-700 border-blue-300"}`}
+                        className={`px-2 py-0.5 rounded text-xs font-semibold border ${
+                          g.type === "OUT"
+                            ? "bg-yellow-50 text-yellow-700 border-yellow-300"
+                            : "bg-blue-50 text-blue-700 border-blue-300"
+                        }`}
                       >
                         ⊕ {g.type}
                       </span>
                     </td>
+
                     <td className="py-3 px-4 text-gray-600">{g.purpose}</td>
+
                     <td className="py-3 px-4 text-gray-600">{g.carrierName}</td>
+
                     <td className="py-3 px-4">
                       <Badge label={g.status} type={g.status} />
                     </td>
+
                     <td className="py-3 px-4 text-gray-500">{g.date}</td>
                   </tr>
                 ))
@@ -220,9 +255,14 @@ const GatePassReportTab: React.FC = () => {
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-gray-400 mt-3">
-          Showing {filtered.length} of {SAMPLE_GATE_PASSES.length} records
-        </p>
+
+        <div className="border-t border-gray-100 px-6 py-4 mt-auto">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filtered.length / recordsPerPage)}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
     </div>
   );
