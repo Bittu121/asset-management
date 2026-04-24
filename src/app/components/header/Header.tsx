@@ -118,6 +118,7 @@
 // }
 
 // export default Header;
+
 "use client";
 
 import { useTheme } from "next-themes";
@@ -136,7 +137,7 @@ function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-   const darkMode = mounted && theme === "dark";
+   const darkMode = theme === "dark";
 
   useEffect(() => {
     setMounted(true);

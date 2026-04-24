@@ -428,9 +428,7 @@ function StatCard({ card }: { card: StatCard }) {
     <div className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm text-gray-500 font-medium mb-1">
-            {card.title}
-          </p>
+          <p className="text-sm text-gray-500 font-medium mb-1">{card.title}</p>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {card.value}
           </h3>
@@ -454,10 +452,17 @@ function StatCard({ card }: { card: StatCard }) {
 }
 
 // Component: Quick Action Button
-function QuickActionBtn({ action, onClick }: { action: QuickAction; onClick: () => void }) {
+function QuickActionBtn({
+  action,
+  onClick,
+}: {
+  action: QuickAction;
+  onClick: () => void;
+}) {
   const variants = {
     primary: "bg-slate-700 hover:bg-slate-800 text-white border-slate-700",
-    secondary: "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200",
+    secondary:
+      "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200",
     tertiary: "bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200",
     outline: "bg-white hover:bg-gray-50 text-gray-700 border-gray-300",
   };
@@ -473,7 +478,13 @@ function QuickActionBtn({ action, onClick }: { action: QuickAction; onClick: () 
 }
 
 // Component: Progress Bar
-function ProgressBar({ percentage, color }: { percentage: number; color: string }) {
+function ProgressBar({
+  percentage,
+  color,
+}: {
+  percentage: number;
+  color: string;
+}) {
   return (
     <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
       <div
@@ -548,7 +559,15 @@ function WarrantyStatus({ items }: { items: WarrantyItem[] }) {
 }
 
 // Component: Category Distribution Card
-function CategoryCard({ title, count, icon: Icon }: { title: string; count: number; icon: any }) {
+function CategoryCard({
+  title,
+  count,
+  icon: Icon,
+}: {
+  title: string;
+  count: number;
+  icon: any;
+}) {
   const total = 16;
   const percentage = (count / total) * 100;
 
@@ -634,7 +653,9 @@ function AssignmentOverview() {
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-medium text-gray-600">Unassigned</span>
+            <span className="text-xs font-medium text-gray-600">
+              Unassigned
+            </span>
             <span className="text-xs font-semibold text-gray-600">50%</span>
           </div>
           <ProgressBar percentage={50} color="bg-gray-400" />
@@ -700,9 +721,21 @@ function Dashboard() {
 
   const quickActions: QuickAction[] = [
     { label: "Add Asset", route: "/assets/asset", variant: "primary" },
-    { label: "Asset Allocation", route: "/assets/asset-allocation", variant: "secondary" },
-    { label: "Bulk Upload", route: "/assets/asset-bulk-upload", variant: "tertiary" },
-    { label: "Gate Pass", route: "/assets/asset-gate-pass", variant: "outline" },
+    {
+      label: "Asset Allocation",
+      route: "/assets/asset-allocation",
+      variant: "secondary",
+    },
+    {
+      label: "Bulk Upload",
+      route: "/assets/asset-bulk-upload",
+      variant: "tertiary",
+    },
+    {
+      label: "Gate Pass",
+      route: "/assets/asset-gate-pass",
+      variant: "outline",
+    },
   ];
 
   const statusItems: StatusItem[] = [
@@ -713,10 +746,26 @@ function Dashboard() {
   ];
 
   const warrantyItems: WarrantyItem[] = [
-    { label: "Valid", value: 1, badgeColor: "bg-green-50 text-green-700 border border-green-200" },
-    { label: "Expiring Soon", value: 0, badgeColor: "bg-amber-50 text-amber-700 border border-amber-200" },
-    { label: "Expired", value: 1, badgeColor: "bg-red-50 text-red-700 border border-red-200" },
-    { label: "No Warranty", value: 14, badgeColor: "bg-gray-50 text-gray-700 border border-gray-200" },
+    {
+      label: "Valid",
+      value: 1,
+      badgeColor: "bg-green-50 text-green-700 border border-green-200",
+    },
+    {
+      label: "Expiring Soon",
+      value: 0,
+      badgeColor: "bg-amber-50 text-amber-700 border border-amber-200",
+    },
+    {
+      label: "Expired",
+      value: 1,
+      badgeColor: "bg-red-50 text-red-700 border border-red-200",
+    },
+    {
+      label: "No Warranty",
+      value: 14,
+      badgeColor: "bg-gray-50 text-gray-700 border border-gray-200",
+    },
   ];
 
   return (

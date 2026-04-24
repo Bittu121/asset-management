@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ThemeProvider } from "./components/theme-provider";
 
 const inter = Poppins({
   subsets: ["latin"],
@@ -22,25 +21,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.className} bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300`}
-        suppressHydrationWarning
-      >
-        <ThemeProvider>
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            pauseOnHover
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            theme="light"
-          />
-          {children}
-        </ThemeProvider>
+      <body className={`${inter.className}`} suppressHydrationWarning>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
+        {children}
       </body>
     </html>
   );
