@@ -4,6 +4,10 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import connectDB from "@/backend/config/db";
+
+connectDB();
+
 const inter = Poppins({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
