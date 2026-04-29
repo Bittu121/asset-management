@@ -1,16 +1,28 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
+  const handleReset = () => {
+    if (password !== confirm) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    // API call later
+    router.push("/login");
+  };
 
   return (
     <div className="flex h-screen bg-[#f8fafc]">
-      {/* LEFT SIDE (SAME AS LOGIN) */}
+      {/* LEFT */}
       <div className="hidden md:flex w-1/2 items-center justify-center bg-[#060c2c] p-10">
         <div className="max-w-md w-full bg-linear-to-br from-[#0f172a] to-[#1e293b] rounded-xl p-10 shadow-sm border border-white/5">
-          {/* Icon */}
           <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
             <svg
               width="24"
@@ -18,7 +30,6 @@ export default function ForgotPassword() {
               fill="none"
               stroke="white"
               strokeWidth="2"
-              viewBox="0 0 24 24"
             >
               <rect x="3" y="3" width="18" height="18" rx="3" />
               <path d="M7 7h4M7 11h4M7 15h4" />
@@ -26,31 +37,28 @@ export default function ForgotPassword() {
             </svg>
           </div>
 
-          {/* Heading */}
           <h2 className="text-3xl font-semibold text-white leading-tight">
             Asset Management
           </h2>
 
-          {/* Description */}
           <p className="mt-4 text-gray-400 text-sm leading-relaxed">
             Track, manage, and optimize assets with real-time visibility and
             automation.
           </p>
 
-          {/* Points */}
           <div className="mt-8 space-y-4">
-            <div className="flex items-start gap-3">
-              <span className="text-green-400 mt-1">✔</span>
+            <div className="flex gap-3">
+              <span className="text-green-400">✔</span>
               <p className="text-sm text-gray-300">Real-time asset tracking</p>
             </div>
 
-            <div className="flex items-start gap-3">
-              <span className="text-green-400 mt-1">✔</span>
+            <div className="flex gap-3">
+              <span className="text-green-400">✔</span>
               <p className="text-sm text-gray-300">Reduce risks and costs</p>
             </div>
 
-            <div className="flex items-start gap-3">
-              <span className="text-green-400 mt-1">✔</span>
+            <div className="flex gap-3">
+              <span className="text-green-400">✔</span>
               <p className="text-sm text-gray-300">
                 End-to-end lifecycle management
               </p>
@@ -59,41 +67,52 @@ export default function ForgotPassword() {
         </div>
       </div>
 
-      {/* RIGHT SIDE (FORGOT PASSWORD) */}
+      {/* RIGHT */}
       <div className="flex w-full md:w-1/2 items-center justify-center">
         <div className="w-full max-w-sm px-6">
           {/* Heading */}
           <h1 className="text-2xl font-semibold text-gray-900">
-            Forgot password
+            Reset Password
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Enter your email to receive a reset link
+            Create a new secure password for your account
           </p>
 
-          {/* Form */}
+          {/* FORM */}
           <div className="mt-6 space-y-4">
             <input
-              type="email"
-              placeholder="Email address"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="password"
+              placeholder="New password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
 
-            {/* Submit */}
-            <button
-              onClick={() => router.push("/verify-otp")}
-              className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition"
-            >
-              Send Reset Link
+            <input
+              type="password"
+              placeholder="Confirm password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+
+            <button className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition">
+              Reset Password
             </button>
 
-            {/* Back to login */}
-            <div className="text-center mt-4">
-              <span
-                onClick={() => router.push("/login")}
-                className="text-xs text-gray-500 cursor-pointer hover:underline"
+            {/* NAVIGATION */}
+            <div className="mt-4 flex justify-between items-center">
+              {/* Back (Secondary) */}
+              <button
+                onClick={() => router.push("/verify-otp")}
+                className="px-3 py-1.5 rounded-md text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 transition"
               >
-                Back to login
-              </span>
+                ← Back
+              </button>
+
+              {/* Login (Primary Action) */}
+              <button
+                onClick={() => router.push("/login")}
+                className="px-3 py-1.5 rounded-md text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 transition shadow-sm"
+              >
+                Login →
+              </button>
             </div>
           </div>
 

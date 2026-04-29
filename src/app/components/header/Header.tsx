@@ -160,7 +160,7 @@ function Header() {
   }
 
   return (
-    <div className="w-full h-16 bg-gray-900 border-b border-gray-200 px-6 flex items-center justify-between">
+    <div className="w-full h-16 bg-white border-b border-gray-200 px-6 flex items-center justify-between">
       {/* LEFT */}
       <h1 className="text-sm font-semibold text-gray-800 dark:text-white tracking-wide">
         Asset Management
