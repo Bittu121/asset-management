@@ -37,29 +37,6 @@ export const createUserAccount = async (data: CreateUserAccountDto) => {
     password: hashedPassword,
   });
 
-  // await sendEmail({
-  //   to: data.email,
-  //   subject: "Your Account Has Been Created",
-  //   html: `
-  //     <div style="font-family: Arial; padding: 20px;">
-  //       <h2>Welcome to Asset Management</h2>
-  //       <p>Your account has been successfully created.</p>
-
-  //       <p><strong>Email:</strong> ${data.email}</p>
-  //       <p><strong>Password:</strong> ${data.password}</p>
-
-  //       <p>You can login using the link below:</p>
-  //       <a href="${process.env.NEXT_PUBLIC_APP_URL}/login">
-  //         Login to your account
-  //       </a>
-
-  //       <br/><br/>
-  //       <p style="font-size:12px;color:gray;">
-  //         Please change your password after first login.
-  //       </p>
-  //     </div>
-  //   `,
-  // });
   await sendEmail({
     to: data.email,
     subject: "Welcome to Asset Management",

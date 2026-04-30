@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectDB from "../../../../backend/config/db";
-import { login } from "../../../../backend/modules/auth/login/controller";
+import { forgotPassword } from "../../../../backend/modules/auth/forgot-password/controller";
 import { handleError } from "../../../../backend/middleware/error";
 
-export const POST = async (req) => {
+export const POST = async (req: NextRequest) => {
   await connectDB();
   try {
-    const result = await login(req);
+    const result = await forgotPassword(req);
     return NextResponse.json(result, { status: result.statusCode });
   } catch (error) {
     const err = handleError(error);

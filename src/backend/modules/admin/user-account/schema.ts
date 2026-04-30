@@ -14,6 +14,9 @@ type UserAccountDocument = {
   subLocation: string;
   supportGroup: string;
   password: string;
+  otp: string;
+  otpExpiry: Date | null;
+  isVerified: boolean;
   createdAt: Date;
 };
 
@@ -32,6 +35,9 @@ const userAccountSchema = new mongoose.Schema<UserAccountDocument>(
     subLocation: { type: String, default: "", trim: true },
     supportGroup: { type: String, default: "", trim: true },
     password: { type: String, required: true },
+    otp: { type: String, default: "" },
+    otpExpiry: { type: Date, default: null },
+    isVerified: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
