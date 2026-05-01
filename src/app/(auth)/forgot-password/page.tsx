@@ -1,11 +1,27 @@
 "use client";
 
+import { clearError, forgotPasswordAction } from "@/store/auth/authActions";
+import { AppDispatch, RootState } from "@/store/auth/store";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ForgotPassword() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { forgotLoading, error } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
+  const handleSubmit = async () => {
+    if (!email.trim()) return;
+    await dispatch(forgotPasswordAction(email, router));
+  };
 
   return (
     <div className="flex h-screen bg-[#f8fafc]">
@@ -71,21 +87,30 @@ export default function ForgotPassword() {
           <p className="text-sm text-gray-500 mt-1">
             Enter your email to receive a reset link
           </p>
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
           {/* Form */}
           <div className="mt-6 space-y-4">
             <input
               type="email"
               placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
               className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             {/* Submit */}
             <button
-              onClick={() => router.push("/verify-otp")}
+              onClick={handleSubmit}
+              disabled={forgotLoading}
               className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition"
             >
-              Send Reset Link
+              {forgotLoading ? "Sending..." : "Send OTP"}
             </button>
 
             {/* Back to login */}
