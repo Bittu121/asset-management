@@ -1,9 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function ForgotPassword() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
 
   return (
     <div className="flex h-screen bg-[#f8fafc]">

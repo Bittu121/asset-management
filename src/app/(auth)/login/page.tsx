@@ -1,16 +1,37 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../../store/auth/store";
+import { clearError, loginAction } from "../../../store/auth/authActions";
 import Image from "next/image";
 
 function Login() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.auth);
 
-  const handleLogin = () => {
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("role", "admin");
-    // localStorage.setItem("role", "user");
-    //  localStorage.setItem("role", "technician");
-    router.push("/admin");
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    // Clear error on mount
+    dispatch(clearError());
+  }, [dispatch]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleLogin = async () => {
+    if (!form.email.trim() || !form.password.trim()) return;
+    await dispatch(loginAction(form.email, form.password, router));
   };
 
   return (
@@ -87,15 +108,22 @@ function Login() {
 
             {/* Email */}
             <input
+              name="email"
               type="email"
               placeholder="Email address"
+              value={form.email}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             {/* Password */}
             <input
+              name="password"
               type="password"
               placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
               className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 

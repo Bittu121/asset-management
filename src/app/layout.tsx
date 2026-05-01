@@ -3,8 +3,9 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import connectDB from "@/backend/config/db";
+
+import { Providers } from "./providers";
 
 connectDB();
 
@@ -26,18 +27,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className}`} suppressHydrationWarning>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          pauseOnHover
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-        />
-        {children}
+        <Providers>
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+          />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -13,14 +13,17 @@ export const authenticate = (
   req: NextRequest,
 ): { user: AuthUser } | ReturnType<typeof errorResponse> => {
   try {
-    const authHeader = req.headers.get("authorization");
+    const token = req.cookies.get("accessToken")?.value;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return errorResponse(messages.AUTH.TOKEN_REQUIRED, 401);
     }
 
-    const token = authHeader.split(" ")[1];
-    const decoded = verifyAccessToken(token);
+    const decoded = verifyAccessToken(token) as {
+      id: string;
+      email: string;
+      role: string;
+    };
 
     return {
       user: {

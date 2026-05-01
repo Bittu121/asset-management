@@ -3,8 +3,7 @@ import { comparePassword } from "../../../utils/bcrypt";
 import { signAccessToken, signRefreshToken } from "../../../config/jwt";
 
 export const loginService = async (email: string, password: string) => {
-  // Find user by email in UserAccount collection
-  const user = await UserAccount.findOne({ email });
+  const user = await UserAccount.findOne({ email }).select("+password");
   if (!user) return null;
 
   // Compare password
@@ -20,6 +19,8 @@ export const loginService = async (email: string, password: string) => {
 
   const accessToken = signAccessToken(payload);
   const refreshToken = signRefreshToken(payload);
+
+  await UserAccount.findByIdAndUpdate(user._id, { refreshToken });
 
   return {
     accessToken,

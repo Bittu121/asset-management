@@ -34,7 +34,7 @@ const userAccountSchema = new mongoose.Schema<UserAccountDocument>(
     location: { type: String, default: "", trim: true },
     subLocation: { type: String, default: "", trim: true },
     supportGroup: { type: String, default: "", trim: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     otp: { type: String, default: "" },
     otpExpiry: { type: Date, default: null },
     isVerified: { type: Boolean, default: false },
