@@ -23,6 +23,8 @@ import {
   BarChart3,
 } from "lucide-react";
 import { RiAdminLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/auth/store";
 
 interface SidebarProps {
   onCollapseChange?: (collapsed: boolean) => void;
@@ -31,6 +33,8 @@ interface SidebarProps {
 function Sidebar({ onCollapseChange }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const [openMenu, setOpenMenu] = useState<string | null>("Admin");
   const [collapsed, setCollapsed] = useState(false);
@@ -45,15 +49,16 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
     onCollapseChange?.(next);
   };
 
-  const role = localStorage.getItem("role") || "admin";
+  console.log("ui", user?.role);
 
-  const isAdmin = role === "admin" || role === "superadmin";
-  const isTechnician = role === "technician" || role === "superadmin";
-  const isUser = role === "user";
+  const isAdmin = user?.role === "admin" || user?.role === "superadmin";
+  const isTechnician =
+    user?.role === "technician" || user?.role === "superadmin";
+  const isUser = user?.role === "user";
 
   const getDashboardPath = () => {
-    if (role === "superadmin" || role === "admin") return "/admin";
-    if (role === "technician") return "/technician";
+    if (user?.role === "superadmin" || user?.role === "admin") return "/admin";
+    if (user?.role === "technician") return "/technician";
     return "/end-user";
   };
 

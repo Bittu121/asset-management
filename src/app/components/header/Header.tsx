@@ -3,18 +3,17 @@
 import { Bell, LogOut, User } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../store/auth/store";
 import { logoutAction } from "../../../store/auth/authActions";
 
 function Header() {
-  // const { user } = useSelector((state: RootState) => state.auth);
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setMounted(true);

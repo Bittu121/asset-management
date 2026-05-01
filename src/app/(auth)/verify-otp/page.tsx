@@ -2,16 +2,34 @@
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  clearError,
+  resendOtpAction,
+  verifyOtpAction,
+} from "@/store/auth/authActions";
 
 export default function VerifyOTP() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { otpEmail, otpLoading, error } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const isOtpValid = otp.every((digit) => digit !== "");
 
-  // TIMER
+  useEffect(() => {
+    if (!otpEmail) {
+      router.push("/forgot-password");
+    }
+    dispatch(clearError());
+  }, [otpEmail, router, dispatch]);
+
+  // Timer
   useEffect(() => {
     if (timer === 0) {
       setCanResend(true);
@@ -40,7 +58,7 @@ export default function VerifyOTP() {
   };
 
   // VERIFY
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const fullOtp = otp.join("");
     const isOtpValid = fullOtp.length === 6;
 
@@ -48,14 +66,13 @@ export default function VerifyOTP() {
       toast.error("Enter complete OTP");
       return;
     }
-
-    router.push("/reset-password");
+    await dispatch(verifyOtpAction(otpEmail, fullOtp, router));
   };
 
-  // RESEND
+  // Resend otp
   const handleResend = () => {
     if (!canResend) return;
-
+    dispatch(resendOtpAction(otpEmail));
     setTimer(60);
     setCanResend(false);
   };
@@ -116,6 +133,11 @@ export default function VerifyOTP() {
           <p className="text-sm text-gray-500 mt-1">
             Enter the 6-digit code sent to your email
           </p>
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
           {/* OTP INPUT */}
           <div className="flex justify-between gap-2 mt-6">
@@ -141,7 +163,7 @@ export default function VerifyOTP() {
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-            Verify OTP
+            {otpLoading ? "Verifying..." : "Verify OTP"}
           </button>
 
           {/* RESEND TIMER */}

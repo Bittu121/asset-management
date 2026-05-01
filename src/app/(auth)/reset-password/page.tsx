@@ -1,21 +1,42 @@
 "use client";
 
+import { clearError, resetPasswordAction } from "@/store/auth/authActions";
+import { AppDispatch, RootState } from "@/store/auth/store";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ResetPassword() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { otpEmail, resetLoading, error } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const handleReset = () => {
+  useEffect(() => {
+    if (!otpEmail) {
+      router.push("/forgot-password");
+    }
+    dispatch(clearError());
+  }, [otpEmail, router, dispatch]);
+
+  const handleReset = async () => {
+    setPasswordError("");
+
     if (password !== confirm) {
-      alert("Passwords do not match");
+      setPasswordError("Passwords do not match");
       return;
     }
 
-    // API call later
-    router.push("/login");
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    await dispatch(resetPasswordAction(otpEmail, password, router));
   };
 
   return (
@@ -70,35 +91,48 @@ export default function ResetPassword() {
       {/* RIGHT */}
       <div className="flex w-full md:w-1/2 items-center justify-center">
         <div className="w-full max-w-sm px-6">
-          {/* Heading */}
           <h1 className="text-2xl font-semibold text-gray-900">
             Reset Password
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             Create a new secure password for your account
           </p>
+          {(error || passwordError) && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+              {error || passwordError}
+            </div>
+          )}
 
           {/* FORM */}
           <div className="mt-6 space-y-4">
             <input
               type="password"
               placeholder="New password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
 
             <input
               type="password"
               placeholder="Confirm password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleReset()}
               className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
 
-            <button className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition">
-              Reset Password
+            <button
+              onClick={handleReset}
+              disabled={resetLoading}
+              className="w-full py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition"
+            >
+              {resetLoading ? "Resetting..." : "Reset Password"}
             </button>
 
             {/* NAVIGATION */}
             <div className="mt-4 flex justify-between items-center">
-              {/* Back (Secondary) */}
+              {/* Back */}
               <button
                 onClick={() => router.push("/verify-otp")}
                 className="px-3 py-1.5 rounded-md text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 transition"
