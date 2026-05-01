@@ -9,6 +9,15 @@ export type AuthUser = {
   role: string;
 };
 
+type AuthSuccess = {
+  user: AuthUser;
+};
+
+type AuthError = {
+  message: string;
+  statusCode: number;
+};
+
 export const authenticate = (
   req: NextRequest,
 ): { user: AuthUser } | ReturnType<typeof errorResponse> => {

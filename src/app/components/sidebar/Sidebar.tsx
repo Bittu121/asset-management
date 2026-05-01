@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import {
@@ -34,7 +34,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, loading } = useSelector((state: RootState) => state.auth);
 
   const [openMenu, setOpenMenu] = useState<string | null>("Admin");
   const [collapsed, setCollapsed] = useState(false);
@@ -49,16 +49,37 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
     onCollapseChange?.(next);
   };
 
-  console.log("ui", user?.role);
+  // Debug: Log user role
+  useEffect(() => {
+    console.log("Current user role:", user?.role);
+  }, [user]);
 
-  const isAdmin = user?.role === "admin" || user?.role === "superadmin";
-  const isTechnician =
-    user?.role === "technician" || user?.role === "superadmin";
-  const isUser = user?.role === "user";
+  // Show loading skeleton while checking session
+  if (loading) {
+    return (
+      <div className="h-screen w-64 bg-linear-to-b from-[#0f172a] via-[#111827] to-[#020617] border-r border-white/10 text-gray-300 px-3 py-6 flex flex-col">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-700 rounded"></div>
+          <div className="h-8 bg-gray-700 rounded"></div>
+          <div className="h-8 bg-gray-700 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if no user
+  if (!user) {
+    return null;
+  }
+
+  const userRole = user?.role.toLowerCase();
+  const isAdmin = userRole === "admin" || userRole === "superadmin";
+  const isTechnician = userRole === "technician" || userRole === "superadmin";
+  const isUser = userRole === "user";
 
   const getDashboardPath = () => {
-    if (user?.role === "superadmin" || user?.role === "admin") return "/admin";
-    if (user?.role === "technician") return "/technician";
+    if (isAdmin) return "/admin";
+    if (isTechnician) return "/technician";
     return "/end-user";
   };
 

@@ -14,6 +14,7 @@ export const RESET_LOADING = "RESET_LOADING";
 export const RESET_SUCCESS = "RESET_SUCCESS";
 export const SET_OTP_EMAIL = "SET_OTP_EMAIL";
 export const CLEAR_ERROR = "CLEAR_ERROR";
+export const CHECK_SESSION = "CHECK_SESSION";
 
 // Login
 export const loginAction =
@@ -52,6 +53,24 @@ export const loginAction =
       toast.error("Something went wrong");
     }
   };
+
+export const checkSession = () => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch("/api/auth/me", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      dispatch({ type: LOGIN_SUCCESS, payload: { user: data.user } });
+    } else {
+      dispatch({ type: LOGOUT });
+    }
+  } catch (error) {
+    dispatch({ type: LOGOUT });
+  }
+};
 
 // Logout
 export const logoutAction = (router: any) => async (dispatch: Dispatch) => {

@@ -11,6 +11,7 @@ import {
   RESET_SUCCESS,
   SET_OTP_EMAIL,
   CLEAR_ERROR,
+  CHECK_SESSION,
 } from "./authActions";
 import { AuthState } from "./authTypes";
 
@@ -31,6 +32,9 @@ const initialState: AuthState = {
 
 const authReducer = (state = initialState, action: Action): AuthState => {
   switch (action.type) {
+    case CHECK_SESSION:
+      return { ...state, loading: true };
+
     case AUTH_LOADING:
       return { ...state, loading: true, error: null };
 
