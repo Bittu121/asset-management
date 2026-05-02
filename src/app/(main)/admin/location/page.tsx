@@ -10,9 +10,17 @@ import { FileSpreadsheet } from "lucide-react";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
 import { CiLocationOn } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  createLocationAction,
+  deleteLocationAction,
+  getLocationsAction,
+  updateLocationAction,
+} from "@/store/location/locationActions";
 
 type Location = {
-  id: number;
+  _id: string;
   locationName: string;
   address: string;
   city: string;
@@ -21,56 +29,11 @@ type Location = {
 };
 
 function Location() {
-  const [location, setLocation] = useState<Location[]>([
-    {
-      id: 1,
-      locationName: "Head Office",
-      city: "Delhi",
-      address: "Connaught Place, New Delhi",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 2,
-      locationName: "Branch Office",
-      city: "Mumbai",
-      address: "Andheri East, Mumbai",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 3,
-      locationName: "Warehouse",
-      city: "Bangalore",
-      address: "Whitefield, Bangalore",
-      isActive: false,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 4,
-      locationName: "Corporate Office",
-      city: "Hyderabad",
-      address: "Hitech City, Hyderabad",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 5,
-      locationName: "Regional Office",
-      city: "Chennai",
-      address: "T Nagar, Chennai",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 6,
-      locationName: "Support Center",
-      city: "Pune",
-      address: "Hinjewadi, Pune",
-      isActive: false,
-      createdAt: new Date().toDateString(),
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { locations, loading } = useSelector(
+    (state: RootState) => state.location,
+  );
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
@@ -86,8 +49,13 @@ function Location() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
 
+  // Fetch locations on mount
+  useEffect(() => {
+    dispatch(getLocationsAction());
+  }, [dispatch]);
+
   //filter step-2
-  const filteredLocations = location.filter((loc) => {
+  const filteredLocations = locations.filter((loc) => {
     const searchMatch =
       search === "" ||
       loc.locationName.toLowerCase().includes(search.toLowerCase()) ||
@@ -117,14 +85,11 @@ function Location() {
   );
 
   //Create Api
-  const handleAddLocation = (data: Omit<Location, "id" | "createdAt">) => {
-    const newLoc: Location = {
-      ...data,
-      id: Date.now(),
-      createdAt: new Date().toDateString(),
-    };
-    toast.success("Department added successfully");
-    setLocation((prev) => [newLoc, ...prev]);
+  const handleAddLocation = async (
+    data: Omit<Location, "_id" | "createdAt">,
+  ) => {
+    await dispatch(createLocationAction(data));
+    dispatch(getLocationsAction());
   };
 
   const handleEdit = (loc: Location) => {
@@ -133,19 +98,20 @@ function Location() {
   };
 
   //Update Api
-  const handleUpdateLocation = (updatedData: any) => {
-    setLocation((prev) =>
-      prev.map((d) =>
-        d.id === selectedLocation?.id ? { ...d, ...updatedData } : d,
-      ),
-    );
-    toast.success("Department updated successfully");
+  const handleUpdateLocation = async (updatedData: any) => {
+    if (selectedLocation) {
+      await dispatch(updateLocationAction(selectedLocation._id, updatedData));
+      dispatch(getLocationsAction());
+    }
   };
 
   //Delete Api
-  const handleDelete = (id: number) => {
-    toast.success("Location deleted successfully");
-    setLocation((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = async (id: string) => {
+    // if (confirm("Are you sure you want to delete this location?")) {
+    // }
+    // console.log("id",id)
+    await dispatch(deleteLocationAction(id));
+    dispatch(getLocationsAction());
   };
 
   return (
@@ -183,8 +149,8 @@ function Location() {
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="">Select Location</option>
-              {location.map((loc) => (
-                <option key={loc.id} value={loc.locationName}>
+              {locations.map((loc) => (
+                <option key={loc._id} value={loc.locationName}>
                   {loc.locationName}
                 </option>
               ))}
@@ -210,7 +176,6 @@ function Location() {
                   id: item.id || Date.now(),
                   isActive: item.Status === "Active" || item.isActive === true,
                 }));
-                setLocation(mapped);
               }}
             />
 
@@ -243,7 +208,7 @@ function Location() {
                 <td colSpan={6} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                      <CiLocationOn size={24} className="font-bold"/>
+                      <CiLocationOn size={24} className="font-bold" />
                     </div>
 
                     <h3 className="text-sm font-semibold text-gray-700">
@@ -267,12 +232,12 @@ function Location() {
               <>
                 {paginatedLocation.map((loc) => (
                   <tr
-                    key={loc.id}
+                    key={loc._id}
                     className="hover:bg-gray-50 transition-all duration-150"
                   >
                     <td className="px-6 py-5">
                       <div className="text-sm font-medium text-gray-900">
-                        {loc.id}
+                        {loc._id}
                       </div>
                     </td>
                     <td className="px-6 py-5">
@@ -315,7 +280,7 @@ function Location() {
                         {/* Divider */}
                         <span className="h-4 w-px bg-gray-300"></span>
                         <button
-                          onClick={() => handleDelete(loc.id)}
+                          onClick={() => handleDelete(loc._id)}
                           className="flex items-center justify-center text-red-800 hover:bg-red-50 p-1 rounded-md"
                           title="Delete"
                         >

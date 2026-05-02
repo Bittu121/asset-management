@@ -8,8 +8,8 @@ import * as locationService from "./service";
 
 // GET all locations
 export const getLocations = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
   const locations = await locationService.getAllLocations();
   return successResponse(locations, "Locations fetched successfully", 200);
@@ -17,8 +17,8 @@ export const getLocations = async (req: NextRequest) => {
 
 // GET single location
 export const getSingleLocation = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
   const location = await locationService.getLocationById(id);
   if (!location) return errorResponse("Location not found", 404);
@@ -28,11 +28,11 @@ export const getSingleLocation = async (req: NextRequest, id: string) => {
 
 // POST create location
 export const createLocation = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -45,11 +45,11 @@ export const createLocation = async (req: NextRequest) => {
 
 // PUT update location
 export const updateLocation = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -61,11 +61,11 @@ export const updateLocation = async (req: NextRequest, id: string) => {
 
 // DELETE location
 export const deleteLocation = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const location = await locationService.deleteLocation(id);
   if (!location) return errorResponse("Location not found", 404);

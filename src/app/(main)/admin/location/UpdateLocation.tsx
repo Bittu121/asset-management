@@ -23,11 +23,26 @@ function UpdateLocation({ isOpen, onClose, selectedLocation, onUpdate }: any) {
 
   useEffect(() => {
     if (selectedLocation) {
-      setFormData(selectedLocation);
+      setFormData({
+        locationName: selectedLocation?.locationName,
+        address: selectedLocation?.address,
+        city: selectedLocation?.city,
+        isActive: selectedLocation?.isActive,
+      });
     }
   }, [selectedLocation]);
 
   if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    if (!formData.locationName || !formData.address || !formData.city) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    onUpdate(formData);
+    onClose();
+  };
 
   return (
     <>

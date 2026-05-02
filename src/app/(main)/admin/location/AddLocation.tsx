@@ -20,6 +20,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
     { label: "Kolkata" },
     { label: "Pune" },
     { label: "Ahmedabad" },
+    { label: "Uttar Pradesh" },
   ];
   if (!isOpen) return null;
 
@@ -28,10 +29,11 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
   };
 
   const handleSubmit = () => {
-    onAdd({
-      ...formData,
-      isActive: true,
-    });
+    if (!formData.locationName || !formData.address || !formData.city) {
+      alert("Please fill all required fields");
+      return;
+    }
+    onAdd(formData);
     setFormData({ locationName: "", address: "", city: "", isActive: true });
     onClose();
   };
@@ -63,7 +65,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
                   Location Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  name="name"
+                  name="locationName"
                   placeholder="Location name"
                   value={formData.locationName || ""}
                   onChange={handleChange}
@@ -187,6 +189,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
 }
 
 export default AddLocation;
+
 // "use client";
 // import React, { useState } from "react";
 // import { X } from "lucide-react";
