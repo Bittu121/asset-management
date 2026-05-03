@@ -8,8 +8,8 @@ import * as subLocationService from "./service";
 
 // GET all sub locations
 export const getSubLocations = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
   const subLocations = await subLocationService.getAllSubLocations();
   return successResponse(
@@ -21,8 +21,8 @@ export const getSubLocations = async (req: NextRequest) => {
 
 // GET single sub location
 export const getSingleSubLocation = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
   const subLocation = await subLocationService.getSubLocationById(id);
 
@@ -33,11 +33,11 @@ export const getSingleSubLocation = async (req: NextRequest, id: string) => {
 
 // POST create sub location
 export const createSubLocation = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -54,11 +54,11 @@ export const createSubLocation = async (req: NextRequest) => {
 
 // PUT update sub location
 export const updateSubLocation = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -70,11 +70,11 @@ export const updateSubLocation = async (req: NextRequest, id: string) => {
 
 // DELETE sub location
 export const deleteSubLocation = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const subLocation = await subLocationService.deleteSubLocation(id);
   if (!subLocation) return errorResponse("Sub location not found", 404);
