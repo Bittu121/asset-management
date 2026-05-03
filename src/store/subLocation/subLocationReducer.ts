@@ -35,6 +35,12 @@ const subLocationReducer = (
   action: Action,
 ): SubLocationState => {
   switch (action.type) {
+    case SUBLOCATION_LOADING:
+    case SUBLOCATION_ERROR:
+    case GET_SUBLOCATIONS_SUCCESS:
+    case CREATE_SUBLOCATION_SUCCESS:
+    case UPDATE_SUBLOCATION_SUCCESS:
+    case DELETE_SUBLOCATION_SUCCESS:
     default:
       return state;
   }
