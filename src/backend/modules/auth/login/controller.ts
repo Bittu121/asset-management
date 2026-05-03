@@ -30,7 +30,7 @@ const login = async (req: NextRequest) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 60 * 15,
+    maxAge: 60 * 60,  //1 hour
     path: "/",
   });
 

@@ -7,7 +7,15 @@ import {
   DELETE_SUBLOCATION_SUCCESS,
 } from "./subLocationActions";
 
-export type SubLocation = {};
+export type SubLocation = {
+  _id: string;
+  subLocationName: string;
+  locationId: string;
+  locationName: string;
+  floor?: string;
+  isActive: boolean;
+  createdAt: string;
+};
 
 type SubLocationState = {};
 
