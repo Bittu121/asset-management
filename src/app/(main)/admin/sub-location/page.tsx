@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddSubLocation from "./AddSubLocation";
 import UpdateSubLocation from "./UpdateSubLocation";
 import Pagination from "../../../components/common/Pagination";
@@ -9,10 +9,18 @@ import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
 import { CiLocationOn } from "react-icons/ci";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  createSubLocationAction,
+  deleteSubLocationAction,
+  getSubLocationsAction,
+  updateSubLocationAction,
+} from "@/store/subLocation/subLocationActions";
+import { getLocationsAction } from "@/store/location/locationActions";
 
 type SubLocation = {
-  id: number;
+  _id: string;
   subLocationName: string;
   locationName: string;
   floor?: string;
@@ -21,82 +29,12 @@ type SubLocation = {
 };
 
 function SubLocation() {
-  const [subLocation, setSubLocation] = useState<SubLocation[]>([
-    {
-      id: 1,
-      subLocationName: "Ahmedabad Office",
-      locationName: "Ahmedabad",
-      floor: "11th Floor",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 2,
-      subLocationName: "Bangalore Office",
-      locationName: "Bangalore",
-      floor: "1st Floor",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 3,
-      subLocationName: "Mumbai Office",
-      locationName: "Mumbai",
-      floor: "3rd Floor",
-      isActive: false,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 4,
-      subLocationName: "Delhi HQ",
-      locationName: "Delhi",
-      floor: "Ground Floor",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 5,
-      subLocationName: "Chennai Support",
-      locationName: "Chennai",
-      floor: "2nd Floor",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 6,
-      subLocationName: "Hyderabad Tech Park",
-      locationName: "Hyderabad",
-      floor: "5th Floor",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-  ]);
-  const [locationName] = useState([
-    {
-      id: 1,
-      name: "Ahmedabad",
-    },
-    {
-      id: 2,
-      name: "Bangalore",
-    },
-    {
-      id: 3,
-      name: "Mumbai",
-    },
-    {
-      id: 4,
-      name: "Delhi",
-    },
-    {
-      id: 5,
-      name: "Chennai",
-    },
-    {
-      id: 6,
-      name: "Hyderabad",
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { subLocations, loading } = useSelector(
+    (state: RootState) => state?.subLocation,
+  );
+  const { locations } = useSelector((state: RootState) => state?.location);
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedSubLocation, setSelectedSubLocation] =
@@ -111,45 +49,45 @@ function SubLocation() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [subLocationFilter, setSubLocationFilter] = useState("");
 
+  // Fetch data on mount
+  useEffect(() => {
+    dispatch(getSubLocationsAction());
+    dispatch(getLocationsAction());
+  }, [dispatch]);
+
   //filter step-2
-  const filteredSubLocations = subLocation.filter((loc) => {
+  const filteredSubLocations = subLocations?.filter((loc) => {
     const searchMatch =
       search === "" ||
-      loc.subLocationName.toLowerCase().includes(search.toLowerCase()) ||
-      loc.locationName.toLowerCase().includes(search.toLowerCase()) ||
-      (loc.floor?.toLowerCase().includes(search.toLowerCase()) ?? false);
+      loc?.subLocationName.toLowerCase().includes(search.toLowerCase()) ||
+      loc?.locationName.toLowerCase().includes(search.toLowerCase()) ||
+      (loc?.floor?.toLowerCase().includes(search.toLowerCase()) ?? false);
 
     const statusMatch =
       statusFilter === "All" ||
-      (statusFilter === "Active" && loc.isActive) ||
-      (statusFilter === "Inactive" && !loc.isActive);
+      (statusFilter === "Active" && loc?.isActive) ||
+      (statusFilter === "Inactive" && !loc?.isActive);
 
     const locationMatch =
       subLocationFilter === "" ||
-      loc.locationName.toLowerCase() === subLocationFilter.toLowerCase();
+      loc.locationName?.toLowerCase() === subLocationFilter.toLowerCase();
 
     return searchMatch && statusMatch && locationMatch;
   });
 
   //pagination step-2
   const totalPages = Math.ceil(filteredSubLocations.length / itemsPerPage);
-
   const paginatedsubLocation = filteredSubLocations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
   //Create Api
-  const handleAddSubLocation = (
-    data: Omit<SubLocation, "id" | "createdAt">,
+  const handleAddSubLocation = async (
+    data: Omit<SubLocation, "_id" | "createdAt">,
   ) => {
-    const newSubLoc: SubLocation = {
-      ...data,
-      id: Date.now(),
-      createdAt: new Date().toDateString(),
-    };
-    toast.success("Department added successfully");
-    setSubLocation((prev) => [newSubLoc, ...prev]);
+    await dispatch(createSubLocationAction(data));
+    dispatch(getSubLocationsAction());
   };
 
   const handleEdit = (subLoc: SubLocation) => {
@@ -158,19 +96,19 @@ function SubLocation() {
   };
 
   //Update Api
-  const handleUpdateSubLocation = (updatedData: any) => {
-    setSubLocation((prev) =>
-      prev.map((d) =>
-        d.id === selectedSubLocation?.id ? { ...d, ...updatedData } : d,
-      ),
-    );
-    toast.success("Department updated successfully");
+  const handleUpdateSubLocation = async (updatedData: any) => {
+    if (selectedSubLocation) {
+      await dispatch(
+        updateSubLocationAction(selectedSubLocation?._id, updatedData),
+      );
+      dispatch(getSubLocationsAction());
+    }
   };
 
   //Delete Api
-  const handleDelete = (id: number) => {
-    toast.success("Sub-Location deleted successfully");
-    setSubLocation((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = async (id: string) => {
+    await dispatch(deleteSubLocationAction(id));
+    dispatch(getSubLocationsAction());
   };
 
   return (
@@ -208,9 +146,9 @@ function SubLocation() {
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="">Select Sub Location</option>
-              {locationName.map((loc) => (
-                <option key={loc.id} value={loc.name}>
-                  {loc.name}
+              {locations?.map((loc) => (
+                <option key={loc?._id} value={loc?.locationName}>
+                  {loc?.locationName}
                 </option>
               ))}
             </select>
@@ -227,22 +165,23 @@ function SubLocation() {
                 { label: "Floor", key: "floor" },
                 { label: "Status", key: "isActive" },
               ]}
-              onUpload={(uploadedData: any[]) => {
-                const formattedData: SubLocation[] = uploadedData.map(
-                  (item, index) => ({
-                    id: Date.now() + index,
-                    subLocationName:
-                      item["Sub Location"] || item.subLocationName || "",
-                    locationName: item.locationName || item.locationName || "",
-                    floor: item.Floor || item.floor || "",
-                    isActive:
-                      item.Status === "Active" ||
-                      item.status === "Active" ||
-                      item.isActive === true,
-                    createdAt: new Date().toDateString(),
-                  }),
-                );
-                setSubLocation((prev) => [...formattedData, ...prev]);
+              onUpload={async (uploadedData: any[]) => {
+                const formattedData = uploadedData?.map((item) => ({
+                  subLocationName:
+                    item["Sub Location"] || item?.subLocationName || "",
+                  locationId: item?.locationId || "",
+                  locationName: item?.locationName || item?.locationName || "",
+                  floor: item?.Floor || item?.floor || "",
+                  isActive:
+                    item?.Status === "Active" ||
+                    item?.status === "Active" ||
+                    item?.isActive === true,
+                  createdAt: new Date().toDateString(),
+                }));
+                for (const item of formattedData) {
+                  await dispatch(createSubLocationAction(item));
+                }
+                dispatch(getSubLocationsAction());
                 toast.success("Sub Locations uploaded successfully");
               }}
             />
@@ -274,7 +213,7 @@ function SubLocation() {
                 <td colSpan={6} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                    <CiLocationOn size={18}/>
+                      <CiLocationOn size={18} />
                     </div>
 
                     <h3 className="text-sm font-semibold text-gray-700">
@@ -297,7 +236,7 @@ function SubLocation() {
             ) : (
               paginatedsubLocation.map((subLoc) => (
                 <tr
-                  key={subLoc.id}
+                  key={subLoc._id}
                   className="hover:bg-gray-50 transition-all duration-150"
                 >
                   <td className="px-6 py-5">
@@ -342,7 +281,7 @@ function SubLocation() {
 
                       <div className="w-px h-4 bg-gray-200"></div>
                       <button
-                        onClick={() => handleDelete(subLoc.id)}
+                        onClick={() => handleDelete(subLoc._id)}
                         className="p-1.5 rounded-md hover:bg-red-50 text-red-800 transition"
                         title="Delete"
                       >
@@ -361,14 +300,14 @@ function SubLocation() {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAddSubLocation}
-        locationName={locationName}
+        locations={locations}
       />
       <UpdateSubLocation
         isOpen={isUpdateOpen}
         onClose={() => setIsUpdateOpen(false)}
         selectedSubLocation={selectedSubLocation}
         onUpdate={handleUpdateSubLocation}
-        locationName={locationName}
+        locations={locations}
       />
       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-4">
         <Pagination

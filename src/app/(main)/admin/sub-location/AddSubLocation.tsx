@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 
-function AddSubLocation({ isOpen, onClose, onAdd, locationName }: any) {
+function AddSubLocation({ isOpen, onClose, onAdd, locations }: any) {
   const [formData, setFormData] = useState({
     subLocationName: "",
+    locationId: "",
     locationName: "",
     floor: "",
     isActive: true,
@@ -12,7 +13,7 @@ function AddSubLocation({ isOpen, onClose, onAdd, locationName }: any) {
 
   if (!isOpen) return null;
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -20,12 +21,15 @@ function AddSubLocation({ isOpen, onClose, onAdd, locationName }: any) {
     onAdd(formData);
     setFormData({
       subLocationName: "",
+      locationId: "",
       locationName: "",
       floor: "",
       isActive: true,
     });
     onClose();
   };
+
+  // console.log("locations",locations)
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
@@ -73,17 +77,22 @@ function AddSubLocation({ isOpen, onClose, onAdd, locationName }: any) {
               </label>
 
               <Autocomplete
-                options={locationName.map((loc) => ({
-                  label: loc.name,
+                options={locations?.map((loc: any) => ({
+                  label: loc?.locationName,
+                  id: loc?._id,
                 }))}
                 value={
-                  locationName
-                    .map((loc) => ({ label: loc.name }))
-                    .find((l) => l.label === formData.locationName) || null
+                  locations
+                    ?.map((loc: any) => ({
+                      label: loc?.locationName,
+                      id: loc?._id,
+                    }))
+                    .find((l: any) => l?.id === formData?.locationId) || null
                 }
                 onChange={(e, value) =>
                   setFormData((prev) => ({
                     ...prev,
+                    locationId: value?.id || "",
                     locationName: value?.label || "",
                   }))
                 }
@@ -98,29 +107,23 @@ function AddSubLocation({ isOpen, onClose, onAdd, locationName }: any) {
                         borderRadius: "0.5rem",
                         backgroundColor: "#f9fafb",
                         height: "42px",
-
                         "& fieldset": {
                           borderColor: "#e5e7eb",
                         },
-
                         "&:hover fieldset": {
                           borderColor: "#e5e7eb",
                         },
-
                         "&.Mui-focused": {
                           boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
                         },
-
                         "&.Mui-focused fieldset": {
                           borderColor: "#c7d2fe",
                         },
-
                         "& input": {
                           padding: "10px 16px",
                           fontSize: "14px",
                           color: "#374151",
                         },
-
                         "& .MuiAutocomplete-endAdornment": {
                           top: "50%",
                           transform: "translateY(-50%)",

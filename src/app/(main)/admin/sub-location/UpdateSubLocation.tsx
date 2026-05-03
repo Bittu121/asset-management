@@ -7,10 +7,11 @@ function UpdateSubLocation({
   onClose,
   selectedSubLocation,
   onUpdate,
-  locationName,
+  locations,
 }: any) {
   const [form, setForm] = useState({
     subLocationName: "",
+    locationId: "",
     locationName: "",
     floor: "",
     isActive: true,
@@ -18,11 +19,26 @@ function UpdateSubLocation({
 
   useEffect(() => {
     if (selectedSubLocation) {
-      setForm(selectedSubLocation);
+      setForm({
+        subLocationName: selectedSubLocation?.subLocationName,
+        locationId: selectedSubLocation?.locationId,
+        locationName: selectedSubLocation?.locationName,
+        floor: selectedSubLocation?.floor || "",
+        isActive: selectedSubLocation?.isActive,
+      });
     }
   }, [selectedSubLocation]);
 
   if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    if (!form?.subLocationName || !form?.locationId || !form?.locationName) {
+      alert("Please fill all required fields");
+      return;
+    }
+    onUpdate(form);
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
@@ -71,17 +87,20 @@ function UpdateSubLocation({
               </label>
 
               <Autocomplete
-                options={locationName.map((loc: any) => ({
-                  label: loc.name,
+                options={locations?.map((loc: any) => ({
+                  label: loc?.locationName,
+                  id: loc?._id,
                 }))}
                 value={
-                  locationName
-                    .map((loc: any) => ({ label: loc.name }))
-                    .find((l) => l.label === form.locationName) || null
+                  locations?.map((loc: any) => ({
+                      label: loc?.locationName,
+                      id: loc?._id,
+                    })).find((l: any) => l?.id === form?.locationId) || null
                 }
                 onChange={(e, value) =>
                   setForm((prev) => ({
                     ...prev,
+                    locationId: value?.id || "",
                     locationName: value?.label || "",
                   }))
                 }
@@ -96,29 +115,23 @@ function UpdateSubLocation({
                         borderRadius: "0.5rem",
                         backgroundColor: "#f9fafb",
                         height: "42px",
-
                         "& fieldset": {
                           borderColor: "#e5e7eb",
                         },
-
                         "&:hover fieldset": {
                           borderColor: "#e5e7eb",
                         },
-
                         "&.Mui-focused": {
                           boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
                         },
-
                         "&.Mui-focused fieldset": {
                           borderColor: "#c7d2fe",
                         },
-
                         "& input": {
                           padding: "10px 16px",
                           fontSize: "14px",
                           color: "#374151",
                         },
-
                         "& .MuiAutocomplete-endAdornment": {
                           top: "50%",
                           transform: "translateY(-50%)",
@@ -180,10 +193,7 @@ function UpdateSubLocation({
           </button>
 
           <button
-            onClick={() => {
-              onUpdate(form);
-              onClose();
-            }}
+            onClick={handleSubmit}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
           >
             Update
