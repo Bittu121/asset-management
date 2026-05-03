@@ -3,15 +3,10 @@
 import React, { useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 
-function AddSubDepartment({
-  isOpen,
-  onClose,
-  onAdd,
-  departmentName,
-  manager,
-}: any) {
+function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
   const [formData, setFormData] = useState({
     subDepartmentName: "",
+    departmentId: "",
     departmentName: "",
     manager: "",
     description: "",
@@ -25,9 +20,19 @@ function AddSubDepartment({
   };
 
   const handleSubmit = () => {
+    if (
+      !formData.subDepartmentName ||
+      !formData.departmentId ||
+      !formData.departmentName
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
+
     onAdd(formData);
     setFormData({
       subDepartmentName: "",
+      departmentId: "",
       departmentName: "",
       manager: "",
       description: "",
@@ -36,21 +41,10 @@ function AddSubDepartment({
     onClose();
   };
 
-  const deptOptions = Array.from(
-    new Map(
-      departmentName
-        .filter((d: any) => d.name && d.name.trim() !== "")
-        .map((d: any) => [d.id, { id: d.id, label: d.name }]),
-    ).values(),
-  );
-
-  const managerOptions = Array.from(
-    new Map(
-      manager
-        .filter((m: any) => m.name && m.name.trim() !== "")
-        .map((m: any) => [m.id, { id: m.id, label: m.name }]),
-    ).values(),
-  );
+  const deptOptions = departments.map((d: any) => ({
+    id: d._id,
+    label: d.departmentName,
+  }));
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
@@ -84,7 +78,7 @@ function AddSubDepartment({
               </label>
               <input
                 name="subDepartmentName"
-                value={formData.subDepartmentName || ""}
+                value={formData.subDepartmentName}
                 onChange={handleChange}
                 placeholder="Sub Department Name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
@@ -105,12 +99,13 @@ function AddSubDepartment({
                 }
                 value={
                   deptOptions.find(
-                    (d: any) => d.label === formData.departmentName,
+                    (d: any) => d.id === formData.departmentId,
                   ) || null
                 }
                 onChange={(e, value) =>
                   setFormData((prev) => ({
                     ...prev,
+                    departmentId: value?.id || "",
                     departmentName: value?.label || "",
                   }))
                 }
@@ -146,48 +141,12 @@ function AddSubDepartment({
               <label className="block text-sm font-semibold text-gray-500 mb-1">
                 Manager
               </label>
-
-              <Autocomplete
-                options={managerOptions}
-                getOptionLabel={(option: any) => option.label}
-                isOptionEqualToValue={(option, value: any) =>
-                  option.id === value.id
-                }
-                value={
-                  managerOptions.find(
-                    (m: any) => m.label === formData.manager,
-                  ) || null
-                }
-                onChange={(e, value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    manager: value?.label || "",
-                  }))
-                }
-                fullWidth
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="Select Manager"
-                    size="small"
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "0.5rem",
-                        backgroundColor: "#f9fafb",
-                        height: "42px",
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#e5e7eb" },
-                        "&.Mui-focused": {
-                          boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
-                        },
-                        "& input": {
-                          padding: "10px 16px",
-                          fontSize: "14px",
-                        },
-                      },
-                    }}
-                  />
-                )}
+              <input
+                name="manager"
+                value={formData.manager}
+                onChange={handleChange}
+                placeholder="Manager email"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
             </div>
 
@@ -197,12 +156,12 @@ function AddSubDepartment({
                 Description
               </label>
               <textarea
-                value={formData.description || ""}
+                value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
                 placeholder="Description"
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 min-h-[70px]"
               />
             </div>
 

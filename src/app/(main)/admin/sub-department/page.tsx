@@ -1,5 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  getSubDepartmentsAction,
+  createSubDepartmentAction,
+  updateSubDepartmentAction,
+  deleteSubDepartmentAction,
+} from "@/store/subDepartment/subDepartmentActions";
+import { getDepartmentsAction } from "@/store/department/departmentActions";
 import AddSubDepartment from "./AddSubDepartment";
 import UpdateSubDepartment from "./UpdateSubDepartment";
 import Pagination from "../../../components/common/Pagination";
@@ -11,138 +20,72 @@ import { GoPlusCircle } from "react-icons/go";
 import { FcDepartment } from "react-icons/fc";
 
 type SubDepartmentType = {
-  id: number;
+  _id: string;
   subDepartmentName: string;
+  departmentId: string;
   departmentName: string;
-  manager: string;
+  manager?: string;
   description?: string;
   isActive: boolean;
   createdAt?: string;
 };
 
 function SubDepartment() {
-  const [departmentName] = useState([
-    { id: 1, name: "Accounts" },
-    { id: 2, name: "Administration" },
-    { id: 3, name: "HR" },
-    { id: 4, name: "Finance" },
-    { id: 5, name: "Legal" },
-  ]);
-  const [manager] = useState([
-    { id: 1, name: "bittu@gmail.com" },
-    { id: 2, name: "" },
-    { id: 3, name: "" },
-    { id: 4, name: "" },
-    { id: 5, name: "" },
-  ]);
-  const [subDepartment, setSubDepartment] = useState<SubDepartmentType[]>([
-    {
-      id: 1,
-      subDepartmentName: "Visual Design",
-      departmentName: "Accounts",
-      manager: "bittu@gmail.com",
-      description:
-        "Handles UI/UX design, branding, and visual assets for digital products.",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 2,
-      subDepartmentName: "Vendor Procurement",
-      departmentName: "Hr",
-      manager: "bittu1@gmail.com",
-      description:
-        "Manages vendor sourcing, onboarding, and procurement processes.",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 3,
-      subDepartmentName: "Recruitment",
-      departmentName: "Hr",
-      manager: "",
-      description:
-        "Responsible for hiring, interviews, and talent acquisition.",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 4,
-      subDepartmentName: "Payroll Management",
-      departmentName: "Accounts",
-      manager: "bk@gmail.com",
-      description:
-        "Handles employee salary processing, deductions, and payslips.",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 5,
-      subDepartmentName: "IT Support",
-      departmentName: "Engineering",
-      manager: "",
-      description:
-        "Provides technical support, system maintenance, and issue resolution.",
-      isActive: true,
-      createdAt: new Date().toDateString(),
-    },
-    {
-      id: 6,
-      subDepartmentName: "Quality Assurance",
-      departmentName: "Engineering",
-      manager: "",
-      description:
-        "Ensures product quality through testing and validation processes.",
-      isActive: false,
-      createdAt: new Date().toDateString(),
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { subDepartments, loading } = useSelector(
+    (state: RootState) => state.subDepartment,
+  );
+  const { departments } = useSelector((state: RootState) => state.department);
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedSubDepartment, setSelectedSubDepartment] =
     useState<SubDepartmentType | null>(null);
 
-  //pagination step-1
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  //filter step-1
+  // Filters
   const [search, setSearch] = useState("");
   const [subDepartmentFilter, setSubDepartmentFilter] = useState("");
 
-  //filter step-2
-  const filteredSubDepartments = subDepartment.filter((subdepts) => {
+  // Fetch data on mount
+  useEffect(() => {
+    dispatch(getSubDepartmentsAction());
+    dispatch(getDepartmentsAction());
+  }, [dispatch]);
+
+  // Filter sub departments
+  const filteredSubDepartments = subDepartments.filter((subdept) => {
     const searchMatch =
       search === "" ||
-      subdepts.subDepartmentName.toLowerCase().includes(search.toLowerCase()) ||
-      subdepts.subDepartmentName.toLowerCase().includes(search.toLowerCase());
+      subdept.subDepartmentName.toLowerCase().includes(search.toLowerCase()) ||
+      subdept.departmentName.toLowerCase().includes(search.toLowerCase());
 
     const departmentMatch =
       subDepartmentFilter === "" ||
-      subdepts.departmentName.toLowerCase() ===
+      subdept.departmentName.toLowerCase() ===
         subDepartmentFilter.toLowerCase();
 
     return searchMatch && departmentMatch;
   });
 
-  //pagination step-2
+  // Pagination
   const totalPages = Math.ceil(filteredSubDepartments.length / itemsPerPage);
-  const paginatedsubDepartment = filteredSubDepartments.slice(
+  const paginatedSubDepartment = filteredSubDepartments.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
-  //Create Api
-  const handleAddSubDepartment = (
-    data: Omit<SubDepartmentType, "id" | "createdAt">,
+  // Handlers
+  const handleAddSubDepartment = async (
+    data: Omit<SubDepartmentType, "_id" | "createdAt">,
   ) => {
-    const newSubDept: SubDepartmentType = {
-      ...data,
-      id: subDepartment.length + 1,
-      createdAt: new Date().toDateString(),
-    };
-    toast.success("Department added successfully");
-    setSubDepartment((prev) => [newSubDept, ...prev]);
+    const success = await dispatch(createSubDepartmentAction(data));
+    if (success) {
+      dispatch(getSubDepartmentsAction());
+    }
   };
 
   const handleEdit = (subDept: SubDepartmentType) => {
@@ -150,20 +93,71 @@ function SubDepartment() {
     setIsUpdateOpen(true);
   };
 
-  //Update Api
-  const handleUpdateSubDepartment = (updatedData: any) => {
-    setSubDepartment((prev) =>
-      prev.map((d) =>
-        d.id === selectedSubDepartment?.id ? { ...d, ...updatedData } : d,
-      ),
-    );
-    toast.success("Department updated successfully");
+  const handleUpdateSubDepartment = async (updatedData: any) => {
+    if (selectedSubDepartment) {
+      const success = await dispatch(
+        updateSubDepartmentAction(selectedSubDepartment._id, updatedData),
+      );
+      if (success) {
+        dispatch(getSubDepartmentsAction());
+      }
+    }
   };
 
-  //Delete Api
-  const handleDelete = (id: number) => {
-    toast.success("Sub Department deleted successfully");
-    setSubDepartment((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = async (id: string) => {
+    await dispatch(deleteSubDepartmentAction(id));
+    dispatch(getSubDepartmentsAction());
+  };
+
+  // Excel Upload Handler
+  const handleExcelUpload = async (uploadedData: any[]) => {
+    const formattedData = uploadedData.map((item) => {
+      // Find department by name to get ID
+      const department = departments.find(
+        (dept) =>
+          dept.departmentName.toLowerCase() ===
+          (item.Department || item.departmentName || "").toLowerCase(),
+      );
+
+      return {
+        subDepartmentName:
+          item["Sub Department"] || item.subDepartmentName || "",
+        departmentId: department?._id || "",
+        departmentName: department?.departmentName || "",
+        manager: item.Manager || item.manager || "",
+        description: item.Description || item.description || "",
+        isActive:
+          item.Status === "Active" ||
+          item.status === "Active" ||
+          item.isActive === true,
+      };
+    });
+
+    // Validate data
+    const validData = formattedData.filter((item) => item.departmentId);
+
+    if (validData.length === 0) {
+      toast.error("No valid departments found in uploaded data");
+      return;
+    }
+
+    // Upload each item
+    let successCount = 0;
+    for (const item of validData) {
+      const success = await dispatch(createSubDepartmentAction(item));
+      if (success) successCount++;
+    }
+
+    // Refresh list
+    dispatch(getSubDepartmentsAction());
+
+    if (successCount === validData.length) {
+      toast.success(`${successCount} sub departments uploaded successfully`);
+    } else {
+      toast.warning(
+        `${successCount} of ${validData.length} sub departments uploaded`,
+      );
+    }
   };
 
   return (
@@ -172,7 +166,6 @@ function SubDepartment() {
         {/* TITLE */}
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">
-            {" "}
             Sub Department
           </h1>
         </div>
@@ -193,10 +186,10 @@ function SubDepartment() {
               onChange={(e) => setSubDepartmentFilter(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
-              <option value="">Select Departments</option>
-              {departmentName.map((dept) => (
-                <option key={dept.id} value={dept.name}>
-                  {dept.name}
+              <option value="">Select Department</option>
+              {departments.map((dept) => (
+                <option key={dept._id} value={dept.departmentName}>
+                  {dept.departmentName}
                 </option>
               ))}
             </select>
@@ -206,33 +199,14 @@ function SubDepartment() {
           <div className="flex items-center gap-2">
             <ExcelActions
               data={filteredSubDepartments}
-              fileName="sub-Department"
+              fileName="sub-department"
               headers={[
-                { label: "ID", key: "id" },
                 { label: "Sub Department", key: "subDepartmentName" },
                 { label: "Department", key: "departmentName" },
                 { label: "Manager", key: "manager" },
                 { label: "Status", key: "isActive" },
               ]}
-              onUpload={(uploadedData: any[]) => {
-                const formattedData: SubDepartmentType[] = uploadedData.map(
-                  (item, index) => ({
-                    id: Date.now() + index,
-                    subDepartmentName:
-                      item["Sub Department"] || item.subDepartmentName || "",
-                    departmentName:
-                      item.Department || item.departmentName || "",
-                    manager: item.Manager || item.manager || "",
-                    isActive:
-                      item.Status === "Active" ||
-                      item.status === "Active" ||
-                      item.isActive === true,
-                    createdAt: new Date().toDateString(),
-                  }),
-                );
-                setSubDepartment((prev) => [...formattedData, ...prev]);
-                toast.success("Sub Departments uploaded successfully");
-              }}
+              onUpload={handleExcelUpload}
             />
 
             <button
@@ -260,42 +234,48 @@ function SubDepartment() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {paginatedsubDepartment?.length === 0 ? (
-              <>
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center gap-3">
-                      <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                        <FcDepartment size={18} />
-                      </div>
-
-                      <h3 className="text-sm font-semibold text-gray-700">
-                        No Sub Department Found
-                      </h3>
-
-                      <p className="text-xs text-gray-500">
-                        You haven’t added any Sub Department yet.
-                      </p>
-
-                      <button
-                        onClick={() => setIsAddOpen(true)}
-                        className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                      >
-                        Sub Department
-                      </button>
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center">
+                  <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                  </div>
+                </td>
+              </tr>
+            ) : paginatedSubDepartment.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                      <FcDepartment size={24} />
                     </div>
-                  </td>
-                </tr>
-              </>
+
+                    <h3 className="text-sm font-semibold text-gray-700">
+                      No Sub Departments Found
+                    </h3>
+
+                    <p className="text-xs text-gray-500">
+                      You haven't added any sub departments yet.
+                    </p>
+
+                    <button
+                      onClick={() => setIsAddOpen(true)}
+                      className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                    >
+                      Add Sub Department
+                    </button>
+                  </div>
+                </td>
+              </tr>
             ) : (
-              paginatedsubDepartment.map((subDept) => (
+              paginatedSubDepartment.map((subDept) => (
                 <tr
-                  key={subDept?.id}
+                  key={subDept._id}
                   className="hover:bg-gray-50 transition-all duration-150"
                 >
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subDept.id}
+                      {subDept._id.slice(-6)}
                     </div>
                   </td>
                   <td className="px-6 py-5">
@@ -310,7 +290,7 @@ function SubDepartment() {
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subDept.manager}
+                      {subDept.manager || "-"}
                     </div>
                   </td>
                   <td className="px-6 py-5">
@@ -334,10 +314,9 @@ function SubDepartment() {
                       >
                         <HiPencilSquare size={19} />
                       </button>
-                      {/* Divider */}
                       <div className="w-px h-4 bg-gray-200"></div>
                       <button
-                        onClick={() => handleDelete(subDept.id)}
+                        onClick={() => handleDelete(subDept._id)}
                         className="p-1.5 rounded-md hover:bg-red-50 text-red-800 transition"
                         title="Delete"
                       >
@@ -356,16 +335,14 @@ function SubDepartment() {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAddSubDepartment}
-        departmentName={departmentName}
-        manager={manager}
+        departments={departments}
       />
       <UpdateSubDepartment
         isOpen={isUpdateOpen}
         onClose={() => setIsUpdateOpen(false)}
         selectedSubDepartment={selectedSubDepartment}
         onUpdate={handleUpdateSubDepartment}
-        departmentName={departmentName}
-        manager={manager}
+        departments={departments}
       />
       <div className="bg-white border border-gray-200 rounded-b-xl px-6 py-4">
         <Pagination
