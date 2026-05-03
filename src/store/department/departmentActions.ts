@@ -32,3 +32,30 @@ export const getDepartmentsAction = () => async (dispatch: Dispatch) => {
     toast.error("Failed to fetch departments");
   }
 };
+
+// Create department
+export const createDepartmentAction =
+  (departmentData: any) => async (dispatch: Dispatch) => {
+    try {
+      const res = await fetch("/api/admin/department", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(departmentData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Failed to create department");
+        return false;
+      }
+
+      dispatch({ type: CREATE_DEPARTMENT_SUCCESS, payload: data.data });
+      toast.success(data.message || "Department created successfully");
+      return true;
+    } catch (error) {
+      toast.error("Failed to create department");
+      return false;
+    }
+  };
