@@ -8,11 +8,11 @@ import * as userAccountService from "./service";
 
 // GET all user accounts
 export const getUserAccounts = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const users = await userAccountService.getAllUserAccounts();
   return successResponse(users, "User accounts fetched successfully", 200);
@@ -20,11 +20,11 @@ export const getUserAccounts = async (req: NextRequest) => {
 
 // GET single user account
 export const getSingleUserAccount = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const user = await userAccountService.getUserAccountById(id);
   if (!user) return errorResponse("User account not found", 404);
@@ -34,11 +34,11 @@ export const getSingleUserAccount = async (req: NextRequest, id: string) => {
 
 // POST create user account
 export const createUserAccount = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -67,11 +67,11 @@ export const createUserAccount = async (req: NextRequest) => {
 
 // PUT update user account
 export const updateUserAccount = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -83,11 +83,11 @@ export const updateUserAccount = async (req: NextRequest, id: string) => {
 
 // DELETE user account
 export const deleteUserAccount = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const user = await userAccountService.deleteUserAccount(id);
   if (!user) return errorResponse("User account not found", 404);

@@ -4,12 +4,14 @@ import authReducer from "../auth/authReducer";
 import locationReducer from "../location/locationReducer";
 import subLocationReducer from "../subLocation/subLocationReducer";
 import departmentReducer from "../department/departmentReducer";
+import subDepartmentReducer from "../subDepartment/subDepartmentReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   location: locationReducer,
   subLocation: subLocationReducer,
   department: departmentReducer,
+  subDepartment: subDepartmentReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
