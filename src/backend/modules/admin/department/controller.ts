@@ -8,8 +8,8 @@ import * as departmentService from "./service";
 
 // GET all departments
 export const getDepartments = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
   const departments = await departmentService.getAllDepartments();
   return successResponse(departments, "Departments fetched successfully", 200);
@@ -17,8 +17,8 @@ export const getDepartments = async (req: NextRequest) => {
 
 // GET single department
 export const getSingleDepartment = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
   const department = await departmentService.getDepartmentById(id);
   if (!department) return errorResponse("Department not found", 404);
@@ -28,11 +28,11 @@ export const getSingleDepartment = async (req: NextRequest, id: string) => {
 
 // POST create department
 export const createDepartment = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -49,11 +49,11 @@ export const createDepartment = async (req: NextRequest) => {
 
 // PUT update department
 export const updateDepartment = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -65,11 +65,11 @@ export const updateDepartment = async (req: NextRequest, id: string) => {
 
 // DELETE department
 export const deleteDepartment = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = authenticate(req);
+  if ("status" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "admin");
+  if (roleCheck) return roleCheck;
 
   const department = await departmentService.deleteDepartment(id);
   if (!department) return errorResponse("Department not found", 404);
