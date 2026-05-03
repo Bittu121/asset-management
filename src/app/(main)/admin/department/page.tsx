@@ -19,39 +19,7 @@ type Department = {
 };
 
 function Department() {
-  const [departments, setDepartments] = useState<Department[]>([
-    {
-      id: 1,
-      departmentName: "Accounts",
-      code: "CC-ACC",
-      createdAt: "Dec 17, 2025",
-    },
-    {
-      id: 2,
-      departmentName: "Administration",
-      code: "CC-ADMIN",
-      createdAt: "Dec 17, 2025",
-    },
-    {
-      id: 3,
-      departmentName: "HR",
-      code: "CC-HR",
-      createdAt: "Dec 17, 2025",
-    },
-    { id: 4, departmentName: "IT", code: "CC-IT", createdAt: "Dec 17, 2025" },
-    {
-      id: 5,
-      departmentName: "Finance",
-      code: "CC-FIN",
-      createdAt: "Dec 17, 2025",
-    },
-    {
-      id: 6,
-      departmentName: "Legal",
-      code: "CC-LEGAL",
-      createdAt: "Dec 17, 2025",
-    },
-  ]);
+  
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedDept, setSelectedDept] = useState<Department | null>(null);
