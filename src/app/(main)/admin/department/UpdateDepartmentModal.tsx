@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function UpdateDepartmentModal({
   isOpen,
@@ -14,10 +15,24 @@ export default function UpdateDepartmentModal({
   });
 
   useEffect(() => {
-    if (department) setForm(department);
+    if (department) {
+      setForm({
+        departmentName: department.departmentName,
+        code: department.code,
+      });
+    }
   }, [department]);
 
   if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    if (!form.departmentName || !form.code) {
+      toast("Please fill all required fields");
+      return;
+    }
+    onUpdate(form);
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">

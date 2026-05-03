@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
   const [formData, setFormData] = useState({
@@ -10,11 +11,16 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
 
   if (!isOpen) return null;
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = () => {
+    if (!formData.departmentName || !formData.code) {
+      toast("Please fill all required fields");
+      return;
+    }
+
     onAdd(formData);
     setFormData({ departmentName: "", code: "" });
     onClose();
@@ -42,7 +48,6 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
         {/* Body */}
         <div className="px-6 py-5">
           <div className="space-y-3">
-         
             <div>
               <label className="block text-sm font-semibold text-gray-500 mb-1">
                 Department Name <span className="text-red-500">*</span>
