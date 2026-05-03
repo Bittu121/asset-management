@@ -59,3 +59,32 @@ export const createDepartmentAction =
       return false;
     }
   };
+
+// Update department
+export const updateDepartmentAction =
+  (id: string, departmentData: any) => async (dispatch: Dispatch) => {
+    try {
+      const res = await fetch(`/api/admin/department/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(departmentData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Failed to update department");
+        return false;
+      }
+
+      dispatch({ type: UPDATE_DEPARTMENT_SUCCESS, payload: data.data });
+      toast.success(data.message || "Department updated successfully");
+      return true;
+    } catch (error) {
+      toast.error("Failed to update department");
+      return false;
+    }
+  };
+
+  
