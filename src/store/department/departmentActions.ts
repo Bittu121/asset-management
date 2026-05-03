@@ -87,4 +87,25 @@ export const updateDepartmentAction =
     }
   };
 
-  
+// Delete department
+export const deleteDepartmentAction =
+  (id: string) => async (dispatch: Dispatch) => {
+    try {
+      const res = await fetch(`/api/admin/department/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Failed to delete department");
+        return;
+      }
+
+      dispatch({ type: DELETE_DEPARTMENT_SUCCESS, payload: id });
+      toast.success(data.message || "Department deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete department");
+    }
+  };
