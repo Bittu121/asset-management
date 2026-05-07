@@ -1,35 +1,33 @@
 import Role from "./schema";
 import { CreateRoleDto, UpdateRoleDto } from "./dto";
 
-// Get all roles
 export const getAllRoles = async () => {
-  const roles = await Role.find().sort({ createdAt: -1 });
-  return roles;
+  return await Role.find().sort({ createdAt: -1 });
 };
 
-// Get role by id
 export const getRoleById = async (id: string) => {
-  const role = await Role.findById(id);
-  return role;
+  return await Role.findById(id);
 };
 
-// Create role
+export const getRoleByName = async (name: string) => {
+  return await Role.findOne({ name: name.toUpperCase() });
+};
+
 export const createRole = async (data: CreateRoleDto) => {
-  const existing = await Role.findOne({ name: data.name.toUpperCase() });
-  if (existing) return null;
-
-  const role = await Role.create(data);
+  const role = await Role.create({
+    ...data,
+    name: data.name.toUpperCase(),
+  });
   return role;
 };
 
-// Update role
 export const updateRole = async (id: string, data: UpdateRoleDto) => {
-  const role = await Role.findByIdAndUpdate(id, data, { new: true });
-  return role;
+  if (data.name) {
+    data.name = data.name.toUpperCase();
+  }
+  return await Role.findByIdAndUpdate(id, data, { new: true });
 };
 
-// Delete role
 export const deleteRole = async (id: string) => {
-  const role = await Role.findByIdAndDelete(id);
-  return role;
+  return await Role.findByIdAndDelete(id);
 };

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { permissionModules } from "./rolesAndPermission";
 
-function AddRoles({ isOpen, onClose, onAdd }: any) {
+function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -64,7 +64,9 @@ function AddRoles({ isOpen, onClose, onAdd }: any) {
               </label>
               <input
                 value={form.name || ""}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, name: e.target.value.toUpperCase() })
+                }
                 placeholder="Enter role name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
@@ -83,6 +85,7 @@ function AddRoles({ isOpen, onClose, onAdd }: any) {
                 placeholder="Enter description"
                 rows={3}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
+                disabled={loading}
               />
             </div>
 
@@ -109,6 +112,7 @@ function AddRoles({ isOpen, onClose, onAdd }: any) {
                             checked={form.permissions.includes(perm)}
                             onChange={() => togglePermission(perm)}
                             className="w-4 h-4"
+                            disabled={loading}
                           />
                           {perm}
                         </label>
@@ -151,6 +155,7 @@ function AddRoles({ isOpen, onClose, onAdd }: any) {
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            disabled={loading}
           >
             Cancel
           </button>
@@ -158,8 +163,9 @@ function AddRoles({ isOpen, onClose, onAdd }: any) {
           <button
             onClick={handleSubmit}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
+            disabled={loading}
           >
-            Create
+            {loading ? "Creating..." : "Create"}
           </button>
         </div>
       </div>

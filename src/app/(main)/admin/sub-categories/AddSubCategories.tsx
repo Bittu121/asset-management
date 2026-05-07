@@ -1,8 +1,14 @@
 "use client";
-import React, { useState } from "react";
-import { TextField, Autocomplete } from "@mui/material";
+import { useState } from "react";
+import { Autocomplete, TextField } from "@mui/material";
 
-function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
+function AddSubCategories({
+  isOpen,
+  onClose,
+  onAdd,
+  loading,
+  assetCategories = [],
+}: any) {
   const [form, setForm] = useState({
     name: "",
     category: "",
@@ -12,20 +18,19 @@ function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
 
   if (!isOpen) return null;
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
   const handleSubmit = () => {
     onAdd(form);
     setForm({ name: "", category: "", description: "", isActive: true });
     onClose();
   };
 
+  const selectedCategory =
+    assetCategories.find((c: any) => c._id === form.category) || null;
+
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-lg rounded-lg shadow-2xl overflow-hidden">
+        {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
@@ -35,57 +40,49 @@ function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
               Create a new sub category
             </p>
           </div>
-
           <button
             onClick={onClose}
+            disabled={loading}
             className="text-black text-xl font-bold cursor-pointer"
           >
             ✕
           </button>
         </div>
 
+        {/* Body */}
         <div className="px-6 py-5 space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Sub Category Name *
+              Sub Category Name <span className="text-red-500">*</span>
             </label>
             <input
-              name="name"
               value={form.name}
-              onChange={handleChange}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Enter sub category name"
+              disabled={loading}
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Category
+              Category <span className="text-red-500">*</span>
             </label>
-
             <Autocomplete
-              options={categories || []}
-              getOptionLabel={(option: any) =>
-                typeof option === "string" ? option : option?.name || ""
+              options={assetCategories}
+              getOptionLabel={(option: any) => option?.name || ""}
+              isOptionEqualToValue={(option: any, value: any) =>
+                option._id === value._id
               }
-              isOptionEqualToValue={(option, value) =>
-                (option?.id || option) === (value?.id || value)
+              value={selectedCategory}
+              onChange={(_e, value: any) =>
+                setForm((prev) => ({ ...prev, category: value?._id || "" }))
               }
-              value={
-                categories.find((c: any) => (c?.name || c) === form.category) ||
-                null
-              }
-              onChange={(e, value: any) =>
-                setForm((prev) => ({
-                  ...prev,
-                  category:
-                    typeof value === "string" ? value : value?.name || "",
-                }))
-              }
+              disabled={loading}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="Select Category"
+                  placeholder="Select category"
                   size="small"
                   sx={{
                     "& .MuiOutlinedInput-root": {
@@ -97,10 +94,7 @@ function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
                       "&.Mui-focused": {
                         boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
                       },
-                      "& input": {
-                        padding: "10px 16px",
-                        fontSize: "14px",
-                      },
+                      "& input": { padding: "10px 16px", fontSize: "14px" },
                     },
                   }}
                 />
@@ -113,11 +107,13 @@ function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
               Description
             </label>
             <textarea
-              name="description"
               value={form.description}
-              onChange={handleChange}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
               placeholder="Enter description"
               rows={3}
+              disabled={loading}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
             />
           </div>
@@ -126,14 +122,11 @@ function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
             <span className="text-sm font-semibold text-gray-500">
               Active Status
             </span>
-
             <button
               onClick={() =>
-                setForm((prev) => ({
-                  ...prev,
-                  isActive: !prev.isActive,
-                }))
+                setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
               }
+              disabled={loading}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
                 form.isActive ? "bg-indigo-600" : "bg-gray-300"
               }`}
@@ -151,16 +144,17 @@ function AddSubCategories({ isOpen, onClose, onAdd, categories = [] }: any) {
         <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm  text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            disabled={loading}
+            className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancel
           </button>
-
           <button
             onClick={handleSubmit}
+            disabled={loading}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
           >
-            Create
+            {loading ? "Creating..." : "Create"}
           </button>
         </div>
       </div>

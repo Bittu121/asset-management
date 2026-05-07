@@ -1,269 +1,196 @@
 "use client";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AddSubCategories from "./AddSubCategories";
 import UpdateSubCategories from "./UpdateSubCategories";
 import Pagination from "../../../components/common/Pagination";
-import { FileSpreadsheet, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { Trash2 } from "lucide-react";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
 import { FiFolder } from "react-icons/fi";
-
-type Category = {
-  id: number;
-  name: string;
-};
-
-type AssetSubCategories = {
-  id: number;
-  name: string;
-  category: string;
-  description: string;
-  isActive: boolean;
-  createdAt: string;
-};
-
-const categories: Category[] = [
-  { id: 1, name: "Laptop" },
-  { id: 2, name: "Desktop" },
-  { id: 3, name: "Networking" },
-  { id: 4, name: "Server" },
-  { id: 5, name: "Printer" },
-];
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  fetchSubCategories,
+  createSubCategoryAction,
+  updateSubCategoryAction,
+  deleteSubCategoryAction,
+} from "@/store/subCategories/subCategoriesActions";
+import { fetchAssetCategories } from "@/store/assetCategories/assetCategoriesActions";
 
 function AssetSubCategories() {
-  const [assetSubCategories, setAssetSubCategories] = useState<
-    AssetSubCategories[]
-  >([
-    {
-      id: 1,
-      name: "MacBook Pro",
-      category: "Laptop",
-      description: "Apple MacBook Pro devices",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 2,
-      name: "Windows Laptop",
-      category: "Laptop",
-      description: "Dell, HP, Lenovo laptops",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 3,
-      name: "Laser Printer",
-      category: "Printer",
-      description: "High-speed office printers",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 4,
-      name: "WiFi Router",
-      category: "Networking",
-      description: "Wireless network routers",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 5,
-      name: "Rack Server",
-      category: "Server",
-      description: "Data center rack servers",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 6,
-      name: "Desktop Workstation",
-      category: "Desktop",
-      description: "High-performance desktop systems",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 7,
-      name: "Inkjet Printer",
-      category: "Printer",
-      description: "Color inkjet office printers",
-      isActive: true,
-      createdAt: "01/02/2026",
-    },
-    {
-      id: 8,
-      name: "Network Switch",
-      category: "Networking",
-      description: "Managed network switches",
-      isActive: true,
-      createdAt: "01/02/2026",
-    },
-    {
-      id: 9,
-      name: "Chromebook",
-      category: "Laptop",
-      description: "Google Chromebook devices",
-      isActive: false,
-      createdAt: "01/03/2026",
-    },
-    {
-      id: 10,
-      name: "iMac",
-      category: "Desktop",
-      description: "Apple iMac all-in-one computers",
-      isActive: true,
-      createdAt: "01/03/2026",
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { subCategories, loading, createLoading, updateLoading, deleteLoading } =
+    useSelector((state: RootState) => state.subCategories);
+  const { assetCategories } = useSelector(
+    (state: RootState) => state.assetCategories,
+  );
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [selectedAssetSubCategories, setSelectedAssetSubCategories] =
-    useState<AssetSubCategories | null>(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null);
 
-  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
-  //filter step-1
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [assetSubCategoriesFilter, setAssetSubCategoriesFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
-  //filter step-2
-  const filteredAssetSubCategories = assetSubCategories.filter(
-    (assetSubCat) => {
-      return (
-        assetSubCat.name.toLowerCase().includes(search.toLowerCase()) &&
-        (assetSubCategoriesFilter === "" ||
-          assetSubCat.category === assetSubCategoriesFilter) &&
-        (statusFilter === "All" ||
-          (statusFilter === "Active" && assetSubCat.isActive) ||
-          (statusFilter === "Inactive" && !assetSubCat.isActive))
-      );
-    },
-  );
+  useEffect(() => {
+    dispatch(fetchSubCategories());
+    dispatch(fetchAssetCategories());
+  }, [dispatch]);
 
-  //pagination step-2
-  const totalPages = Math.ceil(
-    filteredAssetSubCategories.length / itemsPerPage,
-  );
-  const paginatedAssetSubCategories = filteredAssetSubCategories.slice(
+  const filteredSubCategories = subCategories.filter((sc) => {
+    const matchesSearch =
+      search === "" ||
+      sc.name.toLowerCase().includes(search.toLowerCase()) ||
+      (sc.description || "").toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && sc.isActive) ||
+      (statusFilter === "Inactive" && !sc.isActive);
+    const matchesCategory =
+      categoryFilter === "" || sc.category?._id === categoryFilter;
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
+
+  const totalPages = Math.ceil(filteredSubCategories.length / itemsPerPage);
+  const paginatedSubCategories = filteredSubCategories.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
-  //Create Api
-  const handleAddAssetSubCategories = (
-    data: Omit<AssetSubCategories, "id" | "createdAt">,
-  ) => {
-    const newAssetSubCategories: AssetSubCategories = {
-      ...data,
-      id: assetSubCategories.length + 1,
-      createdAt: new Date().toDateString(),
-    };
-    toast.success("Asset Subcategories added successfully");
-    setAssetSubCategories((prev) => [newAssetSubCategories, ...prev]);
+  const handleAdd = (data: any) => {
+    dispatch(createSubCategoryAction(data, () => setIsAddOpen(false)));
   };
 
-  const handleEdit = (subCat: AssetSubCategories) => {
-    setSelectedAssetSubCategories(subCat);
+  const handleEdit = (sc: any) => {
+    setSelectedSubCategory(sc);
     setIsUpdateOpen(true);
   };
 
-  //Update Api
-  const handleUpdateAssetSubCategories = (updatedData: any) => {
-    setAssetSubCategories((prev) =>
-      prev.map((d) =>
-        d.id === selectedAssetSubCategories?.id ? { ...d, ...updatedData } : d,
-      ),
-    );
-    toast.success("Asset Subcategories updated successfully");
+  const handleUpdate = (updatedData: any) => {
+    if (selectedSubCategory) {
+      dispatch(
+        updateSubCategoryAction(selectedSubCategory._id, updatedData, () =>
+          setIsUpdateOpen(false),
+        ),
+      );
+    }
   };
 
-  //Delete Api
-  const handleDelete = (id: number) => {
-    toast.success("Asset Subcategories deleted successfully");
-    setAssetSubCategories((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this sub category?")) {
+      dispatch(deleteSubCategoryAction(id));
+    }
   };
+
+  const handleBulkUpload = (uploadedData: any[]) => {
+    uploadedData.forEach((item) => {
+      const categoryName = item.Category || item.category || "";
+      const matchedCategory = assetCategories.find(
+        (c) => c.name.toLowerCase() === categoryName.toLowerCase(),
+      );
+      const subCategoryData = {
+        name: item["Sub Category"] || item.name || "",
+        category: matchedCategory?._id || "",
+        description: item.Description || item.description || "",
+        isActive:
+          item.Status === "Active" ||
+          item.status === "Active" ||
+          item.isActive === true,
+      };
+      if (subCategoryData.name && subCategoryData.category) {
+        dispatch(createSubCategoryAction(subCategoryData));
+      }
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading sub categories...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
-        {/* TITLE */}
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">
-            {" "}
-            Asset SubCategories
+            Asset Sub Categories
           </h1>
         </div>
 
-        {/* CONTROLS */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          {/* LEFT */}
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Search..."
-              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 placeholder-gray-400
-              focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             />
+
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="All">All</option>
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
+
             <select
-              value={assetSubCategoriesFilter}
-              onChange={(e) => setAssetSubCategoriesFilter(e.target.value)}
+              value={categoryFilter}
+              onChange={(e) => {
+                setCategoryFilter(e.target.value);
+                setCurrentPage(1);
+              }}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
-              <option value="">All Asset SubCategories</option>
-              {categories.map((categ) => (
-                <option key={categ.id} value={categ.name}>
-                  {categ.name}
+              <option value="">All Categories</option>
+              {assetCategories.map((cat: any) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={filteredAssetSubCategories}
+              data={filteredSubCategories.map((sc: any) => ({
+                ID: sc._id.slice(-6),
+                "Sub Category": sc.name,
+                Category: sc.category?.name || "-",
+                Description: sc.description || "-",
+                Status: sc.isActive ? "Active" : "Inactive",
+                "Created At": new Date(sc.createdAt).toLocaleDateString(),
+              }))}
               fileName="asset-subcategories"
               headers={[
-                { label: "ID", key: "id" },
-                { label: "Sub Category", key: "name" },
-                { label: "Category", key: "category" },
-                { label: "Description", key: "description" },
-                { label: "Status", key: "isActive" },
+                { label: "ID", key: "ID" },
+                { label: "Sub Category", key: "Sub Category" },
+                { label: "Category", key: "Category" },
+                { label: "Description", key: "Description" },
+                { label: "Status", key: "Status" },
+                { label: "Created At", key: "Created At" },
               ]}
-              onUpload={(uploadedData: any[]) => {
-                const formattedData: AssetSubCategories[] = uploadedData.map(
-                  (item, index) => ({
-                    id: Date.now() + index,
-                    name: item["Sub Category"] || item.name || "",
-                    category: item.Category || item.category || "",
-                    description: item.Description || item.description || "",
-                    isActive:
-                      item.Status === "Active" ||
-                      item.status === "Active" ||
-                      item.isActive === true,
-                    createdAt: new Date().toDateString(),
-                  }),
-                );
-
-                setAssetSubCategories((prev) => [...formattedData, ...prev]);
-
-                toast.success("Asset subcategories uploaded successfully");
-              }}
+              onUpload={handleBulkUpload}
             />
 
             <button
@@ -277,9 +204,8 @@ function AssetSubCategories() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
-        <table className="min-w-[1100px] w-full">
+        <table className="min-w-275 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
               <th className="px-6 py-3 text-left">ID</th>
@@ -291,86 +217,80 @@ function AssetSubCategories() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {paginatedAssetSubCategories.length === 0 ? (
-              <>
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center gap-3">
-                      <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                        <FiFolder size={18}/>
-                      </div>
-
-                      <h3 className="text-sm font-semibold text-gray-700">
-                        No Asset Sub Categories Found
-                      </h3>
-
-                      <p className="text-xs text-gray-500">
-                        You haven’t added any Asset Sub Categories yet.
-                      </p>
-
-                      <button
-                        onClick={() => setIsAddOpen(true)}
-                        className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                      >
-                      Asset Sub Categories
-                      </button>
+            {paginatedSubCategories.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                      <FiFolder size={18} />
                     </div>
-                  </td>
-                </tr>
-              </>
+                    <h3 className="text-sm font-semibold text-gray-700">
+                      No Asset Sub Categories Found
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      You haven't added any asset sub categories yet.
+                    </p>
+                    <button
+                      onClick={() => setIsAddOpen(true)}
+                      className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                    >
+                      Add Sub Category
+                    </button>
+                  </div>
+                </td>
+              </tr>
             ) : (
-              paginatedAssetSubCategories.map((subCat) => (
+              paginatedSubCategories.map((sc: any) => (
                 <tr
-                  key={subCat.id}
+                  key={sc._id}
                   className="hover:bg-gray-50 transition-all duration-150"
                 >
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subCat.id}
+                      {sc._id.slice(-6)}
                     </div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {subCat.name}
+                      {sc.name}
                     </div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {subCat.category}
+                    <div className="text-sm text-gray-700">
+                      {sc.category?.name || "-"}
                     </div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {subCat.description}
+                    <div className="text-sm text-gray-700 max-w-xs truncate">
+                      {sc.description || "-"}
                     </div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          subCat.isActive
-                            ? "bg-green-100 text-green-600"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        {subCat.isActive ? "Active" : "Inactive"}
-                      </span>
-                    </div>
+                    <span
+                      className={`px-2 py-1 text-xs rounded-full ${
+                        sc.isActive
+                          ? "bg-green-100 text-green-600"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      {sc.isActive ? "Active" : "Inactive"}
+                    </span>
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex justify-end items-center gap-3">
                       <button
-                        onClick={() => handleEdit(subCat)}
+                        onClick={() => handleEdit(sc)}
                         className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                        disabled={updateLoading}
                       >
                         <HiPencilSquare size={19} />
                       </button>
-                      {/* Divider */}
                       <div className="w-px h-4 bg-gray-200"></div>
                       <button
-                        onClick={() => handleDelete(subCat.id)}
+                        onClick={() => handleDelete(sc._id)}
                         className="p-1.5 rounded-md hover:bg-red-50 text-red-800 transition"
                         title="Delete"
+                        disabled={deleteLoading}
                       >
                         <Trash2 size={19} />
                       </button>
@@ -386,16 +306,20 @@ function AssetSubCategories() {
       <AddSubCategories
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
-        onAdd={handleAddAssetSubCategories}
-        categories={categories}
+        onAdd={handleAdd}
+        loading={createLoading}
+        assetCategories={assetCategories}
       />
+
       <UpdateSubCategories
         isOpen={isUpdateOpen}
         onClose={() => setIsUpdateOpen(false)}
-        selectedAssetSubCategories={selectedAssetSubCategories}
-        onUpdate={handleUpdateAssetSubCategories}
-        categories={categories}
+        selectedSubCategory={selectedSubCategory}
+        onUpdate={handleUpdate}
+        loading={updateLoading}
+        assetCategories={assetCategories}
       />
+
       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-3">
         <Pagination
           currentPage={currentPage}

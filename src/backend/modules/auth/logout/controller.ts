@@ -1,33 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logoutService } from "./service";
-import { verifyAccessToken } from "../../../config/jwt";
+import { successResponse } from "../../../utils/response";
+import { messages } from "../../../constants/messages";
 
 export const logout = async (req: NextRequest) => {
-  try {
-    const token = req.cookies.get("accessToken")?.value;
+  const response = NextResponse.json(
+    successResponse(null, messages.AUTH.LOGOUT_SUCCESS, 200),
+    { status: 200 },
+  );
 
-    let userId: string | undefined;
+  // Clear cookies
+  response.cookies.delete("accessToken");
+  response.cookies.delete("refreshToken");
 
-    if (token) {
-      const decoded: any = verifyAccessToken(token);
-      userId = decoded.id;
-    }
-
-    await logoutService(userId);
-
-    const res = NextResponse.json({ message: "Logout successful" });
-
-    // Clear cookies
-    res.cookies.set("accessToken", "", { maxAge: 0 });
-    res.cookies.set("refreshToken", "", { maxAge: 0 });
-
-    return res;
-  } catch {
-    const res = NextResponse.json({ message: "Logout successful" });
-
-    res.cookies.set("accessToken", "", { maxAge: 0 });
-    res.cookies.set("refreshToken", "", { maxAge: 0 });
-
-    return res;
-  }
+  return response;
 };

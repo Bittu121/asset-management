@@ -1,298 +1,3 @@
-// "use client";
-// import React, { useState } from "react";
-// import { X } from "lucide-react";
-
-// function CreateUserAccount({
-//   isOpen,
-//   onClose,
-//   onAdd,
-//   roles,
-//   departments,
-//   subDepartments,
-//   locations,
-//   subLocations,
-//   managers,
-//   supportGroups,
-// }: any) {
-//   const [form, setForm] = useState<any>({
-//     role: "",
-//     name: "",
-//     employeeCode: "",
-//     email: "",
-//     phone: "",
-//     designation: "",
-//     reportingTo: "",
-//     department: "",
-//     subDepartment: "",
-//     location: "",
-//     subLocation: "",
-//     supportGroup: "",
-//     password: "",
-//   });
-//   const [openDept, setOpenDept] = useState(false);
-//   const [openSubDept, setOpenSubDept] = useState(false);
-//   const [openLoc, setOpenLoc] = useState(false);
-//   const [openSubLoc, setOpenSubLoc] = useState(false);
-//   const [openManager, setOpenManager] = useState(false);
-//   const [openSupport, setOpenSupport] = useState(false);
-
-//   if (!isOpen) return null;
-
-//   const handleSubmit = () => {
-//     onAdd(form);
-//     onClose();
-//   };
-//   return (
-//     <>
-//       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
-//         <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
-//           {/* Header */}
-//           <div className="flex justify-between items-center mb-4">
-//             <h2 className="text-lg font-semibold text-gray-900">
-//               User Account
-//             </h2>
-
-//             <button
-//               onClick={onClose}
-//               className="p-1 rounded-md hover:bg-gray-100"
-//             >
-//               <X size={18} />
-//             </button>
-//           </div>
-
-//           {/* Light Divider */}
-//           <div className="h-px bg-gray-100 mb-5"></div>
-//           <div className="space-y-3">
-//             <div className="grid grid-cols-2 gap-4">
-//               <select
-//                 value={form.role}
-//                 onChange={(e) => setForm({ ...form, role: e.target.value })}
-//                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-//               >
-//                 <option>Select Role</option>
-//                 {roles.map((r: any) => (
-//                   <option key={r}>{r}</option>
-//                 ))}
-//               </select>
-//               <input
-//                 placeholder="Full Name"
-//                 value={form.name}
-//                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-//                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-//               />
-//               <input
-//                 placeholder="Employee Code"
-//                 value={form.employeeCode}
-//                 onChange={(e) =>
-//                   setForm({ ...form, employeeCode: e.target.value })
-//                 }
-//                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-//               />
-
-//               <input
-//                 placeholder="Email"
-//                 value={form.email}
-//                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-//                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-//               />
-
-//               <input
-//                 placeholder="Phone"
-//                 value={form.phone}
-//                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-//                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-//               />
-
-//               <div className="relative">
-//                 <div
-//                   onClick={() => setOpenManager(!openManager)}
-//                   className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-//                 >
-//                   {form.reportingTo || "Select Manager"}
-//                 </div>
-
-//                 {openManager && (
-//                   <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-//                     {managers.map((m: any) => (
-//                       <div
-//                         key={m}
-//                         onClick={() => {
-//                           setForm({ ...form, reportingTo: m });
-//                           setOpenManager(false);
-//                         }}
-//                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-//                       >
-//                         {m}
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-
-//               <div className="relative">
-//                 <div
-//                   onClick={() => setOpenDept(!openDept)}
-//                   className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-//                 >
-//                   {form.department || "Select Department"}
-//                 </div>
-
-//                 {openDept && (
-//                   <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-//                     {departments.map((d: any) => (
-//                       <div
-//                         key={d}
-//                         onClick={() => {
-//                           setForm({ ...form, department: d });
-//                           setOpenDept(false);
-//                         }}
-//                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-//                       >
-//                         {d}
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-
-//               <div className="relative">
-//                 <div
-//                   onClick={() => setOpenSubDept(!openSubDept)}
-//                   className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-//                 >
-//                   {form.subDepartment || "Select Sub Department"}
-//                 </div>
-
-//                 {openSubDept && (
-//                   <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-//                     {subDepartments.map((sd: any) => (
-//                       <div
-//                         key={sd}
-//                         onClick={() => {
-//                           setForm({ ...form, subDepartment: sd });
-//                           setOpenSubDept(false);
-//                         }}
-//                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-//                       >
-//                         {sd}
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-
-//               <div className="relative">
-//                 <div
-//                   onClick={() => setOpenLoc(!openLoc)}
-//                   className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-//                 >
-//                   {form.location || "Select Location"}
-//                 </div>
-
-//                 {openLoc && (
-//                   <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-//                     {locations.map((l: any) => (
-//                       <div
-//                         key={l}
-//                         onClick={() => {
-//                           setForm({ ...form, location: l });
-//                           setOpenLoc(false);
-//                         }}
-//                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-//                       >
-//                         {l}
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-
-//               <div className="relative">
-//                 <div
-//                   onClick={() => setOpenSubLoc(!openSubLoc)}
-//                   className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-//                 >
-//                   {form.subLocation || "Select Sub Location"}
-//                 </div>
-
-//                 {openSubLoc && (
-//                   <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-//                     {subLocations.map((sl: any) => (
-//                       <div
-//                         key={sl}
-//                         onClick={() => {
-//                           setForm({ ...form, subLocation: sl });
-//                           setOpenSubLoc(false);
-//                         }}
-//                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-//                       >
-//                         {sl}
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-
-//               <div className="relative col-span-2">
-//                 <div
-//                   onClick={() => setOpenSupport(!openSupport)}
-//                   className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm cursor-pointer bg-white"
-//                 >
-//                   {form.supportGroup || "Select Support Group"}
-//                 </div>
-
-//                 {openSupport && (
-//                   <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-40 overflow-y-auto custom-scroll z-50">
-//                     {supportGroups.map((sg: any) => (
-//                       <div
-//                         key={sg}
-//                         onClick={() => {
-//                           setForm({ ...form, supportGroup: sg });
-//                           setOpenSupport(false);
-//                         }}
-//                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-//                       >
-//                         {sg}
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-
-//               <input
-//                 type="password"
-//                 placeholder="Password"
-//                 value={form.password}
-//                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-//                 className="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-//               />
-//             </div>
-//           </div>
-
-//           {/* Footer */}
-//           <div className="flex justify-end gap-3 mt-6">
-//             <button
-//               onClick={onClose}
-//               className="px-4 py-2 text-sm rounded-md border border-gray-200 hover:bg-gray-50"
-//             >
-//               Cancel
-//             </button>
-
-//             <button
-//               onClick={handleSubmit}
-//               className="px-4 py-2 text-sm rounded-md bg-gray-900 text-white hover:bg-gray-800"
-//             >
-//               Create
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default CreateUserAccount;
-
 "use client";
 import React, { useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
@@ -341,22 +46,21 @@ function CreateUserAccount({
   locations,
   subLocations,
   managers,
-  supportGroups,
+  loading,
 }: any) {
   const [currentStep, setCurrentStep] = useState(1);
   const [form, setForm] = useState<any>({
-    role: "",
     name: "",
     employeeCode: "",
     email: "",
     phone: "",
     designation: "",
-    reportingTo: "",
+    role: "",
+    reportingManager: "",
     department: "",
     subDepartment: "",
     location: "",
     subLocation: "",
-    supportGroup: "",
     password: "",
     confirmPassword: "",
   });
@@ -381,24 +85,23 @@ function CreateUserAccount({
   const subDepartmentOptions = createOptions(subDepartments);
   const locationOptions = createOptions(locations);
   const subLocationOptions = createOptions(subLocations);
-  const supportGroupOptions = createOptions(supportGroups);
 
   const handleSubmit = () => {
-    onAdd(form);
+    const { confirmPassword, ...userData } = form;
+    onAdd(userData);
     setCurrentStep(1);
     setForm({
-      role: "",
       name: "",
       employeeCode: "",
       email: "",
       phone: "",
       designation: "",
-      reportingTo: "",
+      role: "",
+      reportingManager: "",
       department: "",
       subDepartment: "",
       location: "",
       subLocation: "",
-      supportGroup: "",
       password: "",
       confirmPassword: "",
     });
@@ -419,19 +122,22 @@ function CreateUserAccount({
   const labelClass = "block text-sm font-semibold text-gray-700 mb-1.5";
 
   const renderAutocomplete = (
-    options: OptionType[],
-    value: string,
+    options: any[],
+    value: any,
     onChange: (val: string) => void,
     placeholder: string,
+    labelKey: string = "name",
+    valueKey: string = "_id",
   ) => (
     <Autocomplete
       options={options}
-      getOptionLabel={(option: OptionType) => option.label}
-      isOptionEqualToValue={(option: OptionType, val: OptionType) =>
-        option.id === val.id
+      getOptionLabel={(option: any) => option[labelKey] || ""}
+      isOptionEqualToValue={(option: any, val: any) =>
+        option[valueKey] === val[valueKey]
       }
-      value={options.find((o) => o.label === value) || null}
-      onChange={(_e, val) => onChange(val?.label || "")}
+      value={options.find((o) => o[valueKey] === value) || null}
+      onChange={(_e, val) => onChange(val?.[valueKey] || "")}
+      disabled={loading}
       fullWidth
       renderInput={(params) => (
         <TextField
@@ -602,7 +308,7 @@ function CreateUserAccount({
                   Role <span className="text-red-500">*</span>
                 </label>
                 {renderAutocomplete(
-                  roleOptions,
+                  roles,
                   form.role,
                   (val) => setForm({ ...form, role: val }),
                   "Select role",
@@ -612,9 +318,9 @@ function CreateUserAccount({
               <div>
                 <label className={labelClass}>Reporting Manager</label>
                 {renderAutocomplete(
-                  managerOptions,
-                  form.reportingTo,
-                  (val) => setForm({ ...form, reportingTo: val }),
+                  managers,
+                  form.reportingManager,
+                  (val) => setForm({ ...form, reportingManager: val }),
                   "Select manager",
                 )}
               </div>
@@ -623,22 +329,40 @@ function CreateUserAccount({
                 <label className={labelClass}>
                   Department <span className="text-red-500">*</span>
                 </label>
-                {renderAutocomplete(
-                  departmentOptions,
-                  form.department,
-                  (val) => setForm({ ...form, department: val }),
-                  "Select department",
-                )}
+                <select
+                  value={form.department}
+                  onChange={(e) =>
+                    setForm({ ...form, department: e.target.value })
+                  }
+                  className={inputClass}
+                  disabled={loading}
+                >
+                  <option value="">Select department</option>
+                  {departments.map((dept: string) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
                 <label className={labelClass}>Sub Department</label>
-                {renderAutocomplete(
-                  subDepartmentOptions,
-                  form.subDepartment,
-                  (val) => setForm({ ...form, subDepartment: val }),
-                  "Select sub department",
-                )}
+                <select
+                  value={form.subDepartment}
+                  onChange={(e) =>
+                    setForm({ ...form, subDepartment: e.target.value })
+                  }
+                  className={inputClass}
+                  disabled={loading}
+                >
+                  <option value="">Select sub department</option>
+                  {subDepartments.map((subDept: string) => (
+                    <option key={subDept} value={subDept}>
+                      {subDept}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           )}
@@ -650,32 +374,40 @@ function CreateUserAccount({
                 <label className={labelClass}>
                   Location <span className="text-red-500">*</span>
                 </label>
-                {renderAutocomplete(
-                  locationOptions,
-                  form.location,
-                  (val) => setForm({ ...form, location: val }),
-                  "Select location",
-                )}
+                <select
+                  value={form.location}
+                  onChange={(e) =>
+                    setForm({ ...form, location: e.target.value })
+                  }
+                  className={inputClass}
+                  disabled={loading}
+                >
+                  <option value="">Select location</option>
+                  {locations.map((loc: string) => (
+                    <option key={loc} value={loc}>
+                      {loc}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
                 <label className={labelClass}>Sub Location</label>
-                {renderAutocomplete(
-                  subLocationOptions,
-                  form.subLocation,
-                  (val) => setForm({ ...form, subLocation: val }),
-                  "Select sub location",
-                )}
-              </div>
-
-              <div className="col-span-2">
-                <label className={labelClass}>Support Group</label>
-                {renderAutocomplete(
-                  supportGroupOptions,
-                  form.supportGroup,
-                  (val) => setForm({ ...form, supportGroup: val }),
-                  "Select support group",
-                )}
+                <select
+                  value={form.subLocation}
+                  onChange={(e) =>
+                    setForm({ ...form, subLocation: e.target.value })
+                  }
+                  className={inputClass}
+                  disabled={loading}
+                >
+                  <option value="">Select sub location</option>
+                  {subLocations.map((subLoc: string) => (
+                    <option key={subLoc} value={subLoc}>
+                      {subLoc}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           )}
@@ -695,6 +427,7 @@ function CreateUserAccount({
                     setForm({ ...form, password: e.target.value })
                   }
                   className={inputClass}
+                  disabled={loading}
                 />
               </div>
 
@@ -710,6 +443,7 @@ function CreateUserAccount({
                     setForm({ ...form, confirmPassword: e.target.value })
                   }
                   className={inputClass}
+                  disabled={loading}
                 />
               </div>
               <div className="col-span-2 mt-2 bg-violet-50 border border-violet-100 rounded-xl p-4">
@@ -722,13 +456,15 @@ function CreateUserAccount({
                     { label: "Email", value: form.email },
                     { label: "Employee Code", value: form.employeeCode },
                     { label: "Phone", value: form.phone },
-                    { label: "Role", value: form.role },
+                    {
+                      label: "Role",
+                      value: roles.find((r: any) => r._id === form.role)?.name,
+                    },
                     { label: "Department", value: form.department },
                     { label: "Location", value: form.location },
-                    { label: "Support Group", value: form.supportGroup },
                   ].map((item) => (
                     <div key={item.label} className="flex gap-2">
-                      <span className="text-xs text-gray-500 font-medium w-28 flex-shrink-0">
+                      <span className="text-xs text-gray-500 font-medium w-28 shrink-0">
                         {item.label}:
                       </span>
                       <span className="text-xs text-gray-800 font-semibold truncate">
@@ -767,6 +503,7 @@ function CreateUserAccount({
               <button
                 onClick={handleNext}
                 className="px-4 py-2 text-sm font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700 transition shadow-md shadow-violet-200"
+                disabled={loading}
               >
                 Next
               </button>
@@ -775,7 +512,10 @@ function CreateUserAccount({
                 onClick={handleSubmit}
                 className="px-4 py-2 text-sm font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700 transition shadow-md shadow-violet-200"
               >
-                Submit
+                {loading && (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                )}
+                {loading ? "Creating..." : "Submit"}
               </button>
             )}
           </div>

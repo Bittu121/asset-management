@@ -1,6 +1,5 @@
 import UserAccount from "../../admin/user-account/schema";
-import { hashPassword } from "../../../utils/bcrypt";
-
+import { hashPassword } from "../../../utils/password";
 export const resetPasswordService = async (email: string, password: string) => {
   const user = await UserAccount.findOne({ email });
   if (!user) return null;

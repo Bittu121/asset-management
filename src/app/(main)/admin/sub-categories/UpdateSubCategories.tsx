@@ -1,13 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { TextField, Autocomplete } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Autocomplete, TextField } from "@mui/material";
 
 function UpdateSubCategories({
   isOpen,
   onClose,
-  selectedAssetSubCategories,
+  selectedSubCategory,
   onUpdate,
-  categories = [],
+  loading,
+  assetCategories = [],
 }: any) {
   const [form, setForm] = useState({
     name: "",
@@ -17,85 +18,84 @@ function UpdateSubCategories({
   });
 
   useEffect(() => {
-    if (selectedAssetSubCategories) {
-      setForm(selectedAssetSubCategories);
+    if (selectedSubCategory) {
+      setForm({
+        name: selectedSubCategory.name || "",
+        category: selectedSubCategory.category?._id || "",
+        description: selectedSubCategory.description || "",
+        isActive:
+          selectedSubCategory.isActive !== undefined
+            ? selectedSubCategory.isActive
+            : true,
+      });
     }
-  }, [selectedAssetSubCategories]);
+  }, [selectedSubCategory]);
 
   if (!isOpen) return null;
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
   const handleUpdate = () => {
     onUpdate(form);
-    onClose();
   };
+
+  const selectedCategory =
+    assetCategories.find((c: any) => c._id === form.category) || null;
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-lg rounded-lg shadow-2xl overflow-hidden">
+        {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
               Update Sub Category
             </h2>
             <p className="text-gray-500 text-sm mt-1">
-              Update sub category details
+              Modify sub category details
             </p>
           </div>
-
           <button
             onClick={onClose}
+            disabled={loading}
             className="text-black text-xl font-bold cursor-pointer"
           >
             ✕
           </button>
         </div>
+
+        {/* Body */}
         <div className="px-6 py-5 space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Sub Category Name *
+              Sub Category Name <span className="text-red-500">*</span>
             </label>
             <input
-              name="name"
-              value={form.name || ""}
-              onChange={handleChange}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Enter sub category name"
+              disabled={loading}
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Category
+              Category <span className="text-red-500">*</span>
             </label>
-
             <Autocomplete
-              options={categories || []}
-              getOptionLabel={(option: any) =>
-                typeof option === "string" ? option : option?.name || ""
+              options={assetCategories}
+              getOptionLabel={(option: any) => option?.name || ""}
+              isOptionEqualToValue={(option: any, value: any) =>
+                option._id === value._id
               }
-              isOptionEqualToValue={(option, value) =>
-                (option?.id || option) === (value?.id || value)
+              value={selectedCategory}
+              onChange={(_e, value: any) =>
+                setForm((prev) => ({ ...prev, category: value?._id || "" }))
               }
-              value={
-                categories.find((c: any) => (c?.name || c) === form.category) ||
-                null
-              }
-              onChange={(e, value: any) =>
-                setForm((prev) => ({
-                  ...prev,
-                  category:
-                    typeof value === "string" ? value : value?.name || "",
-                }))
-              }
+              disabled={loading}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="Select Category"
+                  placeholder="Select category"
                   size="small"
                   sx={{
                     "& .MuiOutlinedInput-root": {
@@ -107,41 +107,39 @@ function UpdateSubCategories({
                       "&.Mui-focused": {
                         boxShadow: "0 0 0 2px rgba(199,210,254,0.8)",
                       },
-                      "& input": {
-                        padding: "10px 16px",
-                        fontSize: "14px",
-                      },
+                      "& input": { padding: "10px 16px", fontSize: "14px" },
                     },
                   }}
                 />
               )}
             />
           </div>
+
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
               Description
             </label>
             <textarea
-              name="description"
-              value={form.description || ""}
-              onChange={handleChange}
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
               placeholder="Enter description"
               rows={3}
+              disabled={loading}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
             />
           </div>
+
           <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50">
             <span className="text-sm font-semibold text-gray-500">
               Active Status
             </span>
-
             <button
               onClick={() =>
-                setForm((prev) => ({
-                  ...prev,
-                  isActive: !prev.isActive,
-                }))
+                setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
               }
+              disabled={loading}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
                 form.isActive ? "bg-indigo-600" : "bg-gray-300"
               }`}
@@ -159,16 +157,17 @@ function UpdateSubCategories({
         <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
           <button
             onClick={onClose}
+            disabled={loading}
             className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancel
           </button>
-
           <button
             onClick={handleUpdate}
+            disabled={loading}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
           >
-            Update
+            {loading ? "Updating..." : "Update"}
           </button>
         </div>
       </div>

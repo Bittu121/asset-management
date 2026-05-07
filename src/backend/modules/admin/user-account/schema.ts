@@ -1,40 +1,49 @@
 import mongoose from "mongoose";
 
 type UserAccountDocument = {
-  role: string;
   name: string;
-  employeeCode: string;
   email: string;
+  password: string;
+  employeeCode: string;
   phone: string;
   designation: string;
-  reportingTo: string;
+  role: mongoose.Types.ObjectId; // Reference to Role
+  reportingManager: mongoose.Types.ObjectId | null; // Self-reference to User
   department: string;
   subDepartment: string;
   location: string;
   subLocation: string;
-  supportGroup: string;
-  password: string;
   otp: string;
   otpExpiry: Date | null;
   isVerified: boolean;
   createdAt: Date;
+  updatedAt: Date;
 };
 
 const userAccountSchema = new mongoose.Schema<UserAccountDocument>(
   {
-    role: { type: String, required: true, trim: true },
     name: { type: String, required: true, trim: true },
-    employeeCode: { type: String, required: true, trim: true, unique: true },
-    email: { type: String, required: true, trim: true, unique: true },
-    phone: { type: String, default: "", trim: true },
-    designation: { type: String, default: "", trim: true },
-    reportingTo: { type: String, default: "", trim: true },
-    department: { type: String, default: "", trim: true },
-    subDepartment: { type: String, default: "", trim: true },
-    location: { type: String, default: "", trim: true },
-    subLocation: { type: String, default: "", trim: true },
-    supportGroup: { type: String, default: "", trim: true },
-    password: { type: String, required: true, select: false },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    password: { type: String, required: true },
+    employeeCode: { type: String, required: true, unique: true, trim: true },
+    phone: { type: String, default: "" },
+    designation: { type: String, default: "" },
+    role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true },
+    reportingManager: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserAccount",
+      default: null,
+    },
+    department: { type: String, default: "" },
+    subDepartment: { type: String, default: "" },
+    location: { type: String, default: "" },
+    subLocation: { type: String, default: "" },
     otp: { type: String, default: "" },
     otpExpiry: { type: Date, default: null },
     isVerified: { type: Boolean, default: false },

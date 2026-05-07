@@ -3,13 +3,11 @@ import { authenticate } from "../../../middleware/auth";
 import { authorizeRoles } from "../../../middleware/role";
 import { validateFields } from "../../../middleware/validate";
 import { successResponse, errorResponse } from "../../../utils/response";
-import { handleError } from "../../../middleware/error";
 import * as supportGroupService from "./service";
 
-// GET all support groups
 export const getSupportGroups = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
 
   const supportGroups = await supportGroupService.getAllSupportGroups();
   return successResponse(
@@ -19,10 +17,9 @@ export const getSupportGroups = async (req: NextRequest) => {
   );
 };
 
-// GET single support group
 export const getSingleSupportGroup = async (req: NextRequest, id: string) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
 
   const supportGroup = await supportGroupService.getSupportGroupById(id);
   if (!supportGroup) return errorResponse("Support group not found", 404);
@@ -34,20 +31,18 @@ export const getSingleSupportGroup = async (req: NextRequest, id: string) => {
   );
 };
 
-// POST create support group
 export const createSupportGroup = async (req: NextRequest) => {
-  //   const auth = authenticate(req);
-  //   if ("status" in auth) return auth;
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
 
-  //   const roleCheck = authorizeRoles(auth.user, "admin");
-  //   if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "ADMIN", "MANAGER");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
   const validation = validateFields(body, ["name", "code"]);
   if (validation) return validation;
 
-  // Check duplicate code
   const existing = await supportGroupService.getSupportGroupByCode(body.code);
   if (existing) return errorResponse("Support group code already exists", 409);
 
@@ -59,13 +54,12 @@ export const createSupportGroup = async (req: NextRequest) => {
   );
 };
 
-// PUT update support group
 export const updateSupportGroup = async (req: NextRequest, id: string) => {
-  // const auth = authenticate(req);
-  // if ("status" in auth) return auth;
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
 
-  // const roleCheck = authorizeRoles(auth.user, "admin");
-  // if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "ADMIN", "MANAGER");
+  if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -79,16 +73,60 @@ export const updateSupportGroup = async (req: NextRequest, id: string) => {
   );
 };
 
-// DELETE support group
 export const deleteSupportGroup = async (req: NextRequest, id: string) => {
-  // const auth = authenticate(req);
-  // if ("status" in auth) return auth;
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
 
-  // const roleCheck = authorizeRoles(auth.user, "admin");
-  // if (roleCheck) return roleCheck;
+  const roleCheck = authorizeRoles(auth.user, "ADMIN");
+  if (roleCheck) return roleCheck;
 
   const supportGroup = await supportGroupService.deleteSupportGroup(id);
   if (!supportGroup) return errorResponse("Support group not found", 404);
 
   return successResponse(null, "Support group deleted successfully", 200);
+};
+
+export const addMember = async (req: NextRequest, id: string) => {
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
+
+  const roleCheck = authorizeRoles(auth.user, "ADMIN", "MANAGER");
+  if (roleCheck) return roleCheck;
+
+  const body = await req.json();
+  const { userId } = body;
+  if (!userId) return errorResponse("userId is required", 400);
+
+  const group = await supportGroupService.addMemberToGroup(id, userId);
+  if (!group) return errorResponse("Support group not found", 404);
+
+  return successResponse(
+    { groupId: id, userId },
+    "Member added successfully",
+    200,
+  );
+};
+
+export const removeMember = async (
+  req: NextRequest,
+  groupId: string,
+  userId: string,
+) => {
+  const auth = await authenticate(req);
+  if ("statusCode" in auth) return auth;
+
+  const roleCheck = authorizeRoles(auth.user, "ADMIN", "MANAGER");
+  if (roleCheck) return roleCheck;
+
+  const group = await supportGroupService.removeMemberFromGroup(
+    groupId,
+    userId,
+  );
+  if (!group) return errorResponse("Support group not found", 404);
+
+  return successResponse(
+    { groupId, userId },
+    "Member removed successfully",
+    200,
+  );
 };

@@ -33,10 +33,18 @@ const initialState: AuthState = {
 const authReducer = (state = initialState, action: Action): AuthState => {
   switch (action.type) {
     case CHECK_SESSION:
-      return { ...state, loading: true };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
     case AUTH_LOADING:
-      return { ...state, loading: true, error: null };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
     case AUTH_ERROR:
       return {
@@ -62,28 +70,56 @@ const authReducer = (state = initialState, action: Action): AuthState => {
       };
 
     case SET_OTP_EMAIL:
-      return { ...state, otpEmail: action.payload };
+      return {
+        ...state,
+        otpEmail: action.payload,
+      };
 
     case FORGOT_LOADING:
-      return { ...state, forgotLoading: true, error: null };
+      return {
+        ...state,
+        forgotLoading: true,
+        error: null,
+      };
 
     case FORGOT_SUCCESS:
-      return { ...state, forgotLoading: false };
+      return {
+        ...state,
+        forgotLoading: false,
+      };
 
     case OTP_LOADING:
-      return { ...state, otpLoading: true, error: null };
+      return {
+        ...state,
+        otpLoading: true,
+        error: null,
+      };
 
     case OTP_SUCCESS:
-      return { ...state, otpLoading: false };
+      return {
+        ...state,
+        otpLoading: false,
+      };
 
     case RESET_LOADING:
-      return { ...state, resetLoading: true, error: null };
+      return {
+        ...state,
+        resetLoading: true,
+        error: null,
+      };
 
     case RESET_SUCCESS:
-      return { ...state, resetLoading: false, otpEmail: "" };
+      return {
+        ...state,
+        resetLoading: false,
+        otpEmail: "",
+      };
 
     case CLEAR_ERROR:
-      return { ...state, error: null };
+      return {
+        ...state,
+        error: null,
+      };
 
     default:
       return state;

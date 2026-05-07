@@ -1,246 +1,213 @@
 "use client";
-import React, { useState } from "react";
-import UpdateAssetTypes from "./UpdateAssetTypes";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AddAssetTypes from "./AddAssetTypes";
+import UpdateAssetTypes from "./UpdateAssetTypes";
 import Pagination from "../../../components/common/Pagination";
-import { FileSpreadsheet, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { Trash2 } from "lucide-react";
 import { HiPencilSquare } from "react-icons/hi2";
 import ExcelActions from "@/app/components/common/ExcelActions";
 import { GoPlusCircle } from "react-icons/go";
 import { FiSettings } from "react-icons/fi";
-
-type Category = {
-  id: number;
-  name: string;
-};
-
-type SubCategory = {
-  id: number;
-  name: string;
-  parent: string;
-};
-
-type AssetTypes = {
-  id: number;
-  name: string;
-  category: string;
-  subCategory: string;
-  description: string;
-  isActive: boolean;
-  createdAt: string;
-};
-
-const categories: Category[] = [
-  { id: 1, name: "Laptop" },
-  { id: 2, name: "Networking" },
-  { id: 3, name: "Server" },
-];
-
-const subCategories: SubCategory[] = [
-  { id: 1, name: "MacBook", parent: "Laptop" },
-  { id: 2, name: "Windows Laptop", parent: "Laptop" },
-  { id: 3, name: "Router", parent: "Networking" },
-  { id: 4, name: "Switch", parent: "Networking" },
-  { id: 5, name: "Rack Server", parent: "Server" },
-];
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  fetchAssetTypes,
+  createAssetTypeAction,
+  updateAssetTypeAction,
+  deleteAssetTypeAction,
+} from "@/store/assetTypes/assetTypesActions";
+import { fetchAssetCategories } from "@/store/assetCategories/assetCategoriesActions";
+import { fetchSubCategories } from "@/store/subCategories/subCategoriesActions";
 
 function AssetTypes() {
-  const [assetTypes, setAssetTypes] = useState<AssetTypes[]>([
-    {
-      id: 1,
-      name: "MacBook Pro M2",
-      category: "Laptop",
-      subCategory: "MacBook",
-      description: "Apple MacBook Pro M2 16-inch",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 2,
-      name: "Dell Latitude 5420",
-      category: "Laptop",
-      subCategory: "Windows Laptop",
-      description: "Business laptop for employees",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 3,
-      name: "Cisco Router 2900",
-      category: "Networking",
-      subCategory: "Router",
-      description: "Enterprise-grade network router",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 4,
-      name: "HP Aruba Switch",
-      category: "Networking",
-      subCategory: "Switch",
-      description: "Managed network switch",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 5,
-      name: "Dell PowerEdge R740",
-      category: "Server",
-      subCategory: "Rack Server",
-      description: "High-performance rack server",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-    {
-      id: 6,
-      name: "APC Smart UPS",
-      category: "Power",
-      subCategory: "UPS",
-      description: "Uninterruptible power supply system",
-      isActive: true,
-      createdAt: "01/01/2026",
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { assetTypes, loading, createLoading, updateLoading, deleteLoading } =
+    useSelector((state: RootState) => state.assetTypes);
+  const { assetCategories } = useSelector(
+    (state: RootState) => state.assetCategories,
+  );
+  const { subCategories } = useSelector(
+    (state: RootState) => state.subCategories,
+  );
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [selectedAssetTypes, setSelectedAssetTypes] =
-    useState<AssetTypes | null>(null);
+  const [selectedAssetType, setSelectedAssetType] = useState<any>(null);
 
-  //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
-  //filter step-1
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [assetTypeFilter, setAssetTypeFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
-  //filter step-2
-  const filteredAssetTypes = assetTypes.filter((assettypes) => {
-    return (
-      assettypes.name.toLowerCase().includes(search.toLowerCase()) &&
-      (assetTypeFilter === "" || assettypes.name === assetTypeFilter) &&
-      (statusFilter === "All" ||
-        (statusFilter === "Active" && assettypes.isActive) ||
-        (statusFilter === "Inactive" && !assettypes.isActive))
-    );
+  useEffect(() => {
+    dispatch(fetchAssetTypes());
+    dispatch(fetchAssetCategories());
+    dispatch(fetchSubCategories());
+  }, [dispatch]);
+
+  const filteredAssetTypes = assetTypes.filter((at) => {
+    const matchesSearch =
+      search === "" ||
+      at.name.toLowerCase().includes(search.toLowerCase()) ||
+      (at.description || "").toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" ||
+      (statusFilter === "Active" && at.isActive) ||
+      (statusFilter === "Inactive" && !at.isActive);
+    const matchesCategory =
+      categoryFilter === "" || at.category?._id === categoryFilter;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
-  //pagination step-2
   const totalPages = Math.ceil(filteredAssetTypes.length / itemsPerPage);
   const paginatedAssetTypes = filteredAssetTypes.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
-  //Create Api
-  const handleAddAssetTypes = (data: Omit<AssetTypes, "id" | "createdAt">) => {
-    const newDept: AssetTypes = {
-      ...data,
-      id: assetTypes.length + 1,
-      createdAt: new Date().toDateString(),
-    };
-    toast.success("Asset types added successfully");
-    setAssetTypes((prev) => [newDept, ...prev]);
+  const handleAdd = (data: any) => {
+    dispatch(createAssetTypeAction(data, () => setIsAddOpen(false)));
   };
 
-  const handleEdit = (assetType: AssetTypes) => {
-    setSelectedAssetTypes(assetType);
+  const handleEdit = (assetType: any) => {
+    setSelectedAssetType(assetType);
     setIsUpdateOpen(true);
   };
 
-  //Update Api
-  const handleUpdateAssetTypes = (updatedData: any) => {
-    setAssetTypes((prev) =>
-      prev.map((d) =>
-        d.id === selectedAssetTypes?.id ? { ...d, ...updatedData } : d,
-      ),
-    );
-    toast.success("Asset types updated successfully");
+  const handleUpdate = (updatedData: any) => {
+    if (selectedAssetType) {
+      dispatch(
+        updateAssetTypeAction(selectedAssetType._id, updatedData, () =>
+          setIsUpdateOpen(false),
+        ),
+      );
+    }
   };
 
-  //Delete Api
-  const handleDelete = (id: number) => {
-    toast.success("Asset types deleted successfully");
-    setAssetTypes((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this asset type?")) {
+      dispatch(deleteAssetTypeAction(id));
+    }
   };
+
+  const handleBulkUpload = (uploadedData: any[]) => {
+    uploadedData.forEach((item) => {
+      const categoryName = item.Category || item.category || "";
+      const subCategoryName = item["Sub Category"] || item.subCategory || "";
+
+      const matchedCategory = assetCategories.find(
+        (c) => c.name.toLowerCase() === categoryName.toLowerCase(),
+      );
+      const matchedSubCategory = subCategories.find(
+        (s) =>
+          s.name.toLowerCase() === subCategoryName.toLowerCase() &&
+          s.category?._id === matchedCategory?._id,
+      );
+
+      const assetTypeData = {
+        name: item["Asset Type"] || item.name || "",
+        category: matchedCategory?._id || "",
+        subCategory: matchedSubCategory?._id || null,
+        description: item.Description || item.description || "",
+        isActive:
+          item.Status === "Active" ||
+          item.status === "Active" ||
+          item.isActive === true,
+      };
+
+      if (assetTypeData.name && assetTypeData.category) {
+        dispatch(createAssetTypeAction(assetTypeData));
+      }
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading asset types...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
-        {/* TITLE */}
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900"> Asset Types</h1>
+          <h1 className="text-lg font-semibold text-gray-900">Asset Types</h1>
         </div>
 
-        {/* CONTROLS */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          {/* LEFT */}
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Search..."
-              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 placeholder-gray-400
-              focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full sm:w-64 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             />
+
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="All">All</option>
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
+
             <select
-              value={assetTypeFilter}
-              onChange={(e) => setAssetTypeFilter(e.target.value)}
+              value={categoryFilter}
+              onChange={(e) => {
+                setCategoryFilter(e.target.value);
+                setCurrentPage(1);
+              }}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white text-gray-700 focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
             >
-              <option value="">Select Asset Types</option>
-              {assetTypes.map((assettypes) => (
-                <option key={assettypes.id} value={assettypes.name}>
-                  {assettypes.name}
+              <option value="">All Categories</option>
+              {assetCategories.map((cat: any) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* RIGHT */}
           <div className="flex items-center gap-2">
             <ExcelActions
-              data={filteredAssetTypes}
+              data={filteredAssetTypes.map((at: any) => ({
+                ID: at._id.slice(-6),
+                "Asset Type": at.name,
+                Category: at.category?.name || "-",
+                "Sub Category": at.subCategory?.name || "-",
+                Description: at.description || "-",
+                Status: at.isActive ? "Active" : "Inactive",
+                "Created At": new Date(at.createdAt).toLocaleDateString(),
+              }))}
               fileName="asset-types"
               headers={[
-                { label: "Asset Type", key: "name" },
-                { label: "Category", key: "category" },
-                { label: "Sub Category", key: "subCategory" },
-                { label: "Description", key: "description" },
-                { label: "Status", key: "isActive" },
+                { label: "ID", key: "ID" },
+                { label: "Asset Type", key: "Asset Type" },
+                { label: "Category", key: "Category" },
+                { label: "Sub Category", key: "Sub Category" },
+                { label: "Description", key: "Description" },
+                { label: "Status", key: "Status" },
+                { label: "Created At", key: "Created At" },
               ]}
-              onUpload={(uploadedData: any[]) => {
-                const formattedData: AssetTypes[] = uploadedData.map(
-                  (item, index) => ({
-                    id: Date.now() + index,
-                    name: item["Asset Type"] || item.name || "",
-                    category: item.Category || item.category || "",
-                    subCategory: item["Sub Category"] || item.subCategory || "",
-                    description: item.Description || item.description || "",
-                    isActive:
-                      item.Status === "Active" ||
-                      item.status === "Active" ||
-                      item.isActive === true,
-                    createdAt: new Date().toDateString(),
-                  }),
-                );
-
-                setAssetTypes((prev) => [...formattedData, ...prev]);
-
-                toast.success("Asset types uploaded successfully");
-              }}
+              onUpload={handleBulkUpload}
             />
+
             <button
               onClick={() => setIsAddOpen(true)}
               className="flex items-center gap-1 px-3 py-2 text-sm font-normal rounded-md bg-black text-white hover:bg-gray-900"
@@ -252,11 +219,11 @@ function AssetTypes() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
-        <table className="min-w-[1000px] w-full">
+        <table className="min-w-275 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+              <th className="px-6 py-3 text-left">ID</th>
               <th className="px-6 py-3 text-left">Asset Type</th>
               <th className="px-6 py-3 text-left">Category</th>
               <th className="px-6 py-3 text-left">Sub Category</th>
@@ -267,85 +234,84 @@ function AssetTypes() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {paginatedAssetTypes.length === 0 ? (
-              <>
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center gap-3">
-                      <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                        <FiSettings size={18}/>
-                      </div>
-
-                      <h3 className="text-sm font-semibold text-gray-700">
-                        No Asset types Found
-                      </h3>
-
-                      <p className="text-xs text-gray-500">
-                        You haven’t added any Asset types yet.
-                      </p>
-
-                      <button
-                        onClick={() => setIsAddOpen(true)}
-                        className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                      >
-                        Add Asset types
-                      </button>
+              <tr>
+                <td colSpan={7} className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                      <FiSettings size={18} />
                     </div>
-                  </td>
-                </tr>
-              </>
+                    <h3 className="text-sm font-semibold text-gray-700">
+                      No Asset Types Found
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      You haven't added any asset types yet.
+                    </p>
+                    <button
+                      onClick={() => setIsAddOpen(true)}
+                      className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                    >
+                      Add Asset Type
+                    </button>
+                  </div>
+                </td>
+              </tr>
             ) : (
-              paginatedAssetTypes.map((assetType) => (
+              paginatedAssetTypes.map((at: any) => (
                 <tr
-                  key={assetType.id}
+                  key={at._id}
                   className="hover:bg-gray-50 transition-all duration-150"
                 >
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      {assetType.name}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-sm font-medium text-gray-900">
-                      {assetType.category}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-sm font-medium text-gray-900">
-                      {assetType.subCategory}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-sm font-medium text-gray-900">
-                      {assetType.description}
+                      {at._id.slice(-6)}
                     </div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          assetType.isActive
-                            ? "bg-green-100 text-green-600"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        {assetType.isActive ? "Active" : "Inactive"}
-                      </span>
+                      {at.name}
                     </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="text-sm text-gray-700">
+                      {at.category?.name || "-"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="text-sm text-gray-700">
+                      {at.subCategory?.name || "-"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="text-sm text-gray-700 max-w-xs truncate">
+                      {at.description || "-"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <span
+                      className={`px-2 py-1 text-xs rounded-full ${
+                        at.isActive
+                          ? "bg-green-100 text-green-600"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      {at.isActive ? "Active" : "Inactive"}
+                    </span>
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex justify-end items-center gap-3">
                       <button
-                        onClick={() => handleEdit(assetType)}
+                        onClick={() => handleEdit(at)}
                         className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                        disabled={updateLoading}
                       >
                         <HiPencilSquare size={19} />
                       </button>
-                      {/* Divider */}
                       <div className="w-px h-4 bg-gray-200"></div>
                       <button
-                        onClick={() => handleDelete(assetType.id)}
+                        onClick={() => handleDelete(at._id)}
                         className="p-1.5 rounded-md hover:bg-red-50 text-red-800 transition"
                         title="Delete"
+                        disabled={deleteLoading}
                       >
                         <Trash2 size={19} />
                       </button>
@@ -361,18 +327,22 @@ function AssetTypes() {
       <AddAssetTypes
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
-        onAdd={handleAddAssetTypes}
-        categories={categories}
+        onAdd={handleAdd}
+        loading={createLoading}
+        assetCategories={assetCategories}
         subCategories={subCategories}
       />
+
       <UpdateAssetTypes
         isOpen={isUpdateOpen}
         onClose={() => setIsUpdateOpen(false)}
-        selectedAssetTypes={selectedAssetTypes}
-        onUpdate={handleUpdateAssetTypes}
-        categories={categories}
+        selectedAssetType={selectedAssetType}
+        onUpdate={handleUpdate}
+        loading={updateLoading}
+        assetCategories={assetCategories}
         subCategories={subCategories}
       />
+
       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-3">
         <Pagination
           currentPage={currentPage}

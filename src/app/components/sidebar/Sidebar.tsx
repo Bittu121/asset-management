@@ -121,12 +121,12 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
             icon: RiAdminLine,
             children: [
               { name: "Roles", path: "/admin/roles", icon: Users },
+              { name: "Users", path: "/admin/user-account", icon: Users },
               {
                 name: "Support Groups",
                 path: "/admin/support-group",
                 icon: LifeBuoy,
               },
-              { name: "Users", path: "/admin/user-account", icon: Users },
               { name: "Locations", path: "/admin/location", icon: MapPin },
               {
                 name: "Sub Locations",

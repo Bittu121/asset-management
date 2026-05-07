@@ -1,34 +1,42 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function UpdateAssetCategories({
   isOpen,
   onClose,
-  selectedAssetCategories,
+  selectedAssetCategory,
   onUpdate,
+  loading,
 }: any) {
   const [form, setForm] = useState({
     name: "",
+    code: "",
     description: "",
     isActive: true,
   });
 
   useEffect(() => {
-    if (selectedAssetCategories) {
-      setForm(selectedAssetCategories);
+    if (selectedAssetCategory) {
+      setForm({
+        name: selectedAssetCategory.name || "",
+        code: selectedAssetCategory.code || "",
+        description: selectedAssetCategory.description || "",
+        isActive:
+          selectedAssetCategory.isActive !== undefined
+            ? selectedAssetCategory.isActive
+            : true,
+      });
     }
-  }, [selectedAssetCategories]);
+  }, [selectedAssetCategory]);
 
   if (!isOpen) return null;
 
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleUpdate = () => {
     onUpdate(form);
-    onClose();
   };
 
   return (
@@ -41,12 +49,12 @@ function UpdateAssetCategories({
               Update Asset Category
             </h2>
             <p className="text-gray-500 text-sm mt-1">
-              Update asset category details
+              Modify asset category details
             </p>
           </div>
-
           <button
             onClick={onClose}
+            disabled={loading}
             className="text-black text-xl font-bold cursor-pointer"
           >
             ✕
@@ -55,48 +63,60 @@ function UpdateAssetCategories({
 
         {/* Body */}
         <div className="px-6 py-5 space-y-4">
-          {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Category Name *
+              Category Name <span className="text-red-500">*</span>
             </label>
             <input
               name="name"
-              value={form.name || ""}
+              value={form.name}
               onChange={handleChange}
               placeholder="Enter category name"
+              disabled={loading}
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             />
           </div>
 
-          {/* Description */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">
+              Category Code
+            </label>
+            <input
+              name="code"
+              value={form.code}
+              onChange={(e) =>
+                setForm({ ...form, code: e.target.value.toUpperCase() })
+              }
+              placeholder="e.g. IT, HR, FIN"
+              disabled={loading}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
               Description
             </label>
             <textarea
               name="description"
-              value={form.description || ""}
+              value={form.description}
               onChange={handleChange}
               placeholder="Enter description"
               rows={3}
+              disabled={loading}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
             />
           </div>
 
-          {/* Toggle */}
           <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50">
             <span className="text-sm font-semibold text-gray-500">
               Active Status
             </span>
-
             <button
               onClick={() =>
-                setForm((prev) => ({
-                  ...prev,
-                  isActive: !prev.isActive,
-                }))
+                setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
               }
+              disabled={loading}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
                 form.isActive ? "bg-indigo-600" : "bg-gray-300"
               }`}
@@ -114,16 +134,17 @@ function UpdateAssetCategories({
         <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
           <button
             onClick={onClose}
+            disabled={loading}
             className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancel
           </button>
-
           <button
             onClick={handleUpdate}
+            disabled={loading}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
           >
-            Update
+            {loading ? "Updating..." : "Update"}
           </button>
         </div>
       </div>

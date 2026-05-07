@@ -139,7 +139,10 @@ function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
             {/* Manager */}
             <div>
               <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Manager
+                Manager{" "}
+                <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded-md">
+                  Optional
+                </span>
               </label>
               <input
                 name="manager"

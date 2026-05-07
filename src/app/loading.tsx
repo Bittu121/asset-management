@@ -3,7 +3,7 @@ export default function Loading() {
     <div className="flex items-center justify-center h-screen bg-[#f8fafc]">
       <div className="flex flex-col items-center gap-5">
         <div className="relative">
-          <div className="w-10 h-10 rounded-full border-[3px] border-gray-200"></div>
+          <div className="w-8 h-8 rounded-full border-[3px] border-gray-200"></div>
           <div className="absolute top-0 left-0 w-10 h-10 rounded-full border-[3px] border-t-gray-900 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
         </div>
 

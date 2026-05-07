@@ -1,31 +1,20 @@
 export type CreateUserAccountDto = {
-  role: string;
   name: string;
-  employeeCode: string;
   email: string;
+  password: string;
+  employeeCode: string;
   phone?: string;
   designation?: string;
-  reportingTo?: string;
+  role: string; // Role ID
+  reportingManager?: string; // User ID
   department?: string;
   subDepartment?: string;
   location?: string;
   subLocation?: string;
-  supportGroup?: string;
-  password: string;
 };
 
-export type UpdateUserAccountDto = {
-  role?: string;
-  name?: string;
-  employeeCode?: string;
-  email?: string;
-  phone?: string;
-  designation?: string;
-  reportingTo?: string;
-  department?: string;
-  subDepartment?: string;
-  location?: string;
-  subLocation?: string;
-  supportGroup?: string;
+export type UpdateUserAccountDto = Partial<
+  Omit<CreateUserAccountDto, "password">
+> & {
   password?: string;
 };

@@ -7,9 +7,7 @@ import {
 } from "../../../../../backend/modules/admin/user-account/controller";
 import { handleError } from "../../../../../backend/middleware/error";
 
-type Params = {
-  params: Promise<{ id: string }>;
-};
+type Params = { params: Promise<{ id: string }> };
 
 export const GET = async (req: NextRequest, { params }: Params) => {
   await connectDB();

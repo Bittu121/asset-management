@@ -1,67 +1,54 @@
 "use client";
-
 import { useState } from "react";
 
-function CreateVendor({ isOpen, onClose, onAdd }: any) {
-  const [formData, setFormData] = useState({
-    vendorName: "",
-    email: "",
-    phone: "",
-    address: "",
-    gstNumber: "",
-    contractExpiry: "",
-    isActive: true,
-  });
+const empty = {
+  vendorName: "",
+  email: "",
+  phone: "",
+  address: "",
+  gstNumber: "",
+  contractExpiry: "",
+  isActive: true,
+};
+
+function CreateVendor({ isOpen, onClose, onAdd, loading }: any) {
+  const [formData, setFormData] = useState(empty);
 
   if (!isOpen) return null;
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const toggleActive = () => {
-    setFormData((prev) => ({
-      ...prev,
-      isActive: !prev.isActive,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = () => {
     if (!formData.vendorName || !formData.email || !formData.phone) return;
-
     onAdd(formData);
-
-    setFormData({
-      vendorName: "",
-      email: "",
-      phone: "",
-      address: "",
-      gstNumber: "",
-      contractExpiry: "",
-      isActive: true,
-    });
-
+    setFormData(empty);
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-xl rounded-lg shadow-lg overflow-hidden">
+        {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Add Vendor</h2>
             <p className="text-gray-500 text-sm mt-1">Create a new vendor</p>
           </div>
-
           <button
             onClick={onClose}
+            disabled={loading}
             className="text-black text-xl font-bold cursor-pointer"
           >
             ✕
           </button>
         </div>
 
+        {/* Body */}
         <div className="px-6 py-5 space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
@@ -72,7 +59,8 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
               value={formData.vendorName}
               onChange={handleChange}
               placeholder="Enter vendor name"
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              disabled={loading}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-60"
             />
           </div>
 
@@ -82,10 +70,12 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
             </label>
             <input
               name="email"
+              type="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter email"
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              disabled={loading}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-60"
             />
           </div>
 
@@ -98,7 +88,8 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter phone"
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              disabled={loading}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-60"
             />
           </div>
 
@@ -112,7 +103,8 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
                 value={formData.gstNumber}
                 onChange={handleChange}
                 placeholder="Enter GST number"
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                disabled={loading}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-60"
               />
             </div>
 
@@ -125,7 +117,8 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
                 name="contractExpiry"
                 value={formData.contractExpiry}
                 onChange={handleChange}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                disabled={loading}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-60"
               />
             </div>
           </div>
@@ -140,7 +133,8 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
               onChange={handleChange}
               rows={3}
               placeholder="Enter full address"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
+              disabled={loading}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none disabled:opacity-60"
             />
           </div>
 
@@ -148,9 +142,11 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
             <span className="text-sm font-semibold text-gray-500">
               Active Status
             </span>
-
             <button
-              onClick={toggleActive}
+              onClick={() =>
+                setFormData((prev) => ({ ...prev, isActive: !prev.isActive }))
+              }
+              disabled={loading}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
                 formData.isActive ? "bg-indigo-600" : "bg-gray-300"
               }`}
@@ -164,19 +160,21 @@ function CreateVendor({ isOpen, onClose, onAdd }: any) {
           </div>
         </div>
 
-        <div className="px-6 py-4 flex justify-end gap-3 bg-white">
+        {/* Footer */}
+        <div className="px-6 py-4 flex justify-end gap-3 bg-white border-t border-gray-100">
           <button
             onClick={onClose}
+            disabled={loading}
             className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancel
           </button>
-
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
+            disabled={loading}
+            className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Create
+            {loading ? "Creating..." : "Create"}
           </button>
         </div>
       </div>

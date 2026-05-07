@@ -1,47 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateFields } from "../../../middleware/validate";
-import { errorResponse } from "../../../utils/response";
+import { successResponse, errorResponse } from "../../../utils/response";
 import { messages } from "../../../constants/messages";
 import { loginService } from "./service";
 
-const login = async (req: NextRequest) => {
+export const login = async (req: NextRequest) => {
   const body = await req.json();
 
   const validation = validateFields(body, ["email", "password"]);
   if (validation) return validation;
 
   const result = await loginService(body.email, body.password);
-  if (!result) {
-    return NextResponse.json(
-      { message: messages.AUTH.INVALID_CREDENTIALS },
-      { status: 401 },
-    );
+
+  if (!result.success) {
+    return errorResponse(result.message, 401);
   }
-  const res = NextResponse.json(
-    {
-      message: messages.AUTH.LOGIN_SUCCESS,
-      data: {
-        user: result.user,
-      },
-    },
+
+  const response = NextResponse.json(
+    successResponse({ user: result.user }, messages.AUTH.LOGIN_SUCCESS, 200),
     { status: 200 },
   );
-  res.cookies.set("accessToken", result.accessToken, {
+
+  // Set access token cookie (httpOnly for security)
+  response.cookies.set("accessToken", result.accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60,  //1 hour
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60, // 1 day
     path: "/",
   });
 
-  res.cookies.set("refreshToken", result.refreshToken, {
+  // Set refresh token cookie
+  response.cookies.set("refreshToken", result.refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24 * 7,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60, // 7 days
     path: "/",
   });
 
-  return res;
+  return response;
 };
-export default login;

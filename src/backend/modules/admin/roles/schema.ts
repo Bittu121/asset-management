@@ -6,6 +6,7 @@ type RoleDocument = {
   isActive: boolean;
   permissions: string[];
   createdAt: Date;
+  updatedAt: Date;
 };
 
 const roleSchema = new mongoose.Schema<RoleDocument>(

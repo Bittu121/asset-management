@@ -2,7 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { permissionModules } from "./rolesAndPermission";
 
-function UpdateRoles({ isOpen, onClose, selectedRoles, onUpdate }: any) {
+function UpdateRoles({
+  isOpen,
+  onClose,
+  selectedRoles,
+  onUpdate,
+  loading,
+}: any) {
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -54,6 +60,7 @@ function UpdateRoles({ isOpen, onClose, selectedRoles, onUpdate }: any) {
           <button
             onClick={onClose}
             className="text-black text-xl font-bold cursor-pointer"
+            disabled={loading}
           >
             ✕
           </button>
@@ -67,7 +74,9 @@ function UpdateRoles({ isOpen, onClose, selectedRoles, onUpdate }: any) {
               </label>
               <input
                 value={form.name || ""}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, name: e.target.value.toUpperCase() })
+                }
                 placeholder="Enter role name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
@@ -85,6 +94,7 @@ function UpdateRoles({ isOpen, onClose, selectedRoles, onUpdate }: any) {
                 placeholder="Enter description"
                 rows={3}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
+                disabled={loading}
               />
             </div>
 
@@ -111,6 +121,7 @@ function UpdateRoles({ isOpen, onClose, selectedRoles, onUpdate }: any) {
                             checked={form.permissions.includes(perm)}
                             onChange={() => togglePermission(perm)}
                             className="w-4 h-4"
+                            disabled={loading}
                           />
                           {perm}
                         </label>
@@ -160,7 +171,7 @@ function UpdateRoles({ isOpen, onClose, selectedRoles, onUpdate }: any) {
             onClick={handleUpdate}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
           >
-            Update
+            {loading ? "Updating..." : "Update"}
           </button>
         </div>
       </div>

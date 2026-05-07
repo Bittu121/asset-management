@@ -8,8 +8,8 @@ import * as subDepartmentService from "./service";
 
 // GET all sub departments
 export const getSubDepartments = async (req: NextRequest) => {
-  const auth = authenticate(req);
-  if ("status" in auth) return auth;
+  // const auth = authenticate(req);
+  // if ("status" in auth) return auth;
 
   const subDepartments = await subDepartmentService.getAllSubDepartments();
   return successResponse(
@@ -21,8 +21,8 @@ export const getSubDepartments = async (req: NextRequest) => {
 
 // GET single sub department
 export const getSingleSubDepartment = async (req: NextRequest, id: string) => {
-  const auth = authenticate(req);
-  if ("status" in auth) return auth;
+  // const auth = authenticate(req);
+  // if ("status" in auth) return auth;
 
   const subDepartment = await subDepartmentService.getSubDepartmentById(id);
   if (!subDepartment) return errorResponse("Sub department not found", 404);
@@ -36,11 +36,11 @@ export const getSingleSubDepartment = async (req: NextRequest, id: string) => {
 
 // POST create sub department
 export const createSubDepartment = async (req: NextRequest) => {
-  const auth = authenticate(req);
-  if ("status" in auth) return auth;
+  // const auth = authenticate(req);
+  // if ("status" in auth) return auth;
 
-  const roleCheck = authorizeRoles(auth.user, "admin");
-  if (roleCheck) return roleCheck;
+  // const roleCheck = authorizeRoles(auth.user, "admin");
+  // if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -61,11 +61,11 @@ export const createSubDepartment = async (req: NextRequest) => {
 
 // PUT update sub department
 export const updateSubDepartment = async (req: NextRequest, id: string) => {
-  const auth = authenticate(req);
-  if ("status" in auth) return auth;
+  // const auth = authenticate(req);
+  // if ("status" in auth) return auth;
 
-  const roleCheck = authorizeRoles(auth.user, "admin");
-  if (roleCheck) return roleCheck;
+  // const roleCheck = authorizeRoles(auth.user, "admin");
+  // if (roleCheck) return roleCheck;
 
   const body = await req.json();
 
@@ -84,11 +84,11 @@ export const updateSubDepartment = async (req: NextRequest, id: string) => {
 
 // DELETE sub department
 export const deleteSubDepartment = async (req: NextRequest, id: string) => {
-  const auth = authenticate(req);
-  if ("status" in auth) return auth;
+  // const auth = authenticate(req);
+  // if ("status" in auth) return auth;
 
-  const roleCheck = authorizeRoles(auth.user, "admin");
-  if (roleCheck) return roleCheck;
+  // const roleCheck = authorizeRoles(auth.user, "admin");
+  // if (roleCheck) return roleCheck;
 
   const subDepartment = await subDepartmentService.deleteSubDepartment(id);
   if (!subDepartment) return errorResponse("Sub department not found", 404);

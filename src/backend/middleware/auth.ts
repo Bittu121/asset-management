@@ -2,46 +2,51 @@ import { NextRequest } from "next/server";
 import { verifyAccessToken } from "../config/jwt";
 import { errorResponse } from "../utils/response";
 import { messages } from "../constants/messages";
+import UserAccount from "../modules/admin/user-account/schema";
 
 export type AuthUser = {
-  id: string;
+  _id: string;
   email: string;
+  name: string;
   role: string;
+  employeeCode: string;
 };
 
-type AuthSuccess = {
-  user: AuthUser;
-};
+export type AuthResult =
+  | { user: AuthUser }
+  | { status: string; message: string; statusCode: number };
 
-type AuthError = {
-  message: string;
-  statusCode: number;
-};
-
-export const authenticate = (
-  req: NextRequest,
-): { user: AuthUser } | ReturnType<typeof errorResponse> => {
+export const authenticate = async (req: NextRequest): Promise<AuthResult> => {
   try {
+    // Get token from cookies
     const token = req.cookies.get("accessToken")?.value;
 
     if (!token) {
       return errorResponse(messages.AUTH.TOKEN_REQUIRED, 401);
     }
 
-    const decoded = verifyAccessToken(token) as {
-      id: string;
-      email: string;
-      role: string;
-    };
+    // Verify token
+    const decoded = verifyAccessToken(token);
+
+    // Get user from database
+    const user = await UserAccount.findById(decoded.userId)
+      .populate("role", "name")
+      .select("-password -otp -otpExpiry");
+
+    if (!user) {
+      return errorResponse(messages.AUTH.UNAUTHORIZED, 401);
+    }
 
     return {
       user: {
-        id: decoded.id,
-        email: decoded.email,
-        role: decoded.role,
+        _id: user._id.toString(),
+        email: user.email,
+        name: user.name,
+        role: (user.role as any).name,
+        employeeCode: user.employeeCode,
       },
     };
-  } catch {
+  } catch (error) {
     return errorResponse(messages.AUTH.TOKEN_INVALID, 401);
   }
 };
