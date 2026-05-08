@@ -1,850 +1,97 @@
-// "use client";
-// import { useState } from "react";
-// import { useRouter } from "next/navigation";
-// import { HiPencilSquare } from "react-icons/hi2";
-// import { MdQrCode2 } from "react-icons/md";
-// import { Trash2 } from "lucide-react";
-// import { toast } from "react-toastify";
-// import UpdateAssetModal from "./UpdateAssetModal";
-// import Pagination from "../../../components/common/Pagination";
-// import AddAssetModal from "./AddAssetModal";
-// import QRModal from "./QRModal";
-// import { GoPlusCircle } from "react-icons/go";
-// import ExcelActions from "@/app/components/common/ExcelActions";
-
-// export type Asset = {
-//   //step-0
-//   id: number;
-//   assetTag: string;
-//   serialNumber: string;
-//   category: string;
-//   subcategory: string;
-//   manufacturer: string;
-//   model: string;
-//   device: string;
-//   isActive: boolean;
-//   description: string;
-
-//   //step-1
-//   vendor: string;
-//   purchaseOrderId: string;
-//   purchaseDate: string;
-//   purchaseCost: string;
-//   currentValue: string;
-//   warrantyExpiry: string;
-//   amcExpiry: string;
-
-//   //step-2
-//   os: string;
-//   osVersion: string;
-//   processor: string;
-//   ram: string;
-//   storageSize: string;
-
-//   //step-3
-//   hostname: string;
-//   ipAddress: string;
-//   macAddress: string;
-// };
-
-// export default function Page() {
-//   const router = useRouter();
-//   const [assets, setAssets] = useState<Asset[]>([
-//     {
-//       id: 1,
-//       assetTag: "LAP-002",
-//       serialNumber: "SN124",
-//       category: "Laptop",
-//       subcategory: "Office",
-//       manufacturer: "HP",
-//       model: "EliteBook",
-//       device: "HP EliteBook",
-//       isActive: true,
-//       description: "Office use laptop",
-//       vendor: "XYZ Pvt Ltd",
-//       purchaseOrderId: "PO-1001",
-//       purchaseDate: "2023-11-15",
-//       purchaseCost: "62000",
-//       currentValue: "50000",
-//       warrantyExpiry: "2026-11-15",
-//       amcExpiry: "2025-11-15",
-//       os: "Windows",
-//       osVersion: "Windows 11",
-//       processor: "Intel i7",
-//       ram: "16GB",
-//       storageSize: "512GB",
-//       hostname: "DESKTOP-02",
-//       ipAddress: "192.168.1.11",
-//       macAddress: "00:1A:2B:3C:4D:01",
-//     },
-//     {
-//       id: 2,
-//       assetTag: "LAP-003",
-//       serialNumber: "SN125",
-//       category: "Laptop",
-//       subcategory: "Development",
-//       manufacturer: "Lenovo",
-//       model: "ThinkPad",
-//       device: "Lenovo ThinkPad",
-//       isActive: true,
-//       description: "Developer machine",
-//       vendor: "TechSource Ltd",
-//       purchaseOrderId: "PO-1001",
-//       purchaseDate: "2024-02-10",
-//       purchaseCost: "70000",
-//       currentValue: "65000",
-//       warrantyExpiry: "2027-02-10",
-//       amcExpiry: "2026-02-10",
-//       os: "Linux",
-//       osVersion: "Ubuntu 22.04",
-//       processor: "Ryzen 5",
-//       ram: "32GB",
-//       storageSize: "1TB",
-//       hostname: "DEV-01",
-//       ipAddress: "192.168.1.12",
-//       macAddress: "00:1A:2B:3C:4D:02",
-//     },
-//     {
-//       id: 3,
-//       assetTag: "DESK-001",
-//       serialNumber: "SN126",
-//       category: "Desktop",
-//       subcategory: "Office",
-//       manufacturer: "Dell",
-//       model: "OptiPlex",
-//       device: "Dell OptiPlex",
-//       isActive: true,
-//       description: "Office desktop system",
-//       vendor: "ABC Pvt Ltd",
-//       purchaseOrderId: "PO-1002",
-//       purchaseDate: "2023-09-05",
-//       purchaseCost: "45000",
-//       currentValue: "35000",
-//       warrantyExpiry: "2026-09-05",
-//       amcExpiry: "2025-09-05",
-//       os: "Windows",
-//       osVersion: "Windows 10",
-//       processor: "Intel i5",
-//       ram: "8GB",
-//       storageSize: "256GB",
-//       hostname: "DESKTOP-03",
-//       ipAddress: "192.168.1.13",
-//       macAddress: "00:1A:2B:3C:4D:03",
-//     },
-//     {
-//       id: 4,
-//       assetTag: "LAP-004",
-//       serialNumber: "SN127",
-//       category: "Laptop",
-//       subcategory: "Design",
-//       manufacturer: "Apple",
-//       model: "MacBook Pro",
-//       device: "Apple MacBook Pro",
-//       isActive: true,
-//       description: "Design team laptop",
-//       vendor: "Apple Store",
-//       purchaseOrderId: "PO-1003",
-//       purchaseDate: "2024-03-01",
-//       purchaseCost: "150000",
-//       currentValue: "140000",
-//       warrantyExpiry: "2027-03-01",
-//       amcExpiry: "2026-03-01",
-//       os: "macOS",
-//       osVersion: "Sonoma",
-//       processor: "Apple M2",
-//       ram: "16GB",
-//       storageSize: "1TB",
-//       hostname: "MAC-01",
-//       ipAddress: "192.168.1.14",
-//       macAddress: "00:1A:2B:3C:4D:04",
-//     },
-//     {
-//       id: 5,
-//       assetTag: "TAB-001",
-//       serialNumber: "SN128",
-//       category: "Tablet",
-//       subcategory: "Portable",
-//       manufacturer: "Samsung",
-//       model: "Galaxy Tab",
-//       device: "Samsung Galaxy Tab",
-//       isActive: true,
-//       description: "Portable tablet device",
-//       vendor: "Mobile Hub",
-//       purchaseOrderId: "PO-1004",
-//       purchaseDate: "2023-12-20",
-//       purchaseCost: "30000",
-//       currentValue: "25000",
-//       warrantyExpiry: "2026-12-20",
-//       amcExpiry: "2025-12-20",
-//       os: "Android",
-//       osVersion: "Android 13",
-//       processor: "Snapdragon",
-//       ram: "8GB",
-//       storageSize: "256GB",
-//       hostname: "TAB-01",
-//       ipAddress: "192.168.1.15",
-//       macAddress: "00:1A:2B:3C:4D:05",
-//     },
-//     {
-//       id: 6,
-//       assetTag: "LAP-005",
-//       serialNumber: "SN129",
-//       category: "Laptop",
-//       subcategory: "Office",
-//       manufacturer: "Acer",
-//       model: "Aspire",
-//       device: "Acer Aspire",
-//       isActive: true,
-//       description: "Entry-level office laptop",
-//       vendor: "Global Tech",
-//       purchaseOrderId: "PO-1005",
-//       purchaseDate: "2024-01-20",
-//       purchaseCost: "55000",
-//       currentValue: "50000",
-//       warrantyExpiry: "2027-01-20",
-//       amcExpiry: "2026-01-20",
-//       os: "Windows",
-//       osVersion: "Windows 11",
-//       processor: "Intel i3",
-//       ram: "8GB",
-//       storageSize: "512GB",
-//       hostname: "DESKTOP-04",
-//       ipAddress: "192.168.1.16",
-//       macAddress: "00:1A:2B:3C:4D:06",
-//     },
-//   ]);
-
-//   const [open, setOpen] = useState(false);
-//   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-//   const [qrModalOpen, setQrModalOpen] = useState(false);
-//   const [selectedAssetForQR, setSelectedAssetForQR] = useState<Asset | null>(
-//     null,
-//   );
-
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const itemsPerPage = 5;
-
-//   const totalPages = Math.ceil(assets.length / itemsPerPage);
-//   const paginatedAddAsset = assets.slice(
-//     (currentPage - 1) * itemsPerPage,
-//     currentPage * itemsPerPage,
-//   );
-
-//   // CREATE
-//   const handleCreate = () => {
-//     setSelectedAsset(null);
-//     setOpen(true);
-//   };
-
-//   // EDIT
-//   const handleEdit = (asset: Asset) => {
-//     setSelectedAsset(asset);
-//     setOpen(true);
-//   };
-
-//   // SUBMIT
-//   const handleSubmit = (data: Asset) => {
-//     if (selectedAsset) {
-//       // UPDATE
-//       setAssets((prev) =>
-//         prev.map((item) =>
-//           item.id === selectedAsset.id ? { ...item, ...data } : item,
-//         ),
-//       );
-//       toast.success("Asset updated successfully");
-//     } else {
-//       // CREATE
-//       setAssets((prev) => [...prev, { ...data, id: Date.now() }]);
-//       toast.success("Asset created successfully");
-//     }
-//     setOpen(false);
-//   };
-
-//   const handleDelete = (id: number) => {
-//     //Delete Api
-//     toast.success("Asset deleted successfully");
-//     setAssets((prev) => prev.filter((a) => a.id !== id));
-//   };
-
-//   const handleDownloadQrCode = (item: Asset) => {
-//     setSelectedAssetForQR(item);
-//     setQrModalOpen(true);
-//   };
-
-//   return (
-//     <div className="p-4 bg-[#f8fafc] min-h-screen">
-//       <div className="mb-6 space-y-4">
-//         {/* ROW 1 → HEADER */}
-//         <div>
-//           <h1 className="text-xl font-bold text-gray-900 tracking-tight">
-//             Assets
-//           </h1>
-//           <p className="text-sm text-gray-500 mt-0.5">
-//             Manage and track all your company assets
-//           </p>
-//         </div>
-
-//         {/* DIVIDER */}
-//         <div className="border-t border-gray-200" />
-
-//         {/* ROW 2 → SEARCH + FILTERS */}
-//         <div className="flex flex-wrap items-center justify-between gap-3">
-//           {/* LEFT → SEARCH + FILTERS */}
-//           <div className="flex flex-wrap items-center gap-2">
-//             {/* SEARCH */}
-//             <div className="relative">
-//               <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-//                 <svg
-//                   xmlns="http://www.w3.org/2000/svg"
-//                   className="h-4 w-4"
-//                   fill="none"
-//                   viewBox="0 0 24 24"
-//                   stroke="currentColor"
-//                 >
-//                   <path
-//                     strokeLinecap="round"
-//                     strokeLinejoin="round"
-//                     strokeWidth={2}
-//                     d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
-//                   />
-//                 </svg>
-//               </span>
-//               <input
-//                 placeholder="Search assets..."
-//                 className="pl-9 pr-4 py-2 w-64 border border-gray-300 rounded-lg text-sm
-//           bg-white text-gray-700 placeholder-gray-400 shadow-sm
-//           focus:outline-none focus:ring-0.9 focus:ring-blue-500 focus:border-blue-500 transition"
-//               />
-//             </div>
-
-//             {/* DIVIDER LINE */}
-//             <div className="hidden sm:block h-8 w-px bg-gray-200" />
-
-//             {/* STATUS FILTER */}
-//             <select
-//               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-//       text-gray-700 shadow-sm focus:outline-none focus:ring-0.9 focus:ring-blue-500
-//       focus:border-blue-500 transition cursor-pointer"
-//             >
-//               <option>All Status</option>
-//               <option>Active</option>
-//               <option>Inactive</option>
-//             </select>
-
-//             {/* CATEGORY FILTER */}
-//             <select
-//               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-//       text-gray-700 shadow-sm focus:outline-none focus:ring-0.9 focus:ring-blue-500
-//       focus:border-blue-500 transition cursor-pointer"
-//             >
-//               <option>All Category</option>
-//               <option>Laptop</option>
-//               <option>Desktop</option>
-//               <option>Tablet</option>
-//             </select>
-
-//             {/* VENDOR FILTER */}
-//             <select
-//               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-//       text-gray-700 shadow-sm focus:outline-none focus:ring-0.9 focus:ring-blue-500
-//       focus:border-blue-500 transition cursor-pointer"
-//             >
-//               <option>All Vendors</option>
-//               <option>XYZ Pvt Ltd</option>
-//               <option>ABC Pvt Ltd</option>
-//               <option>TechSource Ltd</option>
-//             </select>
-//           </div>
-
-//           {/* RIGHT → RESULTS COUNT */}
-//           <p className="text-sm text-gray-500 hidden lg:block">
-//             Showing{" "}
-//             <span className="font-semibold text-gray-700">{assets.length}</span>{" "}
-//             assets
-//           </p>
-//         </div>
-
-//         {/* ROW 3 → ACTION BUTTONS */}
-//         <div className="flex flex-wrap items-center justify-between gap-3">
-//           <div className="flex flex-wrap items-center gap-2">
-//             <ExcelActions
-//               data={assets}
-//               fileName="asset"
-//               headers={[
-//                 { label: "Asset Tag", key: "assetTag" },
-//                 { label: "Serial Number", key: "serialNumber" },
-//                 { label: "Device", key: "device" },
-//                 { label: "Category", key: "category" },
-//                 { label: "Subcategory", key: "subcategory" },
-//                 { label: "Manufacturer", key: "manufacturer" },
-//                 { label: "Model", key: "model" },
-//                 { label: "Status", key: "isActive" },
-//                 { label: "Purchase Cost", key: "purchaseCost" },
-//                 { label: "Warranty Expiry", key: "warrantyExpiry" },
-//               ]}
-//               onUpload={(uploadedData: Asset[]) => {
-//                 setAssets((prev) => [...prev, ...uploadedData]);
-//                 toast.success("Assets uploaded successfully");
-//               }}
-//             />
-//           </div>
-
-//           {/* RIGHT → CREATE BUTTON */}
-//           <button
-//             onClick={handleCreate}
-//             className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2
-//       rounded-lg text-sm font-medium hover:bg-gray-700 active:scale-95
-//       shadow-sm transition-all duration-150"
-//           >
-//             <GoPlusCircle size={18} />
-//             Create Asset
-//           </button>
-//         </div>
-//       </div>
-
-//       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
-//         <table className="min-w-[1100px] w-full">
-//           <thead>
-//             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-//               <th className="text-left px-6 py-4 ">Asset Tag</th>
-//               <th className="text-left px-6 py-4 ">Device</th>
-//               <th className="text-left px-6 py-4 ">Assigned To-</th>
-//               <th className="text-left px-6 py-4 ">Status</th>
-//               <th className="text-left px-6 py-4 ">Cost</th>
-//               <th className="text-left px-6 py-4 ">Warranty</th>
-//               <th className="text-right px-6 py-4 ">Actions</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {paginatedAddAsset?.length === 0 ? (
-//               <>
-//                 <tr>
-//                   <td colSpan={6} className="px-6 py-12 text-center">
-//                     <div className="flex flex-col items-center justify-center gap-3">
-//                       <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
-//                         📍
-//                       </div>
-
-//                       <h3 className="text-sm font-semibold text-gray-700">
-//                         No Asset Found
-//                       </h3>
-
-//                       <p className="text-xs text-gray-500">
-//                         You haven’t added any Asset yet.
-//                       </p>
-
-//                       <button
-//                         onClick={handleCreate}
-//                         className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
-//                       >
-//                         + Add Location
-//                       </button>
-//                     </div>
-//                   </td>
-//                 </tr>
-//               </>
-//             ) : (
-//               paginatedAddAsset.map((item) => (
-//                 <tr
-//                   key={item.id}
-//                   className="hover:bg-gray-50 transition-all duration-150"
-//                 >
-//                   <td className="px-6 py-5">
-//                     <div className="text-sm font-medium text-gray-900">
-//                       {item.assetTag}
-//                     </div>
-//                   </td>
-//                   <td className="px-6 py-5">
-//                     <div className="text-sm font-medium text-gray-900">
-//                       {item.device}
-//                     </div>
-//                   </td>
-//                   <td className="px-6 py-5">
-//                     <div className="text-sm font-medium text-gray-900">
-//                       {item.serialNumber}
-//                     </div>
-//                   </td>
-//                   <td className="px-6 py-5">
-//                     <div className="text-sm font-medium text-gray-900">
-//                       <span
-//                         className={`px-2 py-1 text-xs rounded-full ${
-//                           item.isActive
-//                             ? "bg-green-100 text-green-600"
-//                             : "bg-gray-100 text-gray-500"
-//                         }`}
-//                       >
-//                         {item.isActive ? "Active" : "Inactive"}
-//                       </span>
-//                     </div>
-//                   </td>
-//                   <td className="px-6 py-5">
-//                     <div className="text-sm font-medium text-gray-900">
-//                       {item.purchaseCost}
-//                     </div>
-//                   </td>
-//                   <td className="px-6 py-5">
-//                     <div className="text-sm font-medium text-gray-900">
-//                       {item.warrantyExpiry}
-//                     </div>
-//                   </td>
-
-//                   <td className="px-6 py-5 text-right">
-//                     <div className="inline-flex items-center gap-3">
-//                       <button
-//                         onClick={() => handleDownloadQrCode(item)}
-//                         className="text-sm font-medium text-blue-600 hover:text-blue-700 leading-none"
-//                       >
-//                         <MdQrCode2 size={19} />
-//                       </button>
-//                       <span className="h-4 w-px bg-gray-300"></span>
-//                       <button
-//                         onClick={() => handleEdit(item)}
-//                         className="text-sm font-medium text-blue-600 hover:text-blue-700 leading-none"
-//                       >
-//                         <HiPencilSquare size={19} />
-//                       </button>
-//                       <span className="h-4 w-px bg-gray-300"></span>
-//                       <button
-//                         onClick={() => handleDelete(item?.id)}
-//                         className="flex items-center justify-center text-red-800 hover:bg-red-50 p-1 rounded-md"
-//                         title="Delete"
-//                       >
-//                         <Trash2 size={19} />
-//                       </button>
-//                     </div>
-//                   </td>
-//                 </tr>
-//               ))
-//             )}
-//           </tbody>
-//         </table>
-//       </div>
-//       {/* Modal */}
-//       <AddAssetModal
-//         initialData={selectedAsset}
-//         isOpen={open && !selectedAsset}
-//         onClose={() => setOpen(false)}
-//         onSubmit={handleSubmit}
-//       />
-//       <UpdateAssetModal
-//         isOpen={open && !!selectedAsset}
-//         onClose={() => setOpen(false)}
-//         initialData={selectedAsset}
-//         onSubmit={handleSubmit}
-//       />
-//       <QRModal
-//         isOpen={qrModalOpen}
-//         onClose={() => setQrModalOpen(false)}
-//         asset={selectedAssetForQR}
-//       />
-//       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-4">
-//         <Pagination
-//           currentPage={currentPage}
-//           totalPages={totalPages}
-//           onPageChange={setCurrentPage}
-//         />
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { HiPencilSquare } from "react-icons/hi2";
 import { MdQrCode2 } from "react-icons/md";
 import { Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
 import UpdateAssetModal from "./UpdateAssetModal";
 import Pagination from "../../../components/common/Pagination";
 import AddAssetModal from "./AddAssetModal";
 import QRModal from "./QRModal";
 import { GoPlusCircle } from "react-icons/go";
 import ExcelActions from "@/app/components/common/ExcelActions";
-
-export type Asset = {
-  id: number;
-  assetTag: string;
-  serialNumber: string;
-  category: string;
-  subcategory: string;
-  manufacturer: string;
-  model: string;
-  device: string;
-  isActive: boolean;
-  description: string;
-  vendor: string;
-  purchaseOrderId: string;
-  purchaseDate: string;
-  purchaseCost: string;
-  currentValue: string;
-  warrantyExpiry: string;
-  amcExpiry: string;
-  os: string;
-  osVersion: string;
-  processor: string;
-  ram: string;
-  storageSize: string;
-  hostname: string;
-  ipAddress: string;
-  macAddress: string;
-};
+import { AppDispatch, RootState } from "@/store/auth/store";
+import {
+  fetchAssets,
+  createAssetAction,
+  updateAssetAction,
+  deleteAssetAction,
+} from "@/store/assets/assetsActions";
+import { fetchAssetCategories } from "@/store/assetCategories/assetCategoriesActions";
+import { fetchSubCategories } from "@/store/subCategories/subCategoriesActions";
+import { fetchVendors } from "@/store/vendor/vendorActions";
 
 function Page() {
-  const [assets, setAssets] = useState<Asset[]>([
-    {
-      id: 1,
-      assetTag: "LAP-002",
-      serialNumber: "SN124",
-      category: "Laptop",
-      subcategory: "Office",
-      manufacturer: "HP",
-      model: "EliteBook",
-      device: "HP EliteBook",
-      isActive: true,
-      description: "Office use laptop",
-      vendor: "XYZ Pvt Ltd",
-      purchaseOrderId: "PO-1001",
-      purchaseDate: "2023-11-15",
-      purchaseCost: "62000",
-      currentValue: "50000",
-      warrantyExpiry: "2026-11-15",
-      amcExpiry: "2025-11-15",
-      os: "Windows",
-      osVersion: "Windows 11",
-      processor: "Intel i7",
-      ram: "16GB",
-      storageSize: "512GB",
-      hostname: "DESKTOP-02",
-      ipAddress: "192.168.1.11",
-      macAddress: "00:1A:2B:3C:4D:01",
-    },
-    {
-      id: 2,
-      assetTag: "LAP-003",
-      serialNumber: "SN125",
-      category: "Laptop",
-      subcategory: "Development",
-      manufacturer: "Lenovo",
-      model: "ThinkPad",
-      device: "Lenovo ThinkPad",
-      isActive: true,
-      description: "Developer machine",
-      vendor: "TechSource Ltd",
-      purchaseOrderId: "PO-1001",
-      purchaseDate: "2024-02-10",
-      purchaseCost: "70000",
-      currentValue: "65000",
-      warrantyExpiry: "2027-02-10",
-      amcExpiry: "2026-02-10",
-      os: "Linux",
-      osVersion: "Ubuntu 22.04",
-      processor: "Ryzen 5",
-      ram: "32GB",
-      storageSize: "1TB",
-      hostname: "DEV-01",
-      ipAddress: "192.168.1.12",
-      macAddress: "00:1A:2B:3C:4D:02",
-    },
-    {
-      id: 3,
-      assetTag: "DESK-001",
-      serialNumber: "SN126",
-      category: "Desktop",
-      subcategory: "Office",
-      manufacturer: "Dell",
-      model: "OptiPlex",
-      device: "Dell OptiPlex",
-      isActive: false,
-      description: "Office desktop system",
-      vendor: "ABC Pvt Ltd",
-      purchaseOrderId: "PO-1002",
-      purchaseDate: "2023-09-05",
-      purchaseCost: "45000",
-      currentValue: "35000",
-      warrantyExpiry: "2026-09-05",
-      amcExpiry: "2025-09-05",
-      os: "Windows",
-      osVersion: "Windows 10",
-      processor: "Intel i5",
-      ram: "8GB",
-      storageSize: "256GB",
-      hostname: "DESKTOP-03",
-      ipAddress: "192.168.1.13",
-      macAddress: "00:1A:2B:3C:4D:03",
-    },
-    {
-      id: 4,
-      assetTag: "LAP-004",
-      serialNumber: "SN127",
-      category: "Laptop",
-      subcategory: "Design",
-      manufacturer: "Apple",
-      model: "MacBook Pro",
-      device: "Apple MacBook Pro",
-      isActive: true,
-      description: "Design team laptop",
-      vendor: "Apple Store",
-      purchaseOrderId: "PO-1003",
-      purchaseDate: "2024-03-01",
-      purchaseCost: "150000",
-      currentValue: "140000",
-      warrantyExpiry: "2027-03-01",
-      amcExpiry: "2026-03-01",
-      os: "macOS",
-      osVersion: "Sonoma",
-      processor: "Apple M2",
-      ram: "16GB",
-      storageSize: "1TB",
-      hostname: "MAC-01",
-      ipAddress: "192.168.1.14",
-      macAddress: "00:1A:2B:3C:4D:04",
-    },
-    {
-      id: 5,
-      assetTag: "TAB-001",
-      serialNumber: "SN128",
-      category: "Tablet",
-      subcategory: "Portable",
-      manufacturer: "Samsung",
-      model: "Galaxy Tab",
-      device: "Samsung Galaxy Tab",
-      isActive: false,
-      description: "Portable tablet device",
-      vendor: "Mobile Hub",
-      purchaseOrderId: "PO-1004",
-      purchaseDate: "2023-12-20",
-      purchaseCost: "30000",
-      currentValue: "25000",
-      warrantyExpiry: "2026-12-20",
-      amcExpiry: "2025-12-20",
-      os: "Android",
-      osVersion: "Android 13",
-      processor: "Snapdragon",
-      ram: "8GB",
-      storageSize: "256GB",
-      hostname: "TAB-01",
-      ipAddress: "192.168.1.15",
-      macAddress: "00:1A:2B:3C:4D:05",
-    },
-    {
-      id: 6,
-      assetTag: "LAP-005",
-      serialNumber: "SN129",
-      category: "Laptop",
-      subcategory: "Office",
-      manufacturer: "Acer",
-      model: "Aspire",
-      device: "Acer Aspire",
-      isActive: true,
-      description: "Entry-level office laptop",
-      vendor: "Global Tech",
-      purchaseOrderId: "PO-1005",
-      purchaseDate: "2024-01-20",
-      purchaseCost: "55000",
-      currentValue: "50000",
-      warrantyExpiry: "2027-01-20",
-      amcExpiry: "2026-01-20",
-      os: "Windows",
-      osVersion: "Windows 11",
-      processor: "Intel i3",
-      ram: "8GB",
-      storageSize: "512GB",
-      hostname: "DESKTOP-04",
-      ipAddress: "192.168.1.16",
-      macAddress: "00:1A:2B:3C:4D:06",
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
 
-  // ── FILTER STATE ──────────────────────────────────────────
+  const { assets, loading, createLoading, updateLoading, deleteLoading } =
+    useSelector((state: RootState) => state.assets);
+  const { assetCategories } = useSelector(
+    (state: RootState) => state.assetCategories,
+  );
+  const { subCategories } = useSelector(
+    (state: RootState) => state.subCategories,
+  );
+  const { vendors } = useSelector((state: RootState) => state.vendor);
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [vendorFilter, setVendorFilter] = useState("All");
 
-  // ── MODAL STATE ───────────────────────────────────────────
   const [open, setOpen] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const [selectedAsset, setSelectedAsset] = useState<any>(null);
   const [qrModalOpen, setQrModalOpen] = useState(false);
-  const [selectedAssetForQR, setSelectedAssetForQR] = useState<Asset | null>(
-    null,
-  );
+  const [selectedAssetForQR, setSelectedAssetForQR] = useState<any>(null);
 
-  // ── PAGINATION ────────────────────────────────────────────
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
-  // ── DYNAMIC FILTER OPTIONS ────────────────────────────────
-  const uniqueCategories = useMemo(
-    () => ["All", ...Array.from(new Set(assets.map((a) => a.category)))],
-    [assets],
-  );
+  useEffect(() => {
+    dispatch(fetchAssets());
+    dispatch(fetchAssetCategories());
+    dispatch(fetchSubCategories());
+    dispatch(fetchVendors());
+  }, [dispatch]);
 
-  const uniqueVendors = useMemo(
-    () => ["All", ...Array.from(new Set(assets.map((a) => a.vendor)))],
-    [assets],
-  );
-
-  // ── FILTERED DATA ─────────────────────────────────────────
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) => {
-      // Search → checks tag, device, serial, model, manufacturer
       const searchLower = search.toLowerCase();
       const matchesSearch =
         search === "" ||
         asset.assetTag.toLowerCase().includes(searchLower) ||
-        asset.device.toLowerCase().includes(searchLower) ||
+        (asset.device || "").toLowerCase().includes(searchLower) ||
         asset.serialNumber.toLowerCase().includes(searchLower) ||
-        asset.model.toLowerCase().includes(searchLower) ||
-        asset.manufacturer.toLowerCase().includes(searchLower);
+        (asset.model || "").toLowerCase().includes(searchLower) ||
+        (asset.manufacturer || "").toLowerCase().includes(searchLower);
 
-      // Status filter
       const matchesStatus =
         statusFilter === "All" ||
         (statusFilter === "Active" && asset.isActive) ||
         (statusFilter === "Inactive" && !asset.isActive);
 
-      // Category filter
       const matchesCategory =
-        categoryFilter === "All" || asset.category === categoryFilter;
+        categoryFilter === "All" || asset.category?._id === categoryFilter;
 
-      // Vendor filter
       const matchesVendor =
-        vendorFilter === "All" || asset.vendor === vendorFilter;
+        vendorFilter === "All" || asset.vendor?._id === vendorFilter;
 
       return matchesSearch && matchesStatus && matchesCategory && matchesVendor;
     });
   }, [assets, search, statusFilter, categoryFilter, vendorFilter]);
 
-  // ── PAGINATED DATA ────────────────────────────────────────
   const totalPages = Math.ceil(filteredAssets.length / itemsPerPage);
-
   const paginatedAssets = filteredAssets.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
-  // ── RESET PAGE on filter change ───────────────────────────
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    setCurrentPage(1);
-  };
+  const isFiltered =
+    search !== "" ||
+    statusFilter !== "All" ||
+    categoryFilter !== "All" ||
+    vendorFilter !== "All";
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatusFilter(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategoryFilter(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleVendorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setVendorFilter(e.target.value);
-    setCurrentPage(1);
-  };
-
-  // ── CLEAR FILTERS ─────────────────────────────────────────
   const handleClearFilters = () => {
     setSearch("");
     setStatusFilter("All");
@@ -853,52 +100,50 @@ function Page() {
     setCurrentPage(1);
   };
 
-  const isFiltered =
-    search !== "" ||
-    statusFilter !== "All" ||
-    categoryFilter !== "All" ||
-    vendorFilter !== "All";
-
-  // ── CRUD ──────────────────────────────────────────────────
   const handleCreate = () => {
     setSelectedAsset(null);
     setOpen(true);
   };
 
-  const handleEdit = (asset: Asset) => {
+  const handleEdit = (asset: any) => {
     setSelectedAsset(asset);
     setOpen(true);
   };
 
-  const handleSubmit = (data: Asset) => {
+  const handleSubmit = (data: any) => {
     if (selectedAsset) {
-      setAssets((prev) =>
-        prev.map((item) =>
-          item.id === selectedAsset.id ? { ...item, ...data } : item,
-        ),
-      );
-      toast.success("Asset updated successfully");
+      dispatch(updateAssetAction(selectedAsset._id, data, () => setOpen(false)));
     } else {
-      setAssets((prev) => [...prev, { ...data, id: Date.now() }]);
-      toast.success("Asset created successfully");
+      dispatch(createAssetAction(data, () => setOpen(false)));
     }
-    setOpen(false);
   };
 
-  const handleDelete = (id: number) => {
-    setAssets((prev) => prev.filter((a) => a.id !== id));
-    toast.success("Asset deleted successfully");
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this asset?")) {
+      dispatch(deleteAssetAction(id));
+    }
   };
 
-  const handleDownloadQrCode = (item: Asset) => {
+  const handleDownloadQrCode = (item: any) => {
     setSelectedAssetForQR(item);
     setQrModalOpen(true);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-gray-600">Loading assets...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-6 space-y-4">
-        {/* ROW 1 → HEADER */}
+        {/* Header */}
         <div>
           <h1 className="text-xl font-bold text-gray-900 tracking-tight">
             Assets
@@ -908,14 +153,12 @@ function Page() {
           </p>
         </div>
 
-        {/* DIVIDER */}
         <div className="border-t border-gray-200" />
 
-        {/* ROW 2 → SEARCH + FILTERS */}
+        {/* Filters */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* LEFT → SEARCH + FILTERS */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* SEARCH */}
+            {/* Search */}
             <div className="relative">
               <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
                 <svg
@@ -935,73 +178,72 @@ function Page() {
               </span>
               <input
                 value={search}
-                onChange={handleSearchChange}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
                 placeholder="Search assets..."
-                className="pl-9 pr-4 py-2 w-64 border border-gray-300 rounded-lg text-sm
-                bg-white text-gray-700 placeholder-gray-400 shadow-sm
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                className="pl-9 pr-4 py-2 w-64 border border-gray-300 rounded-lg text-sm bg-white text-gray-700 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               />
             </div>
 
-            {/* VERTICAL DIVIDER */}
             <div className="hidden sm:block h-8 w-px bg-gray-200" />
 
-            {/* STATUS FILTER */}
             <select
               value={statusFilter}
-              onChange={handleStatusChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-              text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500
-              focus:border-blue-500 transition cursor-pointer"
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition cursor-pointer"
             >
               <option value="All">All Status</option>
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
 
-            {/* CATEGORY FILTER */}
             <select
               value={categoryFilter}
-              onChange={handleCategoryChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-              text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500
-              focus:border-blue-500 transition cursor-pointer"
+              onChange={(e) => {
+                setCategoryFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition cursor-pointer"
             >
-              {uniqueCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat === "All" ? "All Categories" : cat}
+              <option value="All">All Categories</option>
+              {assetCategories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
                 </option>
               ))}
             </select>
 
-            {/* VENDOR FILTER */}
             <select
               value={vendorFilter}
-              onChange={handleVendorChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white
-              text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500
-              focus:border-blue-500 transition cursor-pointer"
+              onChange={(e) => {
+                setVendorFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition cursor-pointer"
             >
-              {uniqueVendors.map((vendor) => (
-                <option key={vendor} value={vendor}>
-                  {vendor === "All" ? "All Vendors" : vendor}
+              <option value="All">All Vendors</option>
+              {vendors.map((v) => (
+                <option key={v._id} value={v._id}>
+                  {v.vendorName}
                 </option>
               ))}
             </select>
 
-            {/* CLEAR FILTERS */}
             {isFiltered && (
               <button
                 onClick={handleClearFilters}
-                className="flex items-center gap-1 px-3 py-2 text-sm text-red-500 
-                border border-red-200 rounded-lg hover:bg-red-50 transition"
+                className="flex items-center gap-1 px-3 py-2 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition"
               >
                 ✕ Clear
               </button>
             )}
           </div>
 
-          {/* RIGHT → RESULTS COUNT */}
           <p className="text-sm text-gray-500 hidden lg:block">
             Showing{" "}
             <span className="font-semibold text-gray-700">
@@ -1013,37 +255,42 @@ function Page() {
           </p>
         </div>
 
-        {/* ROW 3 → ACTION BUTTONS */}
+        {/* Action row */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <ExcelActions
-              data={filteredAssets}
-              fileName="asset"
-              headers={[
-                { label: "Asset Tag", key: "assetTag" },
-                { label: "Serial Number", key: "serialNumber" },
-                { label: "Device", key: "device" },
-                { label: "Category", key: "category" },
-                { label: "Subcategory", key: "subcategory" },
-                { label: "Manufacturer", key: "manufacturer" },
-                { label: "Model", key: "model" },
-                { label: "Status", key: "isActive" },
-                { label: "Purchase Cost", key: "purchaseCost" },
-                { label: "Warranty Expiry", key: "warrantyExpiry" },
-              ]}
-              onUpload={(uploadedData: Asset[]) => {
-                setAssets((prev) => [...prev, ...uploadedData]);
-                toast.success("Assets uploaded successfully");
-              }}
-            />
-          </div>
+          <ExcelActions
+            data={filteredAssets.map((a) => ({
+              "Asset Tag": a.assetTag,
+              "Serial Number": a.serialNumber,
+              Device: a.device || "-",
+              Category: a.category?.name || "-",
+              "Sub Category": a.subCategory?.name || "-",
+              Manufacturer: a.manufacturer || "-",
+              Model: a.model || "-",
+              Vendor: a.vendor?.vendorName || "-",
+              Status: a.isActive ? "Active" : "Inactive",
+              "Purchase Cost": a.purchaseCost || "-",
+              "Warranty Expiry": a.warrantyExpiry || "-",
+            }))}
+            fileName="assets"
+            headers={[
+              { label: "Asset Tag", key: "Asset Tag" },
+              { label: "Serial Number", key: "Serial Number" },
+              { label: "Device", key: "Device" },
+              { label: "Category", key: "Category" },
+              { label: "Sub Category", key: "Sub Category" },
+              { label: "Manufacturer", key: "Manufacturer" },
+              { label: "Model", key: "Model" },
+              { label: "Vendor", key: "Vendor" },
+              { label: "Status", key: "Status" },
+              { label: "Purchase Cost", key: "Purchase Cost" },
+              { label: "Warranty Expiry", key: "Warranty Expiry" },
+            ]}
+            onUpload={() => {}}
+          />
 
-          {/* CREATE BUTTON */}
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2
-            rounded-lg text-sm font-medium hover:bg-gray-700 active:scale-95
-            shadow-sm transition-all duration-150"
+            className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 active:scale-95 shadow-sm transition-all duration-150"
           >
             <GoPlusCircle size={18} />
             Create Asset
@@ -1051,14 +298,15 @@ function Page() {
         </div>
       </div>
 
-      {/* TABLE */}
+      {/* Table */}
       <div className="bg-white rounded-md w-full overflow-x-auto scroll-smooth table-scroll">
-        <table className="min-w-[1100px] w-full">
+        <table className="min-w-275 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide border-b border-gray-100">
               <th className="text-left px-6 py-4">Asset Tag</th>
               <th className="text-left px-6 py-4">Device</th>
-              <th className="text-left px-6 py-4">Assigned To</th>
+              <th className="text-left px-6 py-4">Serial No.</th>
+              <th className="text-left px-6 py-4">Vendor</th>
               <th className="text-left px-6 py-4">Status</th>
               <th className="text-left px-6 py-4">Cost</th>
               <th className="text-left px-6 py-4">Warranty</th>
@@ -1068,7 +316,7 @@ function Page() {
           <tbody className="divide-y divide-gray-100">
             {paginatedAssets.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-16 text-center">
+                <td colSpan={8} className="px-6 py-16 text-center">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 text-xl">
                       🗂️
@@ -1084,16 +332,14 @@ function Page() {
                     {isFiltered ? (
                       <button
                         onClick={handleClearFilters}
-                        className="mt-2 px-4 py-2 text-sm border border-gray-300 
-                        text-gray-700 rounded-md hover:bg-gray-50 transition"
+                        className="mt-2 px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition"
                       >
                         Clear Filters
                       </button>
                     ) : (
                       <button
                         onClick={handleCreate}
-                        className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white 
-                        rounded-md hover:bg-gray-800 transition"
+                        className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 transition"
                       >
                         + Add Asset
                       </button>
@@ -1104,7 +350,7 @@ function Page() {
             ) : (
               paginatedAssets.map((item) => (
                 <tr
-                  key={item.id}
+                  key={item._id}
                   className="hover:bg-gray-50 transition-all duration-150"
                 >
                   <td className="px-6 py-4">
@@ -1114,16 +360,20 @@ function Page() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">
-                      {item.device}
+                      {item.device || "-"}
                     </div>
                     <div className="text-xs text-gray-400">
-                      {item.category} • {item.subcategory}
+                      {item.category?.name || "-"}
+                      {item.subCategory?.name
+                        ? ` • ${item.subCategory.name}`
+                        : ""}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-700">
-                      {item.serialNumber}
-                    </div>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {item.serialNumber}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {item.vendor?.vendorName || "-"}
                   </td>
                   <td className="px-6 py-4">
                     <span
@@ -1141,15 +391,13 @@ function Page() {
                       {item.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      ₹{Number(item.purchaseCost).toLocaleString("en-IN")}
-                    </div>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    {item.purchaseCost
+                      ? `₹${Number(item.purchaseCost).toLocaleString("en-IN")}`
+                      : "-"}
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-700">
-                      {item.warrantyExpiry}
-                    </div>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {item.warrantyExpiry || "-"}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="inline-flex items-center gap-3">
@@ -1163,6 +411,7 @@ function Page() {
                       <span className="h-4 w-px bg-gray-200" />
                       <button
                         onClick={() => handleEdit(item)}
+                        disabled={updateLoading}
                         className="text-blue-500 hover:text-blue-700 transition"
                         title="Edit"
                       >
@@ -1170,9 +419,9 @@ function Page() {
                       </button>
                       <span className="h-4 w-px bg-gray-200" />
                       <button
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-400 hover:text-red-600 hover:bg-red-50 
-                        p-1 rounded-md transition"
+                        onClick={() => handleDelete(item._id)}
+                        disabled={deleteLoading}
+                        className="text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded-md transition"
                         title="Delete"
                       >
                         <Trash2 size={17} />
@@ -1186,7 +435,7 @@ function Page() {
         </table>
       </div>
 
-      {/* PAGINATION */}
+      {/* Pagination */}
       <div className="bg-white border border-gray-200 rounded-b-2xl px-6 py-4">
         <Pagination
           currentPage={currentPage}
@@ -1195,18 +444,24 @@ function Page() {
         />
       </div>
 
-      {/* MODALS */}
       <AddAssetModal
-        initialData={selectedAsset}
         isOpen={open && !selectedAsset}
         onClose={() => setOpen(false)}
         onSubmit={handleSubmit}
+        loading={createLoading}
+        assetCategories={assetCategories}
+        subCategories={subCategories}
+        vendors={vendors}
       />
       <UpdateAssetModal
         isOpen={open && !!selectedAsset}
         onClose={() => setOpen(false)}
         initialData={selectedAsset}
         onSubmit={handleSubmit}
+        loading={updateLoading}
+        assetCategories={assetCategories}
+        subCategories={subCategories}
+        vendors={vendors}
       />
       <QRModal
         isOpen={qrModalOpen}

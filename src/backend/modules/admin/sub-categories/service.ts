@@ -1,6 +1,9 @@
 import SubCategory from "./schema";
 import { CreateSubCategoryDto, UpdateSubCategoryDto } from "./dto";
 
+// Register AssetCategory model so populate("category") resolves correctly
+import "../asset-categories/schema";
+
 export const getAllSubCategories = async () => {
   return await SubCategory.find()
     .populate("category", "name code")

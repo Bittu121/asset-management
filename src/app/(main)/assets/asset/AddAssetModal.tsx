@@ -1,8 +1,15 @@
 "use client";
-import { X } from "lucide-react";
 import AssetForm from "./AssetForm";
 
-export default function AddAssetModal({ isOpen, onClose, onSubmit }: any) {
+export default function AddAssetModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  loading,
+  assetCategories,
+  subCategories,
+  vendors,
+}: any) {
   if (!isOpen) return null;
 
   return (
@@ -15,18 +22,25 @@ export default function AddAssetModal({ isOpen, onClose, onSubmit }: any) {
               Add a new asset to the system
             </p>
           </div>
-
           <button
             onClick={onClose}
+            disabled={loading}
             className="text-black text-xl font-bold cursor-pointer"
           >
             ✕
           </button>
         </div>
 
-        {/* Body */}
-        <div className="px-6 py-5">
-          <AssetForm onSubmit={onSubmit} onClose={onClose} isEdit={false} />
+        <div className="px-6 py-5 overflow-y-auto max-h-[80vh]">
+          <AssetForm
+            onSubmit={onSubmit}
+            onClose={onClose}
+            isEdit={false}
+            loading={loading}
+            assetCategories={assetCategories}
+            subCategories={subCategories}
+            vendors={vendors}
+          />
         </div>
       </div>
     </div>

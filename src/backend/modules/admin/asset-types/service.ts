@@ -1,6 +1,10 @@
 import AssetType from "./schema";
 import { CreateAssetTypeDto, UpdateAssetTypeDto } from "./dto";
 
+// Register referenced models so populate resolves correctly
+import "../asset-categories/schema";
+import "../sub-categories/schema";
+
 const populateFields = [
   { path: "category", select: "name code" },
   { path: "subCategory", select: "name" },
