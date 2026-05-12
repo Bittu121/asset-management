@@ -12,6 +12,7 @@ import assetCategoriesReducer from "../assetCategories/assetCategoriesReducer";
 import subCategoriesReducer from "../subCategories/subCategoriesReducer";
 import assetTypesReducer from "../assetTypes/assetTypesReducer";
 import vendorReducer from "../vendor/vendorReducer";
+import allocationReducer from "../allocations/allocationReducer";
 import assetsReducer from "../assets/assetsReducer";
 
 const rootReducer = combineReducers({
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   assetTypes: assetTypesReducer,
   vendor: vendorReducer,
   assets: assetsReducer,
+  allocations: allocationReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

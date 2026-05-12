@@ -1,375 +1,264 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AllocateAssetModal from "./AllocateAssetModal";
-import ReturnAssetModal from "./ReturnAssetModal";
-import DragDropArea from "./DragDropArea";
+import { useDispatch, useSelector } from "react-redux";
+import { GoPlusCircle } from "react-icons/go";
+
 import ActiveAllocations from "./ActiveAllocations";
 import OverdueAllocations from "./OverdueAllocations";
 import ReturnHistory from "./ReturnHistory";
+import DragDropArea from "./DragDropArea";
+import AllocateAssetModal from "./AllocateAssetModal";
+import ReturnAssetModal from "./ReturnAssetModal";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  employeeCode: string;
-};
+import {
+  fetchAllocations,
+  createAllocationAction,
+  returnAllocationAction,
+} from "../../../../store/allocations/allocationActions";
+import { fetchAssets } from "../../../../store/assets/assetsActions";
+import { fetchUserAccounts } from "../../../../store/userAccounts/userAccountsActions";
+import { RootState, AppDispatch } from "../../../../store/auth/store";
 
-type Asset = {
-  id: number;
-  assetTag: string;
-  assetName: string;
-  status: "AVAILABLE" | "ALLOCATED";
-};
+import {
+  Asset,
+  User,
+  Allocation,
+  isOverdue,
+  today,
+  thirtyDaysFromNow,
+} from "./types";
 
-type Allocation = {
-  id: number;
-  assetId: number;
-  assetTag: string;
-  assetName: string;
-  allocatedToId: number;
-  allocatedTo: string;
-  allocationDate: string;
-  expectedReturn: string;
-  status: "ACTIVE" | "OVERDUE" | "RETURNED";
-};
+type Tab = "active" | "overdue" | "dragdrop" | "history";
 
-type Audit = {
-  id: number;
-  type: "assign" | "return";
-  assetTag: string;
-  assetName: string;
-  userName: string;
-  date: string;
-  message: string;
-};
-
-const STORAGE_KEY = "assetAllocations";
-
-const initialUsers: User[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john.doe@company.com",
-    employeeCode: "EMP001",
-  },
-  {
-    id: 2,
-    name: "Danish Naseem",
-    email: "danish.n@company.com",
-    employeeCode: "EMP002",
-  },
-  {
-    id: 3,
-    name: "Zeeshan Ahmed",
-    email: "zeeshan.a@company.com",
-    employeeCode: "EMP003",
-  },
-  {
-    id: 4,
-    name: "Bittu Kumar",
-    email: "bittu.k@company.com",
-    employeeCode: "EMP004",
-  },
-  {
-    id: 5,
-    name: "Zayed Saifi",
-    email: "zayed.s@company.com",
-    employeeCode: "EMP005",
-  },
+const TABS: { key: Tab; label: string }[] = [
+  { key: "active", label: "Active" },
+  { key: "overdue", label: "Overdue" },
+  { key: "dragdrop", label: "Drag & Drop" },
+  { key: "history", label: "Return History" },
 ];
 
-const initialAssets: Asset[] = [
-  {
-    id: 1,
-    assetTag: "TABLET-2025-001",
-    assetName: "iPad Pro 12.9",
-    status: "AVAILABLE",
-  },
-  {
-    id: 2,
-    assetTag: "SWITCH-2025-001",
-    assetName: "Cisco Catalyst 9300",
-    status: "AVAILABLE",
-  },
-  {
-    id: 3,
-    assetTag: "UPS-2025-001",
-    assetName: "APC Smart-UPS",
-    status: "AVAILABLE",
-  },
-  {
-    id: 4,
-    assetTag: "PROJECTOR-2025-001",
-    assetName: "Epson Projector",
-    status: "AVAILABLE",
-  },
-  {
-    id: 5,
-    assetTag: "CAMERA-2025-001",
-    assetName: "Sony Alpha",
-    status: "AVAILABLE",
-  },
-];
+export default function AssetAllocationPage() {
+  const dispatch = useDispatch<AppDispatch>();
 
-const initialAllocations: Allocation[] = [
-  {
-    id: 1,
-    assetId: 2,
-    assetTag: "SWITCH-2025-001",
-    assetName: "Cisco Catalyst 9300",
-    allocatedToId: 1,
-    allocatedTo: "John Doe",
-    allocationDate: "2026-02-06",
-    expectedReturn: "2026-02-28",
-    status: "ACTIVE",
-  },
-  {
-    id: 2,
-    assetId: 3,
-    assetTag: "UPS-2025-001",
-    assetName: "APC Smart-UPS",
-    allocatedToId: 2,
-    allocatedTo: "Danish Naseem",
-    allocationDate: "2026-02-06",
-    expectedReturn: "2026-02-26",
-    status: "ACTIVE",
-  },
-  {
-    id: 3,
-    assetId: 4,
-    assetTag: "PROJECTOR-2025-001",
-    assetName: "Epson Projector",
-    allocatedToId: 3,
-    allocatedTo: "Zeeshan Ahmed",
-    allocationDate: "2026-02-04",
-    expectedReturn: "2026-02-10",
-    status: "OVERDUE",
-  },
-];
-
-function Page() {
-  const [activeTab, setActiveTab] = useState<
-    "active" | "overdue" | "dragdrop" | "return"
-  >("active");
-  const [allocateOpen, setAllocateOpen] = useState(false);
-  const [returnOpen, setReturnOpen] = useState(false);
-  const [selectedAllocation, setSelectedAllocation] =
-    useState<Allocation | null>(null);
-  const [draggingAssetId, setDraggingAssetId] = useState<number | null>(null);
-
-  const [assets, setAssets] = useState<Asset[]>(initialAssets);
-  const [allocations, setAllocations] =
-    useState<Allocation[]>(initialAllocations);
-  const [auditTrail, setAuditTrail] = useState<Audit[]>([]);
-
+  const rawAllocations = useSelector(
+    (s: RootState) => s.allocations.allocations,
+  );
+  const rawAssets = useSelector((s: RootState) => s.assets.assets);
+  const rawUsers = useSelector((s: RootState) => s.userAccounts.users);
+  // Fetch data on mount
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored) as Allocation[];
-      setAllocations(parsed);
-    }
-  }, []);
+    dispatch(fetchAllocations());
+    dispatch(fetchAssets());
+    dispatch(fetchUserAccounts());
+  }, [dispatch]);
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(allocations));
-    setAssets((prev) =>
-      prev.map((asset) =>
-        allocations.some(
-          (a) => a.assetId === asset.id && a.status !== "RETURNED",
-        )
-          ? { ...asset, status: "ALLOCATED" }
-          : { ...asset, status: "AVAILABLE" },
-      ),
+  // Compute asset status: AVAILABLE if no active allocation exists for it
+  const assets: Asset[] = rawAssets.map((a: any) => {
+    const isAllocated = rawAllocations.some(
+      (al: Allocation) => al.asset._id === a._id && al.status !== "RETURNED",
     );
-  }, [allocations]);
-
-  const addAudit = (entry: Audit) => setAuditTrail((prev) => [entry, ...prev]);
-
-  const handleAssign = (assetId: number, userId: number) => {
-    const asset = assets.find((a) => a.id === assetId);
-    const user = initialUsers.find((u) => u.id === userId);
-    if (!asset || !user) return;
-    if (
-      allocations.some((a) => a.assetId === assetId && a.status !== "RETURNED")
-    )
-      return;
-
-    const allocationDate = new Date().toISOString().split("T")[0];
-    const expectedReturn = new Date(
-      new Date().setDate(new Date().getDate() + 30),
-    )
-      .toISOString()
-      .split("T")[0];
-
-    const allocation: Allocation = {
-      id: Date.now(),
-      assetId: asset.id,
-      assetTag: asset.assetTag,
-      assetName: asset.assetName,
-      allocatedToId: user.id,
-      allocatedTo: user.name,
-      allocationDate,
-      expectedReturn,
-      status: "ACTIVE",
+    return {
+      _id: a._id,
+      assetTag: a.assetTag,
+      device: a.device,
+      isActive: a.isActive,
+      status: isAllocated ? "ALLOCATED" : "AVAILABLE",
     };
+  });
 
-    setAllocations((prev) => [allocation, ...prev]);
-    addAudit({
-      id: Date.now(),
-      type: "assign",
-      assetTag: asset.assetTag,
-      assetName: asset.assetName,
-      userName: user.name,
-      date: allocationDate,
-      message: `${asset.assetTag} assigned to ${user.name}`,
-    });
-  };
+  const users: User[] = rawUsers.map((u: any) => ({
+    _id: u._id,
+    name: u.name,
+    email: u.email,
+    employeeCode: u.employeeCode,
+  }));
 
-  const handleReturn = () => {
-    if (!selectedAllocation) return;
+  const allocations: Allocation[] = rawAllocations;
 
-    const returnDate = new Date().toISOString().split("T")[0];
+  const [activeTab, setActiveTab] = useState<Tab>("active");
+  const [allocateModalOpen, setAllocateModalOpen] = useState(false);
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
+  const [allocationToReturn, setAllocationToReturn] =
+    useState<Allocation | null>(null);
 
-    setAllocations((prev) =>
-      prev.map((item) =>
-        item.id === selectedAllocation.id
-          ? { ...item, status: "RETURNED" }
-          : item,
+  function handleReturnClick(allocation: Allocation) {
+    setAllocationToReturn(allocation);
+    setReturnModalOpen(true);
+  }
+
+  // Confirm return: send PUT to API via Redux action
+  function handleReturnConfirm({
+    condition,
+    notes,
+  }: {
+    condition: string;
+    notes: string;
+  }) {
+    if (!allocationToReturn) return;
+    dispatch(
+      returnAllocationAction(
+        allocationToReturn._id,
+        { condition, notes },
+        () => {
+          setReturnModalOpen(false);
+          setAllocationToReturn(null);
+        },
       ),
     );
+  }
 
-    addAudit({
-      id: Date.now(),
-      type: "return",
-      assetTag: selectedAllocation.assetTag,
-      assetName: selectedAllocation.assetName,
-      userName: selectedAllocation.allocatedTo,
-      date: returnDate,
-      message: `${selectedAllocation.assetTag} returned by ${selectedAllocation.allocatedTo}`,
-    });
+  // Submit from AllocateAssetModal: POST new allocation to API
+  function handleAllocateSubmit(payload: {
+    assetId: string;
+    userId: string;
+    expectedReturn: string;
+    notes: string;
+  }) {
+    dispatch(
+      createAllocationAction(
+        {
+          asset: payload.assetId,
+          allocatedTo: payload.userId,
+          allocationDate: today(),
+          expectedReturn: payload.expectedReturn,
+        },
+        () => setAllocateModalOpen(false),
+      ),
+    );
+  }
 
-    setReturnOpen(false);
-    setSelectedAllocation(null);
-  };
+  // Drop from DragDropArea: assign with default 30-day return window
+  function handleDragAssign(assetId: string, userId: string) {
+    dispatch(
+      createAllocationAction({
+        asset: assetId,
+        allocatedTo: userId,
+        allocationDate: today(),
+        expectedReturn: thirtyDaysFromNow(),
+      }),
+    );
+  }
 
-  const handleReturnClick = (allocation: Allocation) => {
-    setSelectedAllocation(allocation);
-    setReturnOpen(true);
-  };
-
-  const totalAssigned = allocations.filter(
-    (a) => a.status !== "RETURNED",
+  // Summary counts for stat cards
+  const activeCount = allocations.filter(
+    (a) => a.status !== "RETURNED" && !isOverdue(a),
+  ).length;
+  const overdueCount = allocations.filter(
+    (a) => a.status !== "RETURNED" && isOverdue(a),
+  ).length;
+  const returnedCount = allocations.filter(
+    (a) => a.status === "RETURNED",
   ).length;
 
   return (
-    <div className="p-6 bg-[#f8fafc] min-h-screen">
-      <div className="flex flex-wrap justify-between items-center mb-6 gap-3">
-        <h1 className="text-xl font-semibold text-gray-900">
-          Asset Allocation
-        </h1>
+    <div className="p-4 bg-[#f8fafc] min-h-screen space-y-4">
+      {/* Page header */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-semibold text-gray-900">
+            Asset Allocation
+          </h1>
+          <p className="text-xs text-gray-400 mt-0.5">
+            Manage asset assignments, returns, and overdue tracking
+          </p>
+        </div>
         <button
-          onClick={() => setAllocateOpen(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+          onClick={() => setAllocateModalOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-gray-900 text-white rounded-md hover:bg-gray-700 transition"
         >
+          <GoPlusCircle size={16} />
           Allocate Asset
         </button>
       </div>
 
-      <div className="mb-6">
-        <div className="inline-flex bg-gray-100 p-1 rounded-xl">
-          <button
-            onClick={() => setActiveTab("active")}
-            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-              activeTab === "active"
-                ? "bg-white text-blue-600 shadow-sm font-medium"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Active
-          </button>
-
-          <button
-            onClick={() => setActiveTab("overdue")}
-            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-              activeTab === "overdue"
-                ? "bg-white text-blue-600 shadow-sm font-medium"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Overdue
-          </button>
-
-          <button
-            onClick={() => setActiveTab("dragdrop")}
-            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-              activeTab === "dragdrop"
-                ? "bg-white text-blue-600 shadow-sm font-medium"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Drag & Drop
-          </button>
-
-          <button
-            onClick={() => setActiveTab("return")}
-            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-              activeTab === "return"
-                ? "bg-white text-blue-600 shadow-sm font-medium"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Return History
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-4 text-xs text-gray-600">
-        Total assigned assets: {totalAssigned}
-      </div>
-
-      {activeTab === "dragdrop" ? (
-        <DragDropArea
-          assets={assets}
-          users={initialUsers}
-          allocations={allocations}
-          draggingAssetId={draggingAssetId}
-          setDraggingAssetId={setDraggingAssetId}
-          onAssign={handleAssign}
+      {/* Summary stat cards */}
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard label="Active" value={activeCount} color="text-green-600" />
+        <StatCard label="Overdue" value={overdueCount} color="text-red-600" />
+        <StatCard
+          label="Returned"
+          value={returnedCount}
+          color="text-gray-600"
         />
-      ) : activeTab === "return" ? (
-        <ReturnHistory auditTrail={auditTrail} />
-      ) : activeTab === "active" ? (
+      </div>
+
+      {/* Tab bar */}
+      <div className="inline-flex bg-gray-100 p-1 rounded-lg gap-1">
+        {TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActiveTab(key)}
+            className={`px-4 py-1.5 text-sm rounded-md transition-all duration-150 ${
+              activeTab === key
+                ? "bg-white text-gray-900 shadow-sm font-semibold"
+                : "text-gray-500 hover:text-gray-800"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content */}
+      {activeTab === "active" && (
         <ActiveAllocations
           allocations={allocations}
           onReturn={handleReturnClick}
         />
-      ) : (
+      )}
+      {activeTab === "overdue" && (
         <OverdueAllocations
           allocations={allocations}
           onReturn={handleReturnClick}
         />
       )}
+      {activeTab === "history" && <ReturnHistory allocations={allocations} />}
+      {activeTab === "dragdrop" && (
+        <DragDropArea
+          assets={assets}
+          users={users}
+          allocations={allocations}
+          onAssign={handleDragAssign}
+        />
+      )}
 
+      {/* Allocate Asset modal */}
       <AllocateAssetModal
-        isOpen={allocateOpen}
-        onClose={() => setAllocateOpen(false)}
+        isOpen={allocateModalOpen}
+        onClose={() => setAllocateModalOpen(false)}
         assets={assets}
-        users={initialUsers}
-        onSubmit={(payload) => {
-          handleAssign(payload.assetId, payload.userId);
-          setAllocateOpen(false);
-        }}
+        users={users}
+        onSubmit={handleAllocateSubmit}
       />
 
+      {/* Return Asset modal */}
       <ReturnAssetModal
-        isOpen={returnOpen}
-        onClose={() => setReturnOpen(false)}
-        onSubmit={handleReturn}
-        assetName={selectedAllocation?.assetTag || ""}
+        isOpen={returnModalOpen}
+        onClose={() => {
+          setReturnModalOpen(false);
+          setAllocationToReturn(null);
+        }}
+        assetTag={allocationToReturn?.asset.assetTag ?? ""}
+        onSubmit={handleReturnConfirm}
       />
     </div>
   );
 }
 
-export default Page;
+function StatCard({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
+  return (
+    <div className="bg-white rounded-lg border border-gray-100 px-5 py-4 shadow-sm">
+      <p className="text-xs text-gray-400 font-medium">{label}</p>
+      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
+    </div>
+  );
+}

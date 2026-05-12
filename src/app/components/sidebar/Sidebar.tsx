@@ -49,11 +49,6 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
     onCollapseChange?.(next);
   };
 
-  // Debug: Log user role
-  useEffect(() => {
-    console.log("Current user role:", user?.role);
-  }, [user]);
-
   // Show loading skeleton while checking session
   if (loading) {
     return (
@@ -102,11 +97,6 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
                 name: "Allocations",
                 path: "/assets/asset-allocation",
                 icon: UserCheck,
-              },
-              {
-                name: "Bulk Import",
-                path: "/assets/asset-bulk-upload",
-                icon: UploadCloud,
               },
               {
                 name: "Gate Pass",

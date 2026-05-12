@@ -1,281 +1,166 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { RotateCcw, AlertCircle } from "lucide-react";
 import Pagination from "../../../components/common/Pagination";
+import { Allocation, isOverdue, formatDate, getInitials } from "./types";
 
-type Allocation = {
-  id: number;
-  assetId: number;
-  assetTag: string;
-  assetName: string;
-  allocatedToId: number;
-  allocatedTo: string;
-  allocationDate: string;
-  expectedReturn: string;
-  status: "ACTIVE" | "OVERDUE" | "RETURNED";
-};
-
-type OverdueAllocationsProps = {
+type Props = {
   allocations: Allocation[];
   onReturn: (allocation: Allocation) => void;
 };
 
-const ITEMS_PER_PAGE = 4;
+const PER_PAGE = 5;
 
-function OverdueAllocations({
-  allocations,
-  onReturn,
-}: OverdueAllocationsProps) {
+function getDaysOverdue(expectedReturn: string): number {
+  const expected = new Date(expectedReturn);
+  const now = new Date();
+  return Math.floor(
+    (now.getTime() - expected.getTime()) / (1000 * 60 * 60 * 24),
+  );
+}
+
+export default function OverdueAllocations({ allocations, onReturn }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const getComputedStatus = (item: Allocation) => {
-    if (item.status === "RETURNED") return "RETURNED";
-    const expected = new Date(item.expectedReturn);
-    const today = new Date();
-    if (!isNaN(expected.getTime()) && expected < today) return "OVERDUE";
-    return item.status;
-  };
-
-  const overdueAllocations = useMemo(
-    () =>
-      allocations.filter((item) => {
-        const status = getComputedStatus(item);
-        return status === "OVERDUE";
-      }),
-    [allocations],
+  // ACTIVE allocations that are past their expected return date
+  const overdueList = allocations.filter(
+    (a) => a.status !== "RETURNED" && isOverdue(a),
   );
 
-  const totalPages = Math.ceil(overdueAllocations.length / ITEMS_PER_PAGE);
-  const paginatedData = overdueAllocations.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
+  const totalPages = Math.ceil(overdueList.length / PER_PAGE);
+  const pageItems = overdueList.slice(
+    (currentPage - 1) * PER_PAGE,
+    currentPage * PER_PAGE,
   );
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Overdue Allocations
-            </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              {overdueAllocations.length}{" "}
-              {overdueAllocations.length === 1 ? "allocation" : "allocations"}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50">
-              <svg
-                className="w-4 h-4 inline mr-1.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                />
-              </svg>
-              Filter
-            </button>
-            <button className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50">
-              <svg
-                className="w-4 h-4 inline mr-1.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-              Export
-            </button>
-          </div>
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-gray-900">
+            Overdue Allocations
+          </h2>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {overdueList.length} overdue
+          </p>
         </div>
+        <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+          Overdue
+        </span>
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Asset Tag
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Asset Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Allocated To
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Allocation Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Expected Return
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Days Overdue
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wide">
+            <tr>
+              <th className="px-6 py-3 text-left">Asset</th>
+              <th className="px-6 py-3 text-left">Allocated To</th>
+              <th className="px-6 py-3 text-left">Allocated On</th>
+              <th className="px-6 py-3 text-left">Was Due</th>
+              <th className="px-6 py-3 text-left">Days Overdue</th>
+              <th className="px-6 py-3 text-left">Status</th>
+              <th className="px-6 py-3 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {overdueAllocations.length === 0 ? (
+          <tbody className="divide-y divide-gray-50">
+            {pageItems.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-6 py-12">
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                      <svg
-                        className="w-8 h-8 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-sm font-medium text-gray-900 mb-1">
+                <td colSpan={7} className="px-6 py-14 text-center">
+                  <div className="flex flex-col items-center gap-2 text-gray-400">
+                    <AlertCircle size={32} strokeWidth={1.5} />
+                    <p className="text-sm font-medium text-gray-600">
                       No overdue allocations
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      All assets are returned on time
                     </p>
+                    <p className="text-xs">All assets returned on time</p>
                   </div>
                 </td>
               </tr>
-            ) : (
-              paginatedData.map((item) => {
-                const status = getComputedStatus(item);
-                const expectedDate = new Date(item.expectedReturn);
-                const today = new Date();
-                const daysOverdue = Math.floor(
-                  (today.getTime() - expectedDate.getTime()) /
-                    (1000 * 60 * 60 * 24),
-                );
-
-                return (
-                  <tr
-                    key={item.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-semibold text-gray-900">
-                        {item.assetTag}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {item.assetName}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                          <span className="text-xs font-medium text-blue-700">
-                            {item.allocatedTo
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </span>
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          {item.allocatedTo}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-600">
-                        {new Date(item.allocationDate).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          },
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-600">
-                        {new Date(item.expectedReturn).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          },
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        {daysOverdue} {daysOverdue === 1 ? "day" : "days"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        <span className="w-1.5 h-1.5 rounded-full mr-1.5 bg-red-600"></span>
-                        {status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                      <button
-                        onClick={() => onReturn(item)}
-                        className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
-                      >
-                        Return
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
             )}
+
+            {pageItems.map((item) => {
+              const days = getDaysOverdue(item.expectedReturn);
+              return (
+                <tr
+                  key={item._id}
+                  className="hover:bg-red-50/30 transition-colors"
+                >
+                  {/* Asset */}
+                  <td className="px-6 py-4">
+                    <p className="font-semibold text-gray-900">
+                      {item.asset.assetTag}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {item.asset.device}
+                    </p>
+                  </td>
+
+                  {/* User */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                        <span className="text-xs font-bold text-red-700">
+                          {getInitials(item.allocatedTo.name)}
+                        </span>
+                      </div>
+                      <span className="text-gray-800">
+                        {item.allocatedTo.name}
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="px-6 py-4 text-gray-500">
+                    {formatDate(item.allocationDate)}
+                  </td>
+                  <td className="px-6 py-4 text-gray-500">
+                    {formatDate(item.expectedReturn)}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                      {days} {days === 1 ? "day" : "days"}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                      Overdue
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 text-right">
+                    <button
+                      onClick={() => onReturn(item)}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition"
+                    >
+                      <RotateCcw size={13} />
+                      Return
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination */}
-      {overdueAllocations.length > ITEMS_PER_PAGE && (
-        <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
-              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
-              {Math.min(
-                currentPage * ITEMS_PER_PAGE,
-                overdueAllocations.length,
-              )}{" "}
-              of {overdueAllocations.length}
-            </span>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
+      {totalPages > 1 && (
+        <div className="border-t border-gray-100 px-6 py-3 flex items-center justify-between text-xs text-gray-500">
+          <span>
+            Showing {(currentPage - 1) * PER_PAGE + 1}–
+            {Math.min(currentPage * PER_PAGE, overdueList.length)} of{" "}
+            {overdueList.length}
+          </span>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </div>
   );
 }
-
-export default OverdueAllocations;

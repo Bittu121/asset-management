@@ -60,6 +60,7 @@ export const loginAction =
         payload: { user },
       });
 
+      localStorage.setItem("isLoggedIn", "true");
       toast.success(data.message || "Login successful");
 
       const role = user.role.toLowerCase();
@@ -121,9 +122,10 @@ export const logoutAction = (router: any) => async (dispatch: Dispatch) => {
       credentials: "include",
     });
 
+    localStorage.removeItem("isLoggedIn");
     dispatch({ type: LOGOUT });
     toast.success("Logged out successfully");
-    await router.push("/login");
+    router.push("/login");
   } catch (error) {
     toast.error("Logout failed");
   }
