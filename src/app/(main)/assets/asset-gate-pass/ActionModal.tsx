@@ -1,39 +1,41 @@
 "use client";
-import React, { useState } from "react";
 
-interface ActionModalProps {
+import { useState } from "react";
+import { FiX } from "react-icons/fi";
+
+type Props = {
   type: "approve" | "reject";
   onClose: () => void;
   onConfirm: (notes: string) => void;
-}
+};
 
-const ActionModal: React.FC<ActionModalProps> = ({
-  type,
-  onClose,
-  onConfirm,
-}) => {
+export default function ActionModal({ type, onClose, onConfirm }: Props) {
   const [notes, setNotes] = useState("");
+
+  const isApprove = type === "approve";
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-lg rounded-lg shadow-lg overflow-hidden">
+        {/* Modal header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
-              {type === "approve" ? "Approve Gate Pass" : "Reject Gate Pass"}
+              {isApprove ? "Approve Gate Pass" : "Reject Gate Pass"}
             </h2>
             <p className="text-gray-500 text-sm mt-1">
-              {type === "approve"
+              {isApprove
                 ? "Approve this gate pass request"
                 : "Reject this gate pass request"}
             </p>
           </div>
 
+          {/* Close button */}
           <button
             onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
+            className="text-gray-400 hover:text-gray-700 cursor-pointer"
           >
-            ✕
+            <FiX size={18} />
           </button>
         </div>
 
@@ -52,7 +54,7 @@ const ActionModal: React.FC<ActionModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer buttons */}
         <div className="px-6 py-4 flex justify-end gap-3 bg-white">
           <button
             onClick={onClose}
@@ -60,7 +62,6 @@ const ActionModal: React.FC<ActionModalProps> = ({
           >
             Cancel
           </button>
-
           <button
             onClick={() => onConfirm(notes)}
             className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
@@ -71,6 +72,4 @@ const ActionModal: React.FC<ActionModalProps> = ({
       </div>
     </div>
   );
-};
-
-export default ActionModal;
+}
