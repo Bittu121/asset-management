@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/auth/store";
 import {
   FiPackage,
   FiCheckCircle,
@@ -8,7 +10,6 @@ import {
   FiDollarSign,
   FiSearch,
 } from "react-icons/fi";
-import { SAMPLE_ASSETS } from "./sampleData";
 import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
 import Pagination from "../../../components/common/Pagination";
@@ -30,38 +31,38 @@ export default function AssetStatusTab() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const categories = Array.from(
-    new Set(SAMPLE_ASSETS.map((asset) => asset.category)),
+  const assets = useSelector(
+    (state: RootState) => state.reports.data?.assets,
   );
-
-  const filteredAssets = SAMPLE_ASSETS.filter((asset) => {
-    const matchesCategory =
-      categoryFilter === "ALL" || asset.category === categoryFilter;
-    const matchesStatus =
-      statusFilter === "ALL" || asset.status === statusFilter;
-    const searchText = search.toLowerCase();
-    const matchesSearch =
-      asset.assetTag.toLowerCase().includes(searchText) ||
-      asset.assetName.toLowerCase().includes(searchText);
-
-    return matchesCategory && matchesStatus && matchesSearch;
-  });
 
   useEffect(() => {
     setCurrentPage(1);
   }, [categoryFilter, statusFilter, search]);
 
-  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-  const endIndex = currentPage * ROWS_PER_PAGE;
-  const currentPageItems = filteredAssets.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredAssets.length / ROWS_PER_PAGE);
+  if (!assets) return null;
 
-  let totalValue = 0;
-  let allocatedValue = 0;
-  for (const asset of SAMPLE_ASSETS) {
-    totalValue += asset.value;
-    if (asset.status === "ALLOCATED") allocatedValue += asset.value;
-  }
+  const { summary, records } = assets;
+
+  const categories = Array.from(new Set(records.map((a) => a.category))).filter(Boolean);
+
+  const filteredAssets = records.filter((asset) => {
+    const matchesCategory =
+      categoryFilter === "ALL" || asset.category === categoryFilter;
+    const matchesStatus =
+      statusFilter === "ALL" || asset.status === statusFilter;
+    const q = search.toLowerCase();
+    const matchesSearch =
+      asset.assetTag.toLowerCase().includes(q) ||
+      asset.assetName.toLowerCase().includes(q);
+    return matchesCategory && matchesStatus && matchesSearch;
+  });
+
+  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+  const currentPageItems = filteredAssets.slice(
+    startIndex,
+    startIndex + ROWS_PER_PAGE,
+  );
+  const totalPages = Math.ceil(filteredAssets.length / ROWS_PER_PAGE);
 
   function handleExport() {
     const rows = filteredAssets.map((asset) => [
@@ -70,7 +71,7 @@ export default function AssetStatusTab() {
       asset.category,
       asset.status,
       asset.purchaseDate,
-      `${asset.value}`,
+      String(asset.value),
     ]);
     exportToCSV("asset-status-report", rows, TABLE_HEADERS);
   }
@@ -81,30 +82,34 @@ export default function AssetStatusTab() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Total Assets"
-          value={SAMPLE_ASSETS.length}
+          value={summary.total}
           color="bg-indigo-100 text-indigo-600"
           icon={<FiPackage size={22} />}
         />
         <StatCard
           label="Available"
-          value={
-            SAMPLE_ASSETS.filter((asset) => asset.status === "AVAILABLE").length
-          }
+          value={summary.available}
           color="bg-green-100 text-green-600"
           icon={<FiCheckCircle size={22} />}
         />
         <StatCard
           label="Allocated"
-          value={
-            SAMPLE_ASSETS.filter((asset) => asset.status === "ALLOCATED").length
-          }
+          value={summary.allocated}
           color="bg-orange-100 text-orange-600"
           icon={<FiLink size={22} />}
         />
         <StatCard
           label="Portfolio Value"
-          value={`₹${(totalValue / 1000).toFixed(0)}K`}
-          sub={`Allocated: ₹${(allocatedValue / 1000).toFixed(0)}K`}
+          value={
+            summary.totalValue >= 1000
+              ? `₹${(summary.totalValue / 1000).toFixed(0)}K`
+              : `₹${summary.totalValue.toLocaleString()}`
+          }
+          sub={
+            summary.allocatedValue >= 1000
+              ? `Allocated: ₹${(summary.allocatedValue / 1000).toFixed(0)}K`
+              : `Allocated: ₹${summary.allocatedValue.toLocaleString()}`
+          }
           color="bg-purple-100 text-purple-600"
           icon={<FiDollarSign size={22} />}
         />
@@ -118,7 +123,6 @@ export default function AssetStatusTab() {
           onExport={handleExport}
         />
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-4">
           <div className="relative flex-1 min-w-48">
             <FiSearch
@@ -127,7 +131,7 @@ export default function AssetStatusTab() {
             />
             <input
               className="w-full pl-8 pr-4 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="Search asset..."
+              placeholder="Search asset…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -139,9 +143,9 @@ export default function AssetStatusTab() {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="ALL">All Categories</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
               </option>
             ))}
           </select>
@@ -157,7 +161,6 @@ export default function AssetStatusTab() {
           </select>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -173,7 +176,7 @@ export default function AssetStatusTab() {
               </tr>
             </thead>
             <tbody>
-              {filteredAssets.length === 0 && (
+              {filteredAssets.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -182,28 +185,35 @@ export default function AssetStatusTab() {
                     No assets found.
                   </td>
                 </tr>
+              ) : (
+                currentPageItems.map((asset) => (
+                  <tr
+                    key={asset._id}
+                    className="border-b border-gray-50 hover:bg-gray-50 transition"
+                  >
+                    <td className="py-3 px-4 font-semibold text-indigo-600">
+                      {asset.assetTag}
+                    </td>
+                    <td className="py-3 px-4 text-gray-800">
+                      {asset.assetName || "—"}
+                    </td>
+                    <td className="py-3 px-4 text-gray-500">
+                      {asset.category || "—"}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Badge label={asset.status} type={asset.status} />
+                    </td>
+                    <td className="py-3 px-4 text-gray-500">
+                      {asset.purchaseDate || "—"}
+                    </td>
+                    <td className="py-3 px-4 font-medium text-gray-700">
+                      {asset.value > 0
+                        ? `₹${asset.value.toLocaleString()}`
+                        : "—"}
+                    </td>
+                  </tr>
+                ))
               )}
-              {currentPageItems.map((asset) => (
-                <tr
-                  key={asset.id}
-                  className="border-b border-gray-50 hover:bg-gray-50 transition"
-                >
-                  <td className="py-3 px-4 font-semibold text-indigo-600">
-                    {asset.assetTag}
-                  </td>
-                  <td className="py-3 px-4 text-gray-800">{asset.assetName}</td>
-                  <td className="py-3 px-4 text-gray-500">{asset.category}</td>
-                  <td className="py-3 px-4">
-                    <Badge label={asset.status} type={asset.status} />
-                  </td>
-                  <td className="py-3 px-4 text-gray-500">
-                    {asset.purchaseDate}
-                  </td>
-                  <td className="py-3 px-4 font-medium text-gray-700">
-                    ₹{asset.value.toLocaleString()}
-                  </td>
-                </tr>
-              ))}
             </tbody>
           </table>
         </div>

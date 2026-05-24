@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/auth/store";
 import {
   FiPackage,
   FiLink,
@@ -8,71 +10,58 @@ import {
   FiDollarSign,
   FiClipboard,
 } from "react-icons/fi";
-import { SAMPLE_ASSETS, SAMPLE_GATE_PASSES, AUDIT_LOG } from "./sampleData";
 import { StatCard, SectionHeader } from "./SharedComponents";
 import Pagination from "../../../components/common/Pagination";
 
 const ITEMS_PER_PAGE = 4;
+
+function paginate<T>(data: T[], page: number): T[] {
+  const start = (page - 1) * ITEMS_PER_PAGE;
+  return data.slice(start, start + ITEMS_PER_PAGE);
+}
 
 export default function OverviewTab() {
   const [gatePage, setGatePage] = useState(1);
   const [categoryPage, setCategoryPage] = useState(1);
   const [activityPage, setActivityPage] = useState(1);
 
-  const totalAssets = SAMPLE_ASSETS.length;
-  const allocated = SAMPLE_ASSETS.filter(
-    (a) => a.status === "ALLOCATED",
-  ).length;
-  const available = SAMPLE_ASSETS.filter(
-    (a) => a.status === "AVAILABLE",
-  ).length;
-
-  let totalValue = 0;
-  for (const asset of SAMPLE_ASSETS) totalValue += asset.value;
-
-  const gatePassData = [
-    {
-      label: "Pending",
-      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "PENDING").length,
-      color: "bg-amber-300",
-    },
-    {
-      label: "Approved",
-      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "APPROVED").length,
-      color: "bg-sky-400",
-    },
-    {
-      label: "Issued",
-      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "ISSUED").length,
-      color: "bg-violet-400",
-    },
-    {
-      label: "Returned",
-      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "RETURNED").length,
-      color: "bg-emerald-400",
-    },
-    {
-      label: "Rejected",
-      count: SAMPLE_GATE_PASSES.filter((g) => g.status === "REJECTED").length,
-      color: "bg-rose-400",
-    },
-  ];
-
-  const categories = Array.from(
-    new Set(SAMPLE_ASSETS.map((item) => item.category)),
+  const overview = useSelector(
+    (state: RootState) => state.reports.data?.overview,
   );
-  const categoryData = categories.map((cat) => ({
-    cat,
-    count: SAMPLE_ASSETS.filter((a) => a.category === cat).length,
-  }));
 
-  const activityData = AUDIT_LOG.slice(0, 8);
+  if (!overview) return null;
 
-  // Returns a slice of an array for the current page
-  function paginate<T>(data: T[], page: number): T[] {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    return data.slice(start, start + ITEMS_PER_PAGE);
-  }
+  const {
+    totalAssets,
+    allocated,
+    available,
+    totalValue,
+    gatePassSummary,
+    categoryBreakdown,
+    recentActivity,
+  } = overview;
+
+  const gatePassData = Object.entries(gatePassSummary).map(
+    ([label, count]) => ({
+      label,
+      count,
+      color:
+        label === "PENDING"
+          ? "bg-amber-300"
+          : label === "APPROVED"
+            ? "bg-sky-400"
+            : label === "ISSUED"
+              ? "bg-violet-400"
+              : label === "RETURNED"
+                ? "bg-emerald-400"
+                : "bg-rose-400",
+    }),
+  );
+
+  const totalGatePasses = Object.values(gatePassSummary).reduce(
+    (s, n) => s + n,
+    0,
+  );
 
   const cardClass =
     "bg-white border border-gray-200 rounded-2xl flex flex-col min-h-[320px]";
@@ -91,7 +80,11 @@ export default function OverviewTab() {
         <StatCard
           label="Allocated"
           value={allocated}
-          sub={`${((allocated / totalAssets) * 100).toFixed(0)}% utilized`}
+          sub={
+            totalAssets > 0
+              ? `${((allocated / totalAssets) * 100).toFixed(0)}% utilized`
+              : "0% utilized"
+          }
           color="bg-orange-50 text-orange-500"
           icon={<FiLink size={22} />}
         />
@@ -104,7 +97,11 @@ export default function OverviewTab() {
         />
         <StatCard
           label="Asset Value"
-          value={`₹${(totalValue / 1000).toFixed(0)}K`}
+          value={
+            totalValue >= 1000
+              ? `₹${(totalValue / 1000).toFixed(0)}K`
+              : `₹${totalValue.toLocaleString()}`
+          }
           sub="Inventory worth"
           color="bg-violet-50 text-violet-500"
           icon={<FiDollarSign size={22} />}
@@ -132,7 +129,10 @@ export default function OverviewTab() {
                     <div
                       className={`${item.color} h-full rounded-full`}
                       style={{
-                        width: `${(item.count / SAMPLE_GATE_PASSES.length) * 100}%`,
+                        width:
+                          totalGatePasses > 0
+                            ? `${(item.count / totalGatePasses) * 100}%`
+                            : "0%",
                       }}
                     />
                   </div>
@@ -157,10 +157,10 @@ export default function OverviewTab() {
               subtitle="Inventory split"
             />
             <div className="space-y-5 mt-5">
-              {paginate(categoryData, categoryPage).map((item) => (
-                <div key={item.cat}>
+              {paginate(categoryBreakdown, categoryPage).map((item) => (
+                <div key={item.category}>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-500">{item.cat}</span>
+                    <span className="text-gray-500">{item.category}</span>
                     <span className="font-medium text-gray-700">
                       {item.count}
                     </span>
@@ -168,17 +168,27 @@ export default function OverviewTab() {
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="bg-indigo-300 h-full rounded-full"
-                      style={{ width: `${(item.count / totalAssets) * 100}%` }}
+                      style={{
+                        width:
+                          totalAssets > 0
+                            ? `${(item.count / totalAssets) * 100}%`
+                            : "0%",
+                      }}
                     />
                   </div>
                 </div>
               ))}
+              {categoryBreakdown.length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-4">
+                  No data
+                </p>
+              )}
             </div>
           </div>
           <div className="border-t border-gray-100 px-6 py-4 mt-auto">
             <Pagination
               currentPage={categoryPage}
-              totalPages={Math.ceil(categoryData.length / ITEMS_PER_PAGE)}
+              totalPages={Math.ceil(categoryBreakdown.length / ITEMS_PER_PAGE)}
               onPageChange={setCategoryPage}
             />
           </div>
@@ -192,9 +202,9 @@ export default function OverviewTab() {
               subtitle="Latest internal logs"
             />
             <div className="space-y-3 mt-5">
-              {paginate(activityData, activityPage).map((item) => (
+              {paginate(recentActivity, activityPage).map((item, idx) => (
                 <div
-                  key={item.id}
+                  key={idx}
                   className="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50"
                 >
                   <div className="w-10 h-10 rounded-2xl bg-violet-50 text-violet-500 flex items-center justify-center shrink-0">
@@ -210,12 +220,17 @@ export default function OverviewTab() {
                   </div>
                 </div>
               ))}
+              {recentActivity.length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-4">
+                  No activity yet
+                </p>
+              )}
             </div>
           </div>
           <div className="border-t border-gray-100 px-6 py-4 mt-auto">
             <Pagination
               currentPage={activityPage}
-              totalPages={Math.ceil(activityData.length / ITEMS_PER_PAGE)}
+              totalPages={Math.ceil(recentActivity.length / ITEMS_PER_PAGE)}
               onPageChange={setActivityPage}
             />
           </div>

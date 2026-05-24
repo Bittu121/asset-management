@@ -1,8 +1,9 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/auth/store";
 import { FiLink, FiRotateCcw, FiFileText, FiSearch } from "react-icons/fi";
-import { AUDIT_LOG } from "./sampleData";
 import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
 import Pagination from "../../../components/common/Pagination";
@@ -26,24 +27,33 @@ export default function AuditTrailTab() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredEntries = AUDIT_LOG.filter((entry) => {
-    const matchesType = typeFilter === "ALL" || entry.type === typeFilter;
-    const searchText = search.toLowerCase();
-    const matchesSearch =
-      entry.action.toLowerCase().includes(searchText) ||
-      entry.detail.toLowerCase().includes(searchText) ||
-      entry.user.toLowerCase().includes(searchText);
-
-    return matchesType && matchesSearch;
-  });
+  const auditTrail = useSelector(
+    (state: RootState) => state.reports.data?.auditTrail,
+  );
 
   useEffect(() => {
     setCurrentPage(1);
   }, [typeFilter, search]);
 
+  if (!auditTrail) return null;
+
+  const { summary, records } = auditTrail;
+
+  const filteredEntries = records.filter((entry) => {
+    const matchesType = typeFilter === "ALL" || entry.type === typeFilter;
+    const q = search.toLowerCase();
+    const matchesSearch =
+      entry.action.toLowerCase().includes(q) ||
+      entry.detail.toLowerCase().includes(q) ||
+      entry.user.toLowerCase().includes(q);
+    return matchesType && matchesSearch;
+  });
+
   const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-  const endIndex = currentPage * ROWS_PER_PAGE;
-  const currentPageItems = filteredEntries.slice(startIndex, endIndex);
+  const currentPageItems = filteredEntries.slice(
+    startIndex,
+    startIndex + ROWS_PER_PAGE,
+  );
   const totalPages = Math.ceil(filteredEntries.length / ROWS_PER_PAGE);
 
   function handleExport() {
@@ -69,21 +79,19 @@ export default function AuditTrailTab() {
       <div className="grid grid-cols-3 gap-4">
         <StatCard
           label="Allocation Events"
-          value={
-            AUDIT_LOG.filter((entry) => entry.type === "allocation").length
-          }
+          value={summary.allocation}
           color="bg-blue-100 text-blue-600"
           icon={<FiLink size={22} />}
         />
         <StatCard
           label="Return Events"
-          value={AUDIT_LOG.filter((entry) => entry.type === "return").length}
+          value={summary.return}
           color="bg-green-100 text-green-600"
           icon={<FiRotateCcw size={22} />}
         />
         <StatCard
           label="Gate Pass Events"
-          value={AUDIT_LOG.filter((entry) => entry.type === "gatepass").length}
+          value={summary.gatepass}
           color="bg-purple-100 text-purple-600"
           icon={<FiFileText size={22} />}
         />
@@ -97,7 +105,6 @@ export default function AuditTrailTab() {
           onExport={handleExport}
         />
 
-        {/* Filters */}
         <div className="flex gap-3 mb-4">
           <div className="relative flex-1">
             <FiSearch
@@ -106,7 +113,7 @@ export default function AuditTrailTab() {
             />
             <input
               className="w-full pl-8 pr-4 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="Search actions, assets, users..."
+              placeholder="Search actions, assets, users…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -124,7 +131,6 @@ export default function AuditTrailTab() {
           </select>
         </div>
 
-        {/* Audit entries */}
         <div className="space-y-2">
           {filteredEntries.length === 0 && (
             <p className="text-center text-sm text-gray-400 py-8">
@@ -132,19 +138,17 @@ export default function AuditTrailTab() {
             </p>
           )}
 
-          {currentPageItems.map((entry) => (
+          {currentPageItems.map((entry, idx) => (
             <div
-              key={entry.id}
+              key={idx}
               className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition"
             >
-              {/* Event type icon */}
               <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${TYPE_COLOR[entry.type]}`}
+                className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${TYPE_COLOR[entry.type] ?? "bg-gray-100 text-gray-600"}`}
               >
                 {TYPE_ICON[entry.type]}
               </div>
 
-              {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="text-sm font-semibold text-gray-800">
@@ -153,7 +157,9 @@ export default function AuditTrailTab() {
                   <Badge label={entry.type} type={entry.type} />
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">{entry.detail}</p>
-                <p className="text-xs text-gray-400 mt-0.5">By: {entry.user}</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  By: {entry.user}
+                </p>
               </div>
 
               <span className="text-xs text-gray-400 shrink-0 mt-1">

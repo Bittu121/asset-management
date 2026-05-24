@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../../../store/auth/store";
+import { fetchReports } from "../../../../store/reports/reportActions";
 import OverviewTab from "./OverviewTab";
 import AllocationReportTab from "./AllocationReportTab";
 import GatePassReportTab from "./GatePassReportTab";
@@ -16,16 +19,36 @@ type ReportTab =
 
 function Reports() {
   const [activeTab, setActiveTab] = useState<ReportTab>("overview");
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.reports);
 
-  const tabs: { key: ReportTab; label: string; icon: string }[] = [
-    { key: "overview", label: "Overview", icon: "LayoutDashboard" },
-    { key: "allocation", label: "Allocations", icon: "Link2" },
-    { key: "gatepass", label: "Gate Passes", icon: "Ticket" },
-    { key: "asset-status", label: "Asset Status", icon: "Package" },
-    { key: "audit", label: "Audit Trail", icon: "ClipboardList" },
+  useEffect(() => {
+    dispatch(fetchReports() as any);
+  }, [dispatch]);
+
+  const tabs: { key: ReportTab; label: string }[] = [
+    { key: "overview", label: "Overview" },
+    { key: "allocation", label: "Allocations" },
+    { key: "gatepass", label: "Gate Passes" },
+    { key: "asset-status", label: "Asset Status" },
+    { key: "audit", label: "Audit Trail" },
   ];
 
   const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center py-24 text-gray-400 text-sm">
+          Loading report data…
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className="flex items-center justify-center py-24 text-red-400 text-sm">
+          {error}
+        </div>
+      );
+    }
     switch (activeTab) {
       case "overview":
         return <OverviewTab />;
@@ -81,10 +104,8 @@ function Reports() {
                 }`}
               >
                 <span>{tab.label}</span>
-
-                {/* Active underline */}
                 {isActive && (
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-indigo-600 rounded-full" />
+                  <div className="absolute left-0 bottom-0 w-full h-0.5 bg-indigo-600 rounded-full" />
                 )}
               </button>
             );

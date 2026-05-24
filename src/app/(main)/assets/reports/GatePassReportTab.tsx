@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/auth/store";
 import {
   FiClock,
   FiCheck,
@@ -12,7 +14,6 @@ import {
   FiSearch,
 } from "react-icons/fi";
 import { ReactNode } from "react";
-import { SAMPLE_GATE_PASSES } from "./sampleData";
 import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
 import Pagination from "../../../components/common/Pagination";
@@ -66,38 +67,40 @@ export default function GatePassReportTab() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredPasses = SAMPLE_GATE_PASSES.filter((pass) => {
-    const matchesStatus =
-      statusFilter === "ALL" || pass.status === statusFilter;
-    const matchesType = typeFilter === "ALL" || pass.type === typeFilter;
-    const searchText = search.toLowerCase();
-    const matchesSearch =
-      pass.id.toLowerCase().includes(searchText) ||
-      pass.assetTag.toLowerCase().includes(searchText) ||
-      pass.carrierName.toLowerCase().includes(searchText);
-
-    return matchesStatus && matchesType && matchesSearch;
-  });
+  const gatePasses = useSelector(
+    (state: RootState) => state.reports.data?.gatePasses,
+  );
 
   useEffect(() => {
     setCurrentPage(1);
   }, [statusFilter, typeFilter, search]);
 
-  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-  const endIndex = currentPage * ROWS_PER_PAGE;
-  const currentPageItems = filteredPasses.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredPasses.length / ROWS_PER_PAGE);
+  if (!gatePasses) return null;
 
-  const outCount = SAMPLE_GATE_PASSES.filter(
-    (pass) => pass.type === "OUT",
-  ).length;
-  const inCount = SAMPLE_GATE_PASSES.filter(
-    (pass) => pass.type === "IN",
-  ).length;
+  const { summary, outCount, inCount, records } = gatePasses;
+
+  const filteredPasses = records.filter((pass) => {
+    const matchesStatus =
+      statusFilter === "ALL" || pass.status === statusFilter;
+    const matchesType = typeFilter === "ALL" || pass.type === typeFilter;
+    const q = search.toLowerCase();
+    const matchesSearch =
+      pass.gatePassId.toLowerCase().includes(q) ||
+      pass.assetTag.toLowerCase().includes(q) ||
+      pass.carrierName.toLowerCase().includes(q);
+    return matchesStatus && matchesType && matchesSearch;
+  });
+
+  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+  const currentPageItems = filteredPasses.slice(
+    startIndex,
+    startIndex + ROWS_PER_PAGE,
+  );
+  const totalPages = Math.ceil(filteredPasses.length / ROWS_PER_PAGE);
 
   function handleExport() {
     const rows = filteredPasses.map((pass) => [
-      pass.id,
+      pass.gatePassId,
       pass.assetTag,
       pass.assetModel,
       pass.type,
@@ -126,9 +129,7 @@ export default function GatePassReportTab() {
           <StatCard
             key={status}
             label={status}
-            value={
-              SAMPLE_GATE_PASSES.filter((pass) => pass.status === status).length
-            }
+            value={summary[status] ?? 0}
             color={STATUS_COLOR[status]}
             icon={STATUS_ICON[status]}
           />
@@ -166,7 +167,6 @@ export default function GatePassReportTab() {
           onExport={handleExport}
         />
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-4">
           <div className="relative flex-1 min-w-48">
             <FiSearch
@@ -175,7 +175,7 @@ export default function GatePassReportTab() {
             />
             <input
               className="w-full pl-8 pr-4 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="Search gate pass, asset, carrier..."
+              placeholder="Search gate pass, asset, carrier…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -205,7 +205,6 @@ export default function GatePassReportTab() {
           </select>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -233,17 +232,17 @@ export default function GatePassReportTab() {
               ) : (
                 currentPageItems.map((pass) => (
                   <tr
-                    key={pass.id}
+                    key={pass._id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition"
                   >
                     <td className="py-3 px-4 font-semibold text-indigo-600">
-                      {pass.id}
+                      {pass.gatePassId}
                     </td>
                     <td className="py-3 px-4">
                       <p className="font-medium text-gray-800">
                         {pass.assetTag}
                       </p>
-                      <p className="text-xs text-gray-400">{pass.assetModel}</p>
+                      <p className="text-xs text-gray-400">{pass.assetModel || "—"}</p>
                     </td>
                     <td className="py-3 px-4">
                       <span

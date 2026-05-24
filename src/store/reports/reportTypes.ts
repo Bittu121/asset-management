@@ -88,3 +88,9 @@ export interface ReportData {
     records: AuditEntry[];
   };
 }
+
+export interface ReportState {
+  data: ReportData | null;
+  loading: boolean;
+  error: string | null;
+}

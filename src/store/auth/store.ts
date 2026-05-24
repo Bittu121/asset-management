@@ -15,9 +15,12 @@ import vendorReducer from "../vendor/vendorReducer";
 import allocationReducer from "../allocations/allocationReducer";
 import assetsReducer from "../assets/assetsReducer";
 import gatePassReducer from "../gatePasses/gatePassReducer";
+import reportReducer from "../reports/reportReducer";
+import dashboardReducer from "../dashboard/dashboardReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  dashboard: dashboardReducer,
   roles: rolesReducer,
   userAccounts: userAccountsReducer,
   supportGroups: supportGroupsReducer,
@@ -32,6 +35,7 @@ const rootReducer = combineReducers({
   assets: assetsReducer,
   allocations: allocationReducer,
   gatePasses: gatePassReducer,
+  reports: reportReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
