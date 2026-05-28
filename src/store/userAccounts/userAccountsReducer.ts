@@ -28,10 +28,7 @@ type Action = {
   payload?: any;
 };
 
-const userAccountsReducer = (
-  state = initialState,
-  action: Action,
-): UserAccountsState => {
+const userAccountsReducer = (state = initialState, action: Action): UserAccountsState => {
   switch (action.type) {
     case USERS_LOADING:
       return { ...state, loading: true, error: null };
@@ -66,9 +63,7 @@ const userAccountsReducer = (
       return {
         ...state,
         updateLoading: false,
-        users: state.users.map((user) =>
-          user._id === action.payload._id ? action.payload : user,
-        ),
+        users: state.users.map((user) => (user._id === action.payload._id ? action.payload : user)),
       };
 
     case DELETE_USER_LOADING:

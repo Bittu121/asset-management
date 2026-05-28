@@ -2,13 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 
-function UpdateSubLocation({
-  isOpen,
-  onClose,
-  selectedSubLocation,
-  onUpdate,
-  locations,
-}: any) {
+function UpdateSubLocation({ isOpen, onClose, selectedSubLocation, onUpdate, locations }: any) {
   const [form, setForm] = useState({
     subLocationName: "",
     locationId: "",
@@ -46,18 +40,11 @@ function UpdateSubLocation({
         {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Update Sub Location
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Update sub location details
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Update Sub Location</h2>
+            <p className="text-gray-500 text-sm mt-1">Update sub location details</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -72,9 +59,7 @@ function UpdateSubLocation({
               </label>
               <input
                 value={form.subLocationName || ""}
-                onChange={(e) =>
-                  setForm({ ...form, subLocationName: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, subLocationName: e.target.value })}
                 placeholder="Sub Location Name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
@@ -92,10 +77,12 @@ function UpdateSubLocation({
                   id: loc?._id,
                 }))}
                 value={
-                  locations?.map((loc: any) => ({
+                  locations
+                    ?.map((loc: any) => ({
                       label: loc?.locationName,
                       id: loc?._id,
-                    })).find((l: any) => l?.id === form?.locationId) || null
+                    }))
+                    .find((l: any) => l?.id === form?.locationId) || null
                 }
                 onChange={(e, value) =>
                   setForm((prev) => ({
@@ -158,9 +145,7 @@ function UpdateSubLocation({
 
             {/* Active Toggle */}
             <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-5">
-              <span className="text-sm font-semibold text-gray-500">
-                Active Status
-              </span>
+              <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
               <button
                 onClick={() =>

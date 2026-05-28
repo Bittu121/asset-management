@@ -27,7 +27,7 @@ const assetCategorySchema = new mongoose.Schema<AssetCategoryDocument>(
     description: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const AssetCategory =

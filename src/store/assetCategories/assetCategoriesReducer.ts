@@ -28,10 +28,7 @@ type Action = {
   payload?: any;
 };
 
-const assetCategoriesReducer = (
-  state = initialState,
-  action: Action,
-): AssetCategoriesState => {
+const assetCategoriesReducer = (state = initialState, action: Action): AssetCategoriesState => {
   switch (action.type) {
     case ASSET_CATEGORIES_LOADING:
       return { ...state, loading: true, error: null };
@@ -67,7 +64,7 @@ const assetCategoriesReducer = (
         ...state,
         updateLoading: false,
         assetCategories: state.assetCategories.map((cat) =>
-          cat._id === action.payload._id ? action.payload : cat,
+          cat._id === action.payload._id ? action.payload : cat
         ),
       };
 
@@ -78,9 +75,7 @@ const assetCategoriesReducer = (
       return {
         ...state,
         deleteLoading: false,
-        assetCategories: state.assetCategories.filter(
-          (cat) => cat._id !== action.payload,
-        ),
+        assetCategories: state.assetCategories.filter((cat) => cat._id !== action.payload),
       };
 
     case SET_SELECTED_ASSET_CATEGORY:

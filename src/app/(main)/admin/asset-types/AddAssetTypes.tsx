@@ -33,14 +33,10 @@ function AddAssetTypes({
   if (!isOpen) return null;
 
   // Only show sub-categories that belong to the selected category
-  const filteredSubs = subCategories.filter(
-    (s: any) => s.category?._id === form.category,
-  );
+  const filteredSubs = subCategories.filter((s: any) => s.category?._id === form.category);
 
-  const selectedCategory =
-    assetCategories.find((c: any) => c._id === form.category) || null;
-  const selectedSubCategory =
-    filteredSubs.find((s: any) => s._id === form.subCategory) || null;
+  const selectedCategory = assetCategories.find((c: any) => c._id === form.category) || null;
+  const selectedSubCategory = filteredSubs.find((s: any) => s._id === form.subCategory) || null;
 
   const handleSubmit = () => {
     if (!form.name || !form.category) return;
@@ -89,9 +85,7 @@ function AddAssetTypes({
             <Autocomplete
               options={assetCategories}
               getOptionLabel={(option: any) => option?.name || ""}
-              isOptionEqualToValue={(option: any, value: any) =>
-                option._id === value._id
-              }
+              isOptionEqualToValue={(option: any, value: any) => option._id === value._id}
               value={selectedCategory}
               onChange={(_e, value: any) =>
                 setForm((prev) => ({
@@ -102,26 +96,17 @@ function AddAssetTypes({
               }
               disabled={loading}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Select category"
-                  size="small"
-                  sx={muiStyle}
-                />
+                <TextField {...params} placeholder="Select category" size="small" sx={muiStyle} />
               )}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Sub Category
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Sub Category</label>
             <Autocomplete
               options={filteredSubs}
               getOptionLabel={(option: any) => option?.name || ""}
-              isOptionEqualToValue={(option: any, value: any) =>
-                option._id === value._id
-              }
+              isOptionEqualToValue={(option: any, value: any) => option._id === value._id}
               value={selectedSubCategory}
               onChange={(_e, value: any) =>
                 setForm((prev) => ({ ...prev, subCategory: value?._id || "" }))
@@ -130,9 +115,7 @@ function AddAssetTypes({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder={
-                    form.category ? "Select sub category" : "Select category first"
-                  }
+                  placeholder={form.category ? "Select sub category" : "Select category first"}
                   size="small"
                   sx={muiStyle}
                 />
@@ -141,9 +124,7 @@ function AddAssetTypes({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Description
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Description</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -155,13 +136,9 @@ function AddAssetTypes({
           </div>
 
           <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50">
-            <span className="text-sm font-semibold text-gray-500">
-              Active Status
-            </span>
+            <span className="text-sm font-semibold text-gray-500">Active Status</span>
             <button
-              onClick={() =>
-                setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
-              }
+              onClick={() => setForm((prev) => ({ ...prev, isActive: !prev.isActive }))}
               disabled={loading}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
                 form.isActive ? "bg-indigo-600" : "bg-gray-300"

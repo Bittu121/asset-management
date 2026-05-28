@@ -38,18 +38,11 @@ function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
         {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Add Role & Permission
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Create a new role with permissions
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Add Role & Permission</h2>
+            <p className="text-gray-500 text-sm mt-1">Create a new role with permissions</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -64,9 +57,7 @@ function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
               </label>
               <input
                 value={form.name || ""}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value.toUpperCase() })
-                }
+                onChange={(e) => setForm({ ...form, name: e.target.value.toUpperCase() })}
                 placeholder="Enter role name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
@@ -74,14 +65,10 @@ function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Description
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Description</label>
               <textarea
                 value={form.description || ""}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Enter description"
                 rows={3}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
@@ -91,9 +78,7 @@ function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
 
             {/* Permissions */}
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-2">
-                Permissions
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-2">Permissions</label>
 
               <div className="max-h-28 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-gray-50">
                 {permissionModules.map((module) => (
@@ -103,10 +88,7 @@ function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
                     </p>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                       {module.permissions.map((perm) => (
-                        <label
-                          key={perm}
-                          className="flex items-center gap-2 text-sm text-gray-600"
-                        >
+                        <label key={perm} className="flex items-center gap-2 text-sm text-gray-600">
                           <input
                             type="checkbox"
                             checked={form.permissions.includes(perm)}
@@ -125,9 +107,7 @@ function AddRoles({ isOpen, onClose, onAdd, loading }: any) {
 
             {/* Active Toggle */}
             <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-2">
-              <span className="text-sm font-semibold text-gray-500">
-                Active Status
-              </span>
+              <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
               <button
                 onClick={() =>

@@ -34,10 +34,7 @@ type Action = {
   payload?: any;
 };
 
-const supportGroupsReducer = (
-  state = initialState,
-  action: Action,
-): SupportGroupsState => {
+const supportGroupsReducer = (state = initialState, action: Action): SupportGroupsState => {
   switch (action.type) {
     case SUPPORT_GROUPS_LOADING:
       return { ...state, loading: true, error: null };
@@ -75,7 +72,7 @@ const supportGroupsReducer = (
         ...state,
         updateLoading: false,
         supportGroups: state.supportGroups.map((group) =>
-          group._id === action.payload._id ? action.payload : group,
+          group._id === action.payload._id ? action.payload : group
         ),
       };
 
@@ -86,9 +83,7 @@ const supportGroupsReducer = (
       return {
         ...state,
         deleteLoading: false,
-        supportGroups: state.supportGroups.filter(
-          (group) => group._id !== action.payload,
-        ),
+        supportGroups: state.supportGroups.filter((group) => group._id !== action.payload),
       };
 
     case ADD_MEMBER_LOADING:
@@ -101,7 +96,7 @@ const supportGroupsReducer = (
         supportGroups: state.supportGroups.map((g) =>
           g._id === action.payload.groupId
             ? { ...g, members: [...(g.members || []), action.payload.userId] }
-            : g,
+            : g
         ),
       };
 
@@ -116,11 +111,9 @@ const supportGroupsReducer = (
           g._id === action.payload.groupId
             ? {
                 ...g,
-                members: (g.members || []).filter(
-                  (m) => m !== action.payload.userId,
-                ),
+                members: (g.members || []).filter((m) => m !== action.payload.userId),
               }
-            : g,
+            : g
         ),
       };
 

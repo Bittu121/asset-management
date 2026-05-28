@@ -27,9 +27,7 @@ export default function AuditTrailTab() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const auditTrail = useSelector(
-    (state: RootState) => state.reports.data?.auditTrail,
-  );
+  const auditTrail = useSelector((state: RootState) => state.reports.data?.auditTrail);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -50,10 +48,7 @@ export default function AuditTrailTab() {
   });
 
   const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-  const currentPageItems = filteredEntries.slice(
-    startIndex,
-    startIndex + ROWS_PER_PAGE,
-  );
+  const currentPageItems = filteredEntries.slice(startIndex, startIndex + ROWS_PER_PAGE);
   const totalPages = Math.ceil(filteredEntries.length / ROWS_PER_PAGE);
 
   function handleExport() {
@@ -64,13 +59,7 @@ export default function AuditTrailTab() {
       entry.date,
       entry.type,
     ]);
-    exportToCSV("audit-trail", rows, [
-      "Action",
-      "Detail",
-      "User",
-      "Date",
-      "Type",
-    ]);
+    exportToCSV("audit-trail", rows, ["Action", "Detail", "User", "Date", "Type"]);
   }
 
   return (
@@ -133,9 +122,7 @@ export default function AuditTrailTab() {
 
         <div className="space-y-2">
           {filteredEntries.length === 0 && (
-            <p className="text-center text-sm text-gray-400 py-8">
-              No audit entries found.
-            </p>
+            <p className="text-center text-sm text-gray-400 py-8">No audit entries found.</p>
           )}
 
           {currentPageItems.map((entry, idx) => (
@@ -151,20 +138,14 @@ export default function AuditTrailTab() {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-semibold text-gray-800">
-                    {entry.action}
-                  </p>
+                  <p className="text-sm font-semibold text-gray-800">{entry.action}</p>
                   <Badge label={entry.type} type={entry.type} />
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">{entry.detail}</p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  By: {entry.user}
-                </p>
+                <p className="text-xs text-gray-400 mt-0.5">By: {entry.user}</p>
               </div>
 
-              <span className="text-xs text-gray-400 shrink-0 mt-1">
-                {entry.date}
-              </span>
+              <span className="text-xs text-gray-400 shrink-0 mt-1">{entry.date}</span>
             </div>
           ))}
         </div>

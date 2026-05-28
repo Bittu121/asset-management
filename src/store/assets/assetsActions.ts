@@ -63,8 +63,7 @@ export const createAssetAction =
   };
 
 export const updateAssetAction =
-  (id: string, assetData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, assetData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_ASSET_LOADING });
     try {
       const res = await fetch(`/api/assets/${id}`, {
@@ -92,28 +91,27 @@ export const updateAssetAction =
     }
   };
 
-export const deleteAssetAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_ASSET_LOADING });
-    try {
-      const res = await fetch(`/api/assets/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteAssetAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_ASSET_LOADING });
+  try {
+    const res = await fetch(`/api/assets/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: ASSETS_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete asset");
-        return;
-      }
-
-      dispatch({ type: DELETE_ASSET_SUCCESS, payload: id });
-      toast.success(data.message || "Asset deleted successfully");
-
-      await dispatch(fetchAssets() as any);
-    } catch {
-      dispatch({ type: ASSETS_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: ASSETS_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete asset");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_ASSET_SUCCESS, payload: id });
+    toast.success(data.message || "Asset deleted successfully");
+
+    await dispatch(fetchAssets() as any);
+  } catch {
+    dispatch({ type: ASSETS_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};

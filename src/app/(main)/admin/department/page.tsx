@@ -27,9 +27,7 @@ type Department = {
 
 function Department() {
   const dispatch = useDispatch<AppDispatch>();
-  const { departments, loading } = useSelector(
-    (state: RootState) => state.department,
-  );
+  const { departments, loading } = useSelector((state: RootState) => state.department);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -66,7 +64,7 @@ function Department() {
   const totalPages = Math.ceil(filteredDepartments.length / itemsPerPage);
   const paginatedDepartments = filteredDepartments.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   // Handlers
@@ -84,9 +82,7 @@ function Department() {
 
   const handleUpdate = async (updatedData: any) => {
     if (selectedDept) {
-      const success = await dispatch(
-        updateDepartmentAction(selectedDept._id, updatedData),
-      );
+      const success = await dispatch(updateDepartmentAction(selectedDept._id, updatedData));
       if (success) {
         dispatch(getDepartmentsAction());
       }
@@ -106,9 +102,7 @@ function Department() {
     }));
 
     // Validate data
-    const validData = formattedData.filter(
-      (item) => item.departmentName && item.code,
-    );
+    const validData = formattedData.filter((item) => item.departmentName && item.code);
 
     if (validData.length === 0) {
       toast.error("No valid data found in uploaded file");
@@ -128,9 +122,7 @@ function Department() {
     if (successCount === validData.length) {
       toast.success(`${successCount} departments uploaded successfully`);
     } else {
-      toast.warning(
-        `${successCount} of ${validData.length} departments uploaded`,
-      );
+      toast.warning(`${successCount} of ${validData.length} departments uploaded`);
     }
   };
 
@@ -220,13 +212,9 @@ function Department() {
                       <FcDepartment size={24} />
                     </div>
 
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Departments Found
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-700">No Departments Found</h3>
 
-                    <p className="text-xs text-gray-500">
-                      You haven't added any departments yet.
-                    </p>
+                    <p className="text-xs text-gray-500">You haven't added any departments yet.</p>
 
                     <button
                       onClick={() => setIsAddOpen(true)}
@@ -239,24 +227,15 @@ function Department() {
               </tr>
             ) : (
               paginatedDepartments.map((dept) => (
-                <tr
-                  key={dept._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={dept._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {dept._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{dept._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {dept.departmentName}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{dept.departmentName}</div>
                   </td>
 
-                  <td className="px-6 py-5 text-sm text-gray-600">
-                    {dept.code}
-                  </td>
+                  <td className="px-6 py-5 text-sm text-gray-600">{dept.code}</td>
 
                   <td className="px-6 py-5 text-sm text-gray-500">
                     {new Date(dept.createdAt).toLocaleDateString()}

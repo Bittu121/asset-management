@@ -73,8 +73,8 @@ function CreateUserAccount({
       new Map(
         items
           .filter((item: any) => item && String(item).trim() !== "")
-          .map((item: any, i: number) => [i, { id: i, label: String(item) }]),
-      ).values(),
+          .map((item: any, i: number) => [i, { id: i, label: String(item) }])
+      ).values()
     ) as OptionType[];
   };
 
@@ -127,25 +127,18 @@ function CreateUserAccount({
     onChange: (val: string) => void,
     placeholder: string,
     labelKey: string = "name",
-    valueKey: string = "_id",
+    valueKey: string = "_id"
   ) => (
     <Autocomplete
       options={options}
       getOptionLabel={(option: any) => option[labelKey] || ""}
-      isOptionEqualToValue={(option: any, val: any) =>
-        option[valueKey] === val[valueKey]
-      }
+      isOptionEqualToValue={(option: any, val: any) => option[valueKey] === val[valueKey]}
       value={options.find((o) => o[valueKey] === value) || null}
       onChange={(_e, val) => onChange(val?.[valueKey] || "")}
       disabled={loading}
       fullWidth
       renderInput={(params) => (
-        <TextField
-          {...params}
-          placeholder={placeholder}
-          size="small"
-          sx={autocompleteStyle}
-        />
+        <TextField {...params} placeholder={placeholder} size="small" sx={autocompleteStyle} />
       )}
     />
   );
@@ -178,10 +171,7 @@ function CreateUserAccount({
               const isActive = currentStep === step.id;
 
               return (
-                <div
-                  key={step.id}
-                  className="flex flex-col items-center z-10 gap-2"
-                >
+                <div key={step.id} className="flex flex-col items-center z-10 gap-2">
                   {/* Circle */}
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
@@ -198,11 +188,7 @@ function CreateUserAccount({
                         stroke="currentColor"
                         strokeWidth={2.5}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
                       step.id
@@ -228,9 +214,7 @@ function CreateUserAccount({
         </div>
 
         <div className="px-10 py-6">
-          <h2 className="text-lg font-bold text-violet-600 mb-6">
-            {STEPS[currentStep - 1].label}
-          </h2>
+          <h2 className="text-lg font-bold text-violet-600 mb-6">{STEPS[currentStep - 1].label}</h2>
 
           {/* Step 1 */}
           {currentStep === 1 && (
@@ -254,9 +238,7 @@ function CreateUserAccount({
                 <input
                   placeholder="Type employee code"
                   value={form.employeeCode || ""}
-                  onChange={(e) =>
-                    setForm({ ...form, employeeCode: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, employeeCode: e.target.value })}
                   className={inputClass}
                 />
               </div>
@@ -291,9 +273,7 @@ function CreateUserAccount({
                 <input
                   placeholder="Type your designation"
                   value={form.designation || ""}
-                  onChange={(e) =>
-                    setForm({ ...form, designation: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, designation: e.target.value })}
                   className={inputClass}
                 />
               </div>
@@ -311,7 +291,7 @@ function CreateUserAccount({
                   roles,
                   form.role,
                   (val) => setForm({ ...form, role: val }),
-                  "Select role",
+                  "Select role"
                 )}
               </div>
 
@@ -321,7 +301,7 @@ function CreateUserAccount({
                   managers,
                   form.reportingManager,
                   (val) => setForm({ ...form, reportingManager: val }),
-                  "Select manager",
+                  "Select manager"
                 )}
               </div>
 
@@ -331,9 +311,7 @@ function CreateUserAccount({
                 </label>
                 <select
                   value={form.department}
-                  onChange={(e) =>
-                    setForm({ ...form, department: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, department: e.target.value })}
                   className={inputClass}
                   disabled={loading}
                 >
@@ -350,9 +328,7 @@ function CreateUserAccount({
                 <label className={labelClass}>Sub Department</label>
                 <select
                   value={form.subDepartment}
-                  onChange={(e) =>
-                    setForm({ ...form, subDepartment: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, subDepartment: e.target.value })}
                   className={inputClass}
                   disabled={loading}
                 >
@@ -376,9 +352,7 @@ function CreateUserAccount({
                 </label>
                 <select
                   value={form.location}
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, location: e.target.value })}
                   className={inputClass}
                   disabled={loading}
                 >
@@ -395,9 +369,7 @@ function CreateUserAccount({
                 <label className={labelClass}>Sub Location</label>
                 <select
                   value={form.subLocation}
-                  onChange={(e) =>
-                    setForm({ ...form, subLocation: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, subLocation: e.target.value })}
                   className={inputClass}
                   disabled={loading}
                 >
@@ -423,9 +395,7 @@ function CreateUserAccount({
                   type="password"
                   placeholder="Type your password"
                   value={form.password || ""}
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
                   className={inputClass}
                   disabled={loading}
                 />
@@ -439,9 +409,7 @@ function CreateUserAccount({
                   type="password"
                   placeholder="Retype your password"
                   value={form.confirmPassword || ""}
-                  onChange={(e) =>
-                    setForm({ ...form, confirmPassword: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                   className={inputClass}
                   disabled={loading}
                 />
@@ -468,9 +436,7 @@ function CreateUserAccount({
                         {item.label}:
                       </span>
                       <span className="text-xs text-gray-800 font-semibold truncate">
-                        {item.value || (
-                          <span className="text-gray-300 font-normal">—</span>
-                        )}
+                        {item.value || <span className="text-gray-300 font-normal">—</span>}
                       </span>
                     </div>
                   ))}

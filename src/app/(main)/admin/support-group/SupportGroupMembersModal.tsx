@@ -3,10 +3,7 @@ import { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { X, UserMinus, UserPlus, Users } from "lucide-react";
 import { AppDispatch, RootState } from "@/store/auth/store";
-import {
-  addMemberAction,
-  removeMemberAction,
-} from "@/store/supportGroups/supportGroupsActions";
+import { addMemberAction, removeMemberAction } from "@/store/supportGroups/supportGroupsActions";
 
 function SupportGroupMembersModal({
   isOpen,
@@ -19,7 +16,7 @@ function SupportGroupMembersModal({
 }) {
   const dispatch = useDispatch<AppDispatch>();
   const { supportGroups, addMemberLoading, removeMemberLoading } = useSelector(
-    (state: RootState) => state.supportGroups,
+    (state: RootState) => state.supportGroups
   );
   const { users } = useSelector((state: RootState) => state.userAccounts);
 
@@ -32,14 +29,11 @@ function SupportGroupMembersModal({
   const liveGroup = supportGroups.find((g) => g._id === supportGroup?._id);
   const memberIds: string[] = liveGroup?.members || [];
 
-  const members = useMemo(
-    () => users.filter((u) => memberIds.includes(u._id)),
-    [users, memberIds],
-  );
+  const members = useMemo(() => users.filter((u) => memberIds.includes(u._id)), [users, memberIds]);
 
   const available = useMemo(
     () => users.filter((u) => !memberIds.includes(u._id)),
-    [users, memberIds],
+    [users, memberIds]
   );
 
   const filteredMembers = memberSearch
@@ -47,7 +41,7 @@ function SupportGroupMembersModal({
         (u) =>
           u.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
           u.employeeCode.toLowerCase().includes(memberSearch.toLowerCase()) ||
-          u.email.toLowerCase().includes(memberSearch.toLowerCase()),
+          u.email.toLowerCase().includes(memberSearch.toLowerCase())
       )
     : members;
 
@@ -55,10 +49,8 @@ function SupportGroupMembersModal({
     ? available.filter(
         (u) =>
           u.name.toLowerCase().includes(availableSearch.toLowerCase()) ||
-          u.employeeCode
-            .toLowerCase()
-            .includes(availableSearch.toLowerCase()) ||
-          u.email.toLowerCase().includes(availableSearch.toLowerCase()),
+          u.employeeCode.toLowerCase().includes(availableSearch.toLowerCase()) ||
+          u.email.toLowerCase().includes(availableSearch.toLowerCase())
       )
     : available;
 
@@ -66,16 +58,12 @@ function SupportGroupMembersModal({
 
   const handleAdd = (userId: string) => {
     setAddingId(userId);
-    dispatch(
-      addMemberAction(supportGroup._id, userId, () => setAddingId(null)),
-    );
+    dispatch(addMemberAction(supportGroup._id, userId, () => setAddingId(null)));
   };
 
   const handleRemove = (userId: string) => {
     setRemovingId(userId);
-    dispatch(
-      removeMemberAction(supportGroup._id, userId, () => setRemovingId(null)),
-    );
+    dispatch(removeMemberAction(supportGroup._id, userId, () => setRemovingId(null)));
   };
 
   return (
@@ -86,22 +74,15 @@ function SupportGroupMembersModal({
           <div>
             <div className="flex items-center gap-2">
               <Users size={18} className="text-indigo-600" />
-              <h2 className="text-lg font-bold text-gray-900">
-                Manage Members
-              </h2>
+              <h2 className="text-lg font-bold text-gray-900">Manage Members</h2>
             </div>
             <p className="text-gray-500 text-sm mt-1">
-              <span className="font-medium text-gray-700">
-                {supportGroup.name}
-              </span>{" "}
-              &mdash; {memberIds.length} member
+              <span className="font-medium text-gray-700">{supportGroup.name}</span> &mdash;{" "}
+              {memberIds.length} member
               {memberIds.length !== 1 ? "s" : ""}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-800 cursor-pointer"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-800 cursor-pointer">
             <X size={20} />
           </button>
         </div>
@@ -134,8 +115,7 @@ function SupportGroupMembersModal({
                 </div>
               ) : (
                 filteredMembers.map((user) => {
-                  const isRemoving =
-                    removingId === user._id && removeMemberLoading;
+                  const isRemoving = removingId === user._id && removeMemberLoading;
                   return (
                     <div
                       key={user._id}
@@ -146,12 +126,9 @@ function SupportGroupMembersModal({
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {user.name}
-                          </p>
+                          <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
                           <p className="text-xs text-gray-500 truncate">
-                            {user.employeeCode} &middot;{" "}
-                            {user.designation || user.role?.name}
+                            {user.employeeCode} &middot; {user.designation || user.role?.name}
                           </p>
                         </div>
                       </div>
@@ -195,9 +172,7 @@ function SupportGroupMembersModal({
                     <Users size={16} className="text-gray-400" />
                   </div>
                   <p className="text-sm text-gray-500">
-                    {availableSearch
-                      ? "No users match"
-                      : "All users are already members"}
+                    {availableSearch ? "No users match" : "All users are already members"}
                   </p>
                 </div>
               ) : (
@@ -213,12 +188,9 @@ function SupportGroupMembersModal({
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {user.name}
-                          </p>
+                          <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
                           <p className="text-xs text-gray-500 truncate">
-                            {user.employeeCode} &middot;{" "}
-                            {user.designation || user.role?.name}
+                            {user.employeeCode} &middot; {user.designation || user.role?.name}
                           </p>
                         </div>
                       </div>

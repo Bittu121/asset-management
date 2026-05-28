@@ -24,14 +24,8 @@ type LoginFailure = {
 
 export type LoginResponse = LoginSuccess | LoginFailure;
 
-export const loginService = async (
-  email: string,
-  password: string,
-): Promise<LoginResponse> => {
-  const user = await UserAccount.findOne({ email }).populate(
-    "role",
-    "name permissions",
-  );
+export const loginService = async (email: string, password: string): Promise<LoginResponse> => {
+  const user = await UserAccount.findOne({ email }).populate("role", "name permissions");
 
   if (!user) {
     return { success: false, message: "Invalid email or password" };

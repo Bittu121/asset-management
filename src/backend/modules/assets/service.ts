@@ -36,9 +36,7 @@ export const createAsset = async (data: CreateAssetDto) => {
 };
 
 export const updateAsset = async (id: string, data: UpdateAssetDto) => {
-  return await Asset.findByIdAndUpdate(id, data, { new: true }).populate(
-    populateFields,
-  );
+  return await Asset.findByIdAndUpdate(id, data, { new: true }).populate(populateFields);
 };
 
 export const deleteAsset = async (id: string) => {

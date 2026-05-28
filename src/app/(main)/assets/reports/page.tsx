@@ -10,12 +10,7 @@ import GatePassReportTab from "./GatePassReportTab";
 import AssetStatusTab from "./AssetStatusTab";
 import AuditTrailTab from "./AuditTrailTab";
 
-type ReportTab =
-  | "overview"
-  | "allocation"
-  | "gatepass"
-  | "asset-status"
-  | "audit";
+type ReportTab = "overview" | "allocation" | "gatepass" | "asset-status" | "audit";
 
 function Reports() {
   const [activeTab, setActiveTab] = useState<ReportTab>("overview");
@@ -44,9 +39,7 @@ function Reports() {
     }
     if (error) {
       return (
-        <div className="flex items-center justify-center py-24 text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="flex items-center justify-center py-24 text-red-400 text-sm">{error}</div>
       );
     }
     switch (activeTab) {

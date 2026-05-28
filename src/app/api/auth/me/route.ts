@@ -8,16 +8,13 @@ export const GET = async (req: NextRequest) => {
   const auth = await authenticate(req);
 
   if ("statusCode" in auth) {
-    return NextResponse.json(
-      { message: auth.message },
-      { status: auth.statusCode },
-    );
+    return NextResponse.json({ message: auth.message }, { status: auth.statusCode });
   }
 
   return NextResponse.json(
     {
       user: auth.user,
     },
-    { status: 200 },
+    { status: 200 }
   );
 };

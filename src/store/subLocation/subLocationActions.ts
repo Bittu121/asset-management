@@ -34,29 +34,28 @@ export const getSubLocationsAction = () => async (dispatch: Dispatch) => {
 };
 
 // Create sub location
-export const createSubLocationAction =
-  (subLocationData: any) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch("/api/admin/sub-location", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(subLocationData),
-      });
+export const createSubLocationAction = (subLocationData: any) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch("/api/admin/sub-location", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(subLocationData),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to create sub location");
-        return;
-      }
-
-      dispatch({ type: CREATE_SUBLOCATION_SUCCESS, payload: data.data });
-      toast.success(data.message || "Sub location created successfully");
-    } catch (error) {
-      toast.error("Failed to create sub location");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to create sub location");
+      return;
     }
-  };
+
+    dispatch({ type: CREATE_SUBLOCATION_SUCCESS, payload: data.data });
+    toast.success(data.message || "Sub location created successfully");
+  } catch (error) {
+    toast.error("Failed to create sub location");
+  }
+};
 
 // Update sub location
 export const updateSubLocationAction =
@@ -84,24 +83,23 @@ export const updateSubLocationAction =
   };
 
 // Delete sub location
-export const deleteSubLocationAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch(`/api/admin/sub-location/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+export const deleteSubLocationAction = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch(`/api/admin/sub-location/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to delete sub location");
-        return;
-      }
-
-      dispatch({ type: DELETE_SUBLOCATION_SUCCESS, payload: id });
-      toast.success(data.message || "Sub location deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete sub location");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to delete sub location");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_SUBLOCATION_SUCCESS, payload: id });
+    toast.success(data.message || "Sub location deleted successfully");
+  } catch (error) {
+    toast.error("Failed to delete sub location");
+  }
+};

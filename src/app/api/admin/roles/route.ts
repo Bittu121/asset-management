@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "../../../../backend/config/db";
-import {
-  getRoles,
-  createRole,
-} from "../../../../backend/modules/admin/roles/controller";
+import { getRoles, createRole } from "../../../../backend/modules/admin/roles/controller";
 import { handleError } from "../../../../backend/middleware/error";
 
 export const GET = async (req: NextRequest) => {

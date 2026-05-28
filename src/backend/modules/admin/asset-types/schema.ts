@@ -31,11 +31,10 @@ const assetTypeSchema = new mongoose.Schema<AssetTypeDocument>(
     description: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const AssetType =
-  mongoose.models.AssetType ||
-  mongoose.model<AssetTypeDocument>("AssetType", assetTypeSchema);
+  mongoose.models.AssetType || mongoose.model<AssetTypeDocument>("AssetType", assetTypeSchema);
 
 export default AssetType;

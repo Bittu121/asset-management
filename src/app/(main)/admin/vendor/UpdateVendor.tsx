@@ -11,13 +11,7 @@ const empty = {
   isActive: true,
 };
 
-function UpdateVendor({
-  isOpen,
-  onClose,
-  selectedVendor,
-  onUpdate,
-  loading,
-}: any) {
+function UpdateVendor({ isOpen, onClose, selectedVendor, onUpdate, loading }: any) {
   const [formData, setFormData] = useState(empty);
 
   useEffect(() => {
@@ -36,9 +30,7 @@ function UpdateVendor({
 
   if (!isOpen) return null;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -112,9 +104,7 @@ function UpdateVendor({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                GST Number
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">GST Number</label>
               <input
                 name="gstNumber"
                 value={formData.gstNumber}
@@ -141,9 +131,7 @@ function UpdateVendor({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Address
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Address</label>
             <textarea
               name="address"
               value={formData.address}
@@ -156,13 +144,9 @@ function UpdateVendor({
           </div>
 
           <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50">
-            <span className="text-sm font-semibold text-gray-500">
-              Active Status
-            </span>
+            <span className="text-sm font-semibold text-gray-500">Active Status</span>
             <button
-              onClick={() =>
-                setFormData((prev) => ({ ...prev, isActive: !prev.isActive }))
-              }
+              onClick={() => setFormData((prev) => ({ ...prev, isActive: !prev.isActive }))}
               disabled={loading}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
                 formData.isActive ? "bg-indigo-600" : "bg-gray-300"

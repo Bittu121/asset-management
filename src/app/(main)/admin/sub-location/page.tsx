@@ -30,15 +30,12 @@ type SubLocation = {
 
 function SubLocation() {
   const dispatch = useDispatch<AppDispatch>();
-  const { subLocations, loading } = useSelector(
-    (state: RootState) => state?.subLocation,
-  );
+  const { subLocations, loading } = useSelector((state: RootState) => state?.subLocation);
   const { locations } = useSelector((state: RootState) => state?.location);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [selectedSubLocation, setSelectedSubLocation] =
-    useState<SubLocation | null>(null);
+  const [selectedSubLocation, setSelectedSubLocation] = useState<SubLocation | null>(null);
 
   //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,13 +76,11 @@ function SubLocation() {
   const totalPages = Math.ceil(filteredSubLocations.length / itemsPerPage);
   const paginatedsubLocation = filteredSubLocations.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   //Create Api
-  const handleAddSubLocation = async (
-    data: Omit<SubLocation, "_id" | "createdAt">,
-  ) => {
+  const handleAddSubLocation = async (data: Omit<SubLocation, "_id" | "createdAt">) => {
     await dispatch(createSubLocationAction(data));
     dispatch(getSubLocationsAction());
   };
@@ -98,9 +93,7 @@ function SubLocation() {
   //Update Api
   const handleUpdateSubLocation = async (updatedData: any) => {
     if (selectedSubLocation) {
-      await dispatch(
-        updateSubLocationAction(selectedSubLocation?._id, updatedData),
-      );
+      await dispatch(updateSubLocationAction(selectedSubLocation?._id, updatedData));
       dispatch(getSubLocationsAction());
     }
   };
@@ -167,8 +160,7 @@ function SubLocation() {
               ]}
               onUpload={async (uploadedData: any[]) => {
                 const formattedData = uploadedData?.map((item) => ({
-                  subLocationName:
-                    item["Sub Location"] || item?.subLocationName || "",
+                  subLocationName: item["Sub Location"] || item?.subLocationName || "",
                   locationId: item?.locationId || "",
                   locationName: item?.locationName || item?.locationName || "",
                   floor: item?.Floor || item?.floor || "",
@@ -216,13 +208,9 @@ function SubLocation() {
                       <CiLocationOn size={18} />
                     </div>
 
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Locations Found
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-700">No Locations Found</h3>
 
-                    <p className="text-xs text-gray-500">
-                      You haven’t added any locations yet.
-                    </p>
+                    <p className="text-xs text-gray-500">You haven’t added any locations yet.</p>
 
                     <button
                       onClick={() => setIsAddOpen(true)}
@@ -235,10 +223,7 @@ function SubLocation() {
               </tr>
             ) : (
               paginatedsubLocation.map((subLoc) => (
-                <tr
-                  key={subLoc._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={subLoc._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
                       {subLoc.subLocationName}
@@ -252,9 +237,7 @@ function SubLocation() {
                   </td>
 
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {subLoc.floor || "-"}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{subLoc.floor || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">

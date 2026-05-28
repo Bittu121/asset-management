@@ -7,8 +7,8 @@ type UserAccountDocument = {
   employeeCode: string;
   phone: string;
   designation: string;
-  role: mongoose.Types.ObjectId; // Reference to Role
-  reportingManager: mongoose.Types.ObjectId | null; // Self-reference to User
+  role: mongoose.Types.ObjectId;
+  reportingManager: mongoose.Types.ObjectId | null;
   department: string;
   subDepartment: string;
   location: string;
@@ -16,6 +16,8 @@ type UserAccountDocument = {
   otp: string;
   otpExpiry: Date | null;
   isVerified: boolean;
+  otpAttempts: number;
+  otpLockedUntil: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -47,8 +49,10 @@ const userAccountSchema = new mongoose.Schema<UserAccountDocument>(
     otp: { type: String, default: "" },
     otpExpiry: { type: Date, default: null },
     isVerified: { type: Boolean, default: false },
+    otpAttempts: { type: Number, default: 0 },
+    otpLockedUntil: { type: Date, default: null },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const UserAccount =

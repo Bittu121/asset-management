@@ -6,11 +6,7 @@ import { useEffect, useState } from "react";
 
 const SESSION_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-export default function MainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -75,9 +71,7 @@ export default function MainLayout({
           <Header />
         </header>
 
-        <main className="flex-1 bg-[#EAEFF5] p-4 overflow-y-auto layout-scroll">
-          {children}
-        </main>
+        <main className="flex-1 bg-[#EAEFF5] p-4 overflow-y-auto layout-scroll">{children}</main>
       </div>
     </div>
   );

@@ -19,8 +19,9 @@ import {
 
 function AssetCategories() {
   const dispatch = useDispatch<AppDispatch>();
-  const { assetCategories, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.assetCategories);
+  const { assetCategories, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.assetCategories
+  );
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -53,7 +54,7 @@ function AssetCategories() {
   const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
   const paginatedCategories = filteredCategories.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAdd = (data: any) => {
@@ -69,8 +70,8 @@ function AssetCategories() {
     if (selectedAssetCategory) {
       dispatch(
         updateAssetCategoryAction(selectedAssetCategory._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
+          setIsUpdateOpen(false)
+        )
       );
     }
   };
@@ -87,10 +88,7 @@ function AssetCategories() {
         name: item.Name || item.name || "",
         code: item.Code || item.code || "",
         description: item.Description || item.description || "",
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
       if (categoryData.name) {
         dispatch(createAssetCategoryAction(categoryData));
@@ -228,19 +226,12 @@ function AssetCategories() {
               </tr>
             ) : (
               paginatedCategories.map((cat: any) => (
-                <tr
-                  key={cat._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={cat._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {cat._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{cat._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {cat.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{cat.name}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700">{cat.code || "-"}</div>
@@ -253,9 +244,7 @@ function AssetCategories() {
                   <td className="px-6 py-5">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        cat.isActive
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-500"
+                        cat.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {cat.isActive ? "Active" : "Inactive"}

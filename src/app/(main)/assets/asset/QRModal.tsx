@@ -132,8 +132,10 @@ export default function QRModal({
           ctx.textAlign = "left";
           ctx.fillText(label, 44, y + 21);
 
-          ctx.fillStyle = value === "Active" ? "#16a34a" : value === "Inactive" ? "#6b7280" : "#111827";
-          ctx.font = value === "Active" || value === "Inactive" ? "bold 11px system-ui" : "11px system-ui";
+          ctx.fillStyle =
+            value === "Active" ? "#16a34a" : value === "Inactive" ? "#6b7280" : "#111827";
+          ctx.font =
+            value === "Active" || value === "Inactive" ? "bold 11px system-ui" : "11px system-ui";
           ctx.textAlign = "right";
           ctx.fillText(value, CARD_W - 44, y + 21);
         });
@@ -167,7 +169,7 @@ export default function QRModal({
     }
   };
 
-  // Print 
+  // Print
   const handlePrint = () => {
     const printWindow = window.open("", "_blank", "width=420,height=600");
     if (!printWindow) return;
@@ -233,7 +235,6 @@ export default function QRModal({
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
       <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-
         {/* Indigo top accent */}
         <div className="h-1.5 bg-indigo-600" />
 
@@ -253,7 +254,6 @@ export default function QRModal({
 
         {/* Body */}
         <div className="px-5 py-5 space-y-4">
-
           {/* QR card */}
           <div className="flex flex-col items-center bg-linear-to-b from-gray-50 to-white rounded-xl border border-gray-100 py-5 px-4 shadow-inner">
             {/* Asset tag */}
@@ -265,16 +265,8 @@ export default function QRModal({
             </span>
 
             {/* QR code */}
-            <div
-              ref={qrRef}
-              className="p-3 bg-white rounded-xl shadow-md border border-gray-100"
-            >
-              <QRCode
-                value={qrValue}
-                size={160}
-                fgColor="#1e1b4b"
-                bgColor="#ffffff"
-              />
+            <div ref={qrRef} className="p-3 bg-white rounded-xl shadow-md border border-gray-100">
+              <QRCode value={qrValue} size={160} fgColor="#1e1b4b" bgColor="#ffffff" />
             </div>
 
             <p className="mt-3 text-[11px] text-gray-400 text-center">
@@ -333,9 +325,7 @@ export default function QRModal({
               <span className="text-gray-500">Status</span>
               <span
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${
-                  asset.isActive
-                    ? "bg-green-100 text-green-700"
-                    : "bg-gray-100 text-gray-500"
+                  asset.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
                 }`}
               >
                 <span

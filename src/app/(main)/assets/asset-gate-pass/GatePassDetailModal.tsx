@@ -2,11 +2,7 @@
 
 import type { ReactNode } from "react";
 import { FiX, FiArrowUpRight, FiArrowDownLeft } from "react-icons/fi";
-import {
-  GatePass,
-  GatePassStatus,
-  MovementType,
-} from "../../../../store/gatePasses/gatePassTypes";
+import { GatePass, GatePassStatus, MovementType } from "../../../../store/gatePasses/gatePassTypes";
 
 type Props = {
   gatePass: GatePass;
@@ -17,19 +13,13 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-0">
       <span className="text-gray-400 text-sm">{label}</span>
-      <span className="font-semibold text-gray-800 text-sm">
-        {value || "—"}
-      </span>
+      <span className="font-semibold text-gray-800 text-sm">{value || "—"}</span>
     </div>
   );
 }
 
 function SectionLabel({ children }: { children: ReactNode }) {
-  return (
-    <p className="text-xs font-bold text-gray-400 tracking-widest mt-4 mb-1">
-      {children}
-    </p>
-  );
+  return <p className="text-xs font-bold text-gray-400 tracking-widest mt-4 mb-1">{children}</p>;
 }
 
 function StatusBadge({ status }: { status: GatePassStatus }) {
@@ -41,11 +31,7 @@ function StatusBadge({ status }: { status: GatePassStatus }) {
     REJECTED: "bg-red-100 text-red-700 border border-red-300",
   };
   return (
-    <span
-      className={`px-2 py-0.5 rounded text-xs font-semibold ${styles[status]}`}
-    >
-      {status}
-    </span>
+    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${styles[status]}`}>{status}</span>
   );
 }
 
@@ -78,9 +64,7 @@ export default function GatePassDetailModal({ gatePass, onClose }: Props) {
         </button>
 
         {/* Header */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {gatePass.gatePassId}
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{gatePass.gatePassId}</h2>
         <div className="flex gap-2 mb-6">
           <StatusBadge status={gatePass.status} />
           <TypeBadge type={gatePass.type} />
@@ -89,10 +73,7 @@ export default function GatePassDetailModal({ gatePass, onClose }: Props) {
         {/* Asset */}
         <SectionLabel>ASSET</SectionLabel>
         <DetailRow label="Asset Tag" value={gatePass.asset.assetTag} />
-        <DetailRow
-          label="Asset Model"
-          value={gatePass.asset.model || gatePass.asset.device}
-        />
+        <DetailRow label="Asset Model" value={gatePass.asset.model || gatePass.asset.device} />
 
         {/* Movement */}
         <SectionLabel>MOVEMENT</SectionLabel>

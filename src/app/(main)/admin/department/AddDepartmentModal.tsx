@@ -32,15 +32,10 @@ export default function AddDepartmentModal({ isOpen, onClose, onAdd }: any) {
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Add Department</h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Create a new department
-            </p>
+            <p className="text-gray-500 text-sm mt-1">Create a new department</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>

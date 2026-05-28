@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function UpdateDepartmentModal({
-  isOpen,
-  onClose,
-  department,
-  onUpdate,
-}: any) {
+export default function UpdateDepartmentModal({ isOpen, onClose, department, onUpdate }: any) {
   const [form, setForm] = useState({
     departmentName: "",
     code: "",
@@ -40,18 +35,11 @@ export default function UpdateDepartmentModal({
         {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Update Department
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Update department details
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Update Department</h2>
+            <p className="text-gray-500 text-sm mt-1">Update department details</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -66,9 +54,7 @@ export default function UpdateDepartmentModal({
               </label>
               <input
                 value={form.departmentName || ""}
-                onChange={(e) =>
-                  setForm({ ...form, departmentName: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, departmentName: e.target.value })}
                 placeholder="Department name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />

@@ -28,10 +28,7 @@ type Action = {
   payload?: any;
 };
 
-const subCategoriesReducer = (
-  state = initialState,
-  action: Action,
-): SubCategoriesState => {
+const subCategoriesReducer = (state = initialState, action: Action): SubCategoriesState => {
   switch (action.type) {
     case SUB_CATEGORIES_LOADING:
       return { ...state, loading: true, error: null };
@@ -67,7 +64,7 @@ const subCategoriesReducer = (
         ...state,
         updateLoading: false,
         subCategories: state.subCategories.map((sc) =>
-          sc._id === action.payload._id ? action.payload : sc,
+          sc._id === action.payload._id ? action.payload : sc
         ),
       };
 
@@ -78,9 +75,7 @@ const subCategoriesReducer = (
       return {
         ...state,
         deleteLoading: false,
-        subCategories: state.subCategories.filter(
-          (sc) => sc._id !== action.payload,
-        ),
+        subCategories: state.subCategories.filter((sc) => sc._id !== action.payload),
       };
 
     case SET_SELECTED_SUB_CATEGORY:

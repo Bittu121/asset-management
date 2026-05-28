@@ -57,9 +57,7 @@ const assetsReducer = (state = initialState, action: Action): AssetsState => {
       return {
         ...state,
         updateLoading: false,
-        assets: state.assets.map((a) =>
-          a._id === action.payload._id ? action.payload : a,
-        ),
+        assets: state.assets.map((a) => (a._id === action.payload._id ? action.payload : a)),
       };
 
     case DELETE_ASSET_LOADING:

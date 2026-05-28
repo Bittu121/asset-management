@@ -24,8 +24,7 @@ export default function NotFound() {
         <h1 className="text-5xl font-semibold text-gray-900">404</h1>
         <div className="w-10 h-0.5 bg-gray-300 mx-auto my-4"></div>
         <p className="text-gray-600 text-sm leading-relaxed">
-          The page you are looking for might have been removed or is temporarily
-          unavailable.
+          The page you are looking for might have been removed or is temporarily unavailable.
         </p>
 
         <button

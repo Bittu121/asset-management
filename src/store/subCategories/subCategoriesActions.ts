@@ -36,8 +36,7 @@ export const fetchSubCategories = () => async (dispatch: Dispatch) => {
 };
 
 export const createSubCategoryAction =
-  (subCategoryData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (subCategoryData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: CREATE_SUB_CATEGORY_LOADING });
     try {
       const res = await fetch("/api/admin/sub-categories", {
@@ -66,8 +65,7 @@ export const createSubCategoryAction =
   };
 
 export const updateSubCategoryAction =
-  (id: string, subCategoryData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, subCategoryData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_SUB_CATEGORY_LOADING });
     try {
       const res = await fetch(`/api/admin/sub-categories/${id}`, {
@@ -95,36 +93,34 @@ export const updateSubCategoryAction =
     }
   };
 
-export const deleteSubCategoryAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_SUB_CATEGORY_LOADING });
-    try {
-      const res = await fetch(`/api/admin/sub-categories/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteSubCategoryAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_SUB_CATEGORY_LOADING });
+  try {
+    const res = await fetch(`/api/admin/sub-categories/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: SUB_CATEGORIES_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete sub category");
-        return;
-      }
-
-      dispatch({ type: DELETE_SUB_CATEGORY_SUCCESS, payload: id });
-      toast.success(data.message || "Sub category deleted successfully");
-
-      await dispatch(fetchSubCategories() as any);
-    } catch {
-      dispatch({ type: SUB_CATEGORIES_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: SUB_CATEGORIES_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete sub category");
+      return;
     }
-  };
 
-export const setSelectedSubCategory =
-  (subCategory: any) => (dispatch: Dispatch) => {
-    dispatch({ type: SET_SELECTED_SUB_CATEGORY, payload: subCategory });
-  };
+    dispatch({ type: DELETE_SUB_CATEGORY_SUCCESS, payload: id });
+    toast.success(data.message || "Sub category deleted successfully");
+
+    await dispatch(fetchSubCategories() as any);
+  } catch {
+    dispatch({ type: SUB_CATEGORIES_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};
+
+export const setSelectedSubCategory = (subCategory: any) => (dispatch: Dispatch) => {
+  dispatch({ type: SET_SELECTED_SUB_CATEGORY, payload: subCategory });
+};
 
 export const clearSubCategoriesError = () => (dispatch: Dispatch) => {
   dispatch({ type: CLEAR_SUB_CATEGORIES_ERROR });

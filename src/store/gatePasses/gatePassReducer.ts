@@ -19,7 +19,7 @@ const initialState: GatePassState = {
 
 export default function gatePassReducer(
   state = initialState,
-  action: { type: string; payload?: any },
+  action: { type: string; payload?: any }
 ): GatePassState {
   switch (action.type) {
     case GATE_PASSES_LOADING:

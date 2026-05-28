@@ -48,13 +48,10 @@ function Login() {
             />
           </div>
 
-          <h2 className="text-3xl font-semibold text-white leading-tight">
-            Asset Management
-          </h2>
+          <h2 className="text-3xl font-semibold text-white leading-tight">Asset Management</h2>
 
           <p className="mt-4 text-gray-400 text-sm leading-relaxed">
-            Track, manage, and optimize assets with real-time visibility and
-            automation.
+            Track, manage, and optimize assets with real-time visibility and automation.
           </p>
 
           <div className="mt-8 space-y-4">
@@ -68,9 +65,7 @@ function Login() {
             </div>
             <div className="flex items-start gap-3">
               <span className="text-green-400 mt-1">✔</span>
-              <p className="text-sm text-gray-300">
-                End-to-end lifecycle management
-              </p>
+              <p className="text-sm text-gray-300">End-to-end lifecycle management</p>
             </div>
           </div>
         </div>
@@ -80,9 +75,7 @@ function Login() {
       <div className="flex w-full md:w-1/2 items-center justify-center">
         <div className="w-full max-w-sm px-6">
           <h1 className="text-2xl font-semibold text-gray-900">Welcome back</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Please login to your account
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Please login to your account</p>
 
           <div className="mt-6 space-y-4">
             {/* Google Login */}
@@ -181,7 +174,7 @@ function Login() {
                       fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
-                  </svg> 
+                  </svg>
                   Logging in...
                 </>
               ) : (

@@ -28,9 +28,7 @@ export const createAssetType = async (data: CreateAssetTypeDto) => {
 };
 
 export const updateAssetType = async (id: string, data: UpdateAssetTypeDto) => {
-  return await AssetType.findByIdAndUpdate(id, data, { new: true }).populate(
-    populateFields,
-  );
+  return await AssetType.findByIdAndUpdate(id, data, { new: true }).populate(populateFields);
 };
 
 export const deleteAssetType = async (id: string) => {

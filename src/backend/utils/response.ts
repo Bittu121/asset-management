@@ -3,11 +3,7 @@ const STATUS = {
   ERROR: "error",
 };
 
-export const successResponse = (
-  data: unknown,
-  message: string,
-  statusCode = 200,
-) => {
+export const successResponse = (data: unknown, message: string, statusCode = 200) => {
   return {
     status: STATUS.SUCCESS,
     message,

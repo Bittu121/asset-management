@@ -3,12 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/auth/store";
-import {
-  FiCheckCircle,
-  FiAlertTriangle,
-  FiRotateCcw,
-  FiSearch,
-} from "react-icons/fi";
+import { FiCheckCircle, FiAlertTriangle, FiRotateCcw, FiSearch } from "react-icons/fi";
 import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
 import Pagination from "../../../components/common/Pagination";
@@ -31,17 +26,14 @@ export default function AllocationReportTab() {
   const [summaryPage, setSummaryPage] = useState(1);
   const [detailPage, setDetailPage] = useState(1);
 
-  const allocations = useSelector(
-    (state: RootState) => state.reports.data?.allocations,
-  );
+  const allocations = useSelector((state: RootState) => state.reports.data?.allocations);
 
   if (!allocations) return null;
 
   const { summary, userSummary, records } = allocations;
 
   const filteredAllocations = records.filter((a) => {
-    const matchesStatus =
-      statusFilter === "ALL" || a.status === statusFilter;
+    const matchesStatus = statusFilter === "ALL" || a.status === statusFilter;
     const q = search.toLowerCase();
     const matchesSearch =
       a.assetTag.toLowerCase().includes(q) ||
@@ -118,7 +110,7 @@ export default function AllocationReportTab() {
                   String(row.returned),
                   String(row.total),
                 ]),
-                SUMMARY_HEADERS,
+                SUMMARY_HEADERS
               )
             }
           />
@@ -140,34 +132,18 @@ export default function AllocationReportTab() {
               <tbody>
                 {paginatedSummary.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="py-10 text-center text-sm text-gray-400"
-                    >
+                    <td colSpan={5} className="py-10 text-center text-sm text-gray-400">
                       No records found
                     </td>
                   </tr>
                 ) : (
                   paginatedSummary.map((row) => (
-                    <tr
-                      key={row.user}
-                      className="border-b border-gray-50 hover:bg-gray-50/70"
-                    >
-                      <td className="py-3 px-4 font-medium text-gray-800">
-                        {row.user}
-                      </td>
-                      <td className="py-3 px-4 text-emerald-500 font-semibold">
-                        {row.active}
-                      </td>
-                      <td className="py-3 px-4 text-rose-500 font-semibold">
-                        {row.overdue}
-                      </td>
-                      <td className="py-3 px-4 text-slate-500 font-semibold">
-                        {row.returned}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-gray-700">
-                        {row.total}
-                      </td>
+                    <tr key={row.user} className="border-b border-gray-50 hover:bg-gray-50/70">
+                      <td className="py-3 px-4 font-medium text-gray-800">{row.user}</td>
+                      <td className="py-3 px-4 text-emerald-500 font-semibold">{row.active}</td>
+                      <td className="py-3 px-4 text-rose-500 font-semibold">{row.overdue}</td>
+                      <td className="py-3 px-4 text-slate-500 font-semibold">{row.returned}</td>
+                      <td className="py-3 px-4 font-semibold text-gray-700">{row.total}</td>
                     </tr>
                   ))
                 )}
@@ -243,30 +219,18 @@ export default function AllocationReportTab() {
               <tbody>
                 {paginatedDetail.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={6}
-                      className="py-10 text-center text-sm text-gray-400"
-                    >
+                    <td colSpan={6} className="py-10 text-center text-sm text-gray-400">
                       No records found
                     </td>
                   </tr>
                 ) : (
                   paginatedDetail.map((a) => (
-                    <tr
-                      key={a._id}
-                      className="border-t border-gray-50 hover:bg-gray-50/70"
-                    >
-                      <td className="py-3 px-4 font-semibold text-indigo-600">
-                        {a.assetTag}
-                      </td>
+                    <tr key={a._id} className="border-t border-gray-50 hover:bg-gray-50/70">
+                      <td className="py-3 px-4 font-semibold text-indigo-600">{a.assetTag}</td>
                       <td className="py-3 px-4 text-gray-700">{a.assetName || "—"}</td>
                       <td className="py-3 px-4 text-gray-700">{a.allocatedTo}</td>
-                      <td className="py-3 px-4 text-gray-500">
-                        {a.allocationDate}
-                      </td>
-                      <td className="py-3 px-4 text-gray-500">
-                        {a.expectedReturn}
-                      </td>
+                      <td className="py-3 px-4 text-gray-500">{a.allocationDate}</td>
+                      <td className="py-3 px-4 text-gray-500">{a.expectedReturn}</td>
                       <td className="py-3 px-4">
                         <Badge label={a.status} type={a.status} />
                       </td>
@@ -279,8 +243,7 @@ export default function AllocationReportTab() {
 
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-5">
             <p className="text-xs text-gray-400">
-              Showing {paginatedDetail.length} of {filteredAllocations.length}{" "}
-              records
+              Showing {paginatedDetail.length} of {filteredAllocations.length} records
             </p>
             <Pagination
               currentPage={detailPage}

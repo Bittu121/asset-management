@@ -50,7 +50,7 @@ const assetSchema = new mongoose.Schema(
     ipAddress: { type: String, default: "" },
     macAddress: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Asset = mongoose.models.Asset || mongoose.model("Asset", assetSchema);

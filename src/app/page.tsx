@@ -133,22 +133,42 @@ const roles = [
   {
     role: "Admin",
     desc: "Full system control. Manage users, roles, masters, and all asset operations.",
-    perms: ["All asset CRUD operations", "User & role management", "Master data configuration", "Full reports & audit access"],
+    perms: [
+      "All asset CRUD operations",
+      "User & role management",
+      "Master data configuration",
+      "Full reports & audit access",
+    ],
   },
   {
     role: "Manager",
     desc: "Oversee team assets, approve gate passes and manage allocations.",
-    perms: ["View & update assets", "Approve gate pass requests", "Manage team allocations", "Access team-level reports"],
+    perms: [
+      "View & update assets",
+      "Approve gate pass requests",
+      "Manage team allocations",
+      "Access team-level reports",
+    ],
   },
   {
     role: "Technician",
     desc: "Handle day-to-day asset operations, maintenance and tracking.",
-    perms: ["View asset details", "Update asset status", "Process allocations & returns", "Raise gate pass requests"],
+    perms: [
+      "View asset details",
+      "Update asset status",
+      "Process allocations & returns",
+      "Raise gate pass requests",
+    ],
   },
   {
     role: "End User",
     desc: "View assigned assets and raise service or gate pass requests.",
-    perms: ["View own assigned assets", "Raise gate pass requests", "View allocation history", "Scan QR for asset info"],
+    perms: [
+      "View own assigned assets",
+      "Raise gate pass requests",
+      "View allocation history",
+      "Scan QR for asset info",
+    ],
   },
 ];
 
@@ -161,13 +181,8 @@ const stats = [
 
 // ── QR cell pattern (static — no Math.random) ─────────────
 const QR_CELLS = [
-  1,1,1,1,1,1,1,
-  1,0,0,0,0,0,1,
-  1,0,1,1,1,0,1,
-  1,0,1,0,1,0,1,
-  1,0,1,1,1,0,1,
-  1,0,0,0,0,0,1,
-  1,1,1,1,1,1,1,
+  1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1,
+  0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
 ];
 
 export default function LandingPage() {
@@ -182,22 +197,23 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#060c2c] text-white font-sans antialiased">
-
       {/* ── NAVBAR ──────────────────────────────────────── */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-white border-b border-gray-200 shadow-sm"
-            : "bg-transparent"
+          scrolled ? "bg-white border-b border-gray-200 shadow-sm" : "bg-transparent"
         }`}
       >
         <nav className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${scrolled ? "bg-gray-900 border-gray-700" : "bg-white/5 border-white/10"}`}>
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center border ${scrolled ? "bg-gray-900 border-gray-700" : "bg-white/5 border-white/10"}`}
+            >
               <Package size={15} className={scrolled ? "text-white" : "text-white"} />
             </div>
-            <span className={`text-base font-bold tracking-tight ${scrolled ? "text-gray-900" : "text-white"}`}>
+            <span
+              className={`text-base font-bold tracking-tight ${scrolled ? "text-gray-900" : "text-white"}`}
+            >
               AssetFlow
             </span>
           </Link>
@@ -244,7 +260,9 @@ export default function LandingPage() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className={`md:hidden border-b px-5 py-4 space-y-3 ${scrolled ? "bg-white border-gray-200" : "bg-[#060c2c] border-white/10"}`}>
+          <div
+            className={`md:hidden border-b px-5 py-4 space-y-3 ${scrolled ? "bg-white border-gray-200" : "bg-[#060c2c] border-white/10"}`}
+          >
             {navLinks.map((l) => (
               <a
                 key={l.href}
@@ -255,11 +273,19 @@ export default function LandingPage() {
                 {l.label}
               </a>
             ))}
-            <div className={`pt-2 flex flex-col gap-2 border-t ${scrolled ? "border-gray-100" : "border-white/10"}`}>
-              <Link href="/login" className={`text-sm font-medium text-center py-2 border rounded-md ${scrolled ? "border-gray-300 text-gray-700 hover:bg-gray-50" : "border-white/20 text-white hover:bg-white/10"}`}>
+            <div
+              className={`pt-2 flex flex-col gap-2 border-t ${scrolled ? "border-gray-100" : "border-white/10"}`}
+            >
+              <Link
+                href="/login"
+                className={`text-sm font-medium text-center py-2 border rounded-md ${scrolled ? "border-gray-300 text-gray-700 hover:bg-gray-50" : "border-white/20 text-white hover:bg-white/10"}`}
+              >
                 Login
               </Link>
-              <Link href="/login" className="text-sm font-semibold text-white text-center py-2 bg-gray-900 rounded-md hover:bg-gray-700">
+              <Link
+                href="/login"
+                className="text-sm font-semibold text-white text-center py-2 bg-gray-900 rounded-md hover:bg-gray-700"
+              >
                 Get Started Free
               </Link>
             </div>
@@ -270,8 +296,12 @@ export default function LandingPage() {
       {/* ── HERO ────────────────────────────────────────── */}
       <section className="pt-32 pb-24 px-5 bg-[#060c2c] relative overflow-hidden">
         {/* Subtle radial glow */}
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,255,255,0.04) 0%, transparent 70%)" }}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,255,255,0.04) 0%, transparent 70%)",
+          }}
         />
 
         <div className="relative max-w-4xl mx-auto text-center">
@@ -290,9 +320,8 @@ export default function LandingPage() {
 
           {/* Sub */}
           <p className="mt-5 text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            The complete IT asset lifecycle management platform — from
-            procurement and QR tagging to allocation, gate passes, and
-            compliance reporting. Built for modern organisations.
+            The complete IT asset lifecycle management platform — from procurement and QR tagging to
+            allocation, gate passes, and compliance reporting. Built for modern organisations.
           </p>
 
           {/* CTAs */}
@@ -313,7 +342,8 @@ export default function LandingPage() {
           </div>
 
           <p className="mt-4 text-xs text-gray-600">
-            No credit card required &nbsp;·&nbsp; Setup in minutes &nbsp;·&nbsp; Role-based access included
+            No credit card required &nbsp;·&nbsp; Setup in minutes &nbsp;·&nbsp; Role-based access
+            included
           </p>
         </div>
 
@@ -356,16 +386,25 @@ export default function LandingPage() {
                   ["MAC-003", "MacBook Pro 14 M3", "Laptop", "Allocated", "2026-11-01"],
                   ["TAB-004", "Samsung Galaxy Tab", "Tablet", "Inactive", "2025-12-20"],
                 ].map(([tag, dev, cat, status]) => (
-                  <div key={tag} className="grid grid-cols-5 px-4 py-2.5 border-b border-white/5 text-[10px] text-gray-400 last:border-0">
+                  <div
+                    key={tag}
+                    className="grid grid-cols-5 px-4 py-2.5 border-b border-white/5 text-[10px] text-gray-400 last:border-0"
+                  >
                     <span className="font-semibold text-white">{tag}</span>
                     <span className="truncate">{dev}</span>
                     <span>{cat}</span>
                     <span>
-                      <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold ${
-                        status === "Active" ? "bg-green-500/20 text-green-400"
-                        : status === "Allocated" ? "bg-white/10 text-gray-300"
-                        : "bg-white/5 text-gray-500"
-                      }`}>{status}</span>
+                      <span
+                        className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold ${
+                          status === "Active"
+                            ? "bg-green-500/20 text-green-400"
+                            : status === "Allocated"
+                              ? "bg-white/10 text-gray-300"
+                              : "bg-white/5 text-gray-500"
+                        }`}
+                      >
+                        {status}
+                      </span>
                     </span>
                     <span className="text-gray-500">—</span>
                   </div>
@@ -401,8 +440,8 @@ export default function LandingPage() {
               Everything you need in one platform
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              Designed for IT teams, operations managers, and finance departments
-              who need complete visibility over physical assets.
+              Designed for IT teams, operations managers, and finance departments who need complete
+              visibility over physical assets.
             </p>
           </div>
 
@@ -434,8 +473,8 @@ export default function LandingPage() {
               Four powerful modules, one platform
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              Each module is purpose-built and works seamlessly with the others,
-              giving you end-to-end control over your asset ecosystem.
+              Each module is purpose-built and works seamlessly with the others, giving you
+              end-to-end control over your asset ecosystem.
             </p>
           </div>
 
@@ -474,7 +513,8 @@ export default function LandingPage() {
               Up and running in three steps
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              No complex onboarding. Configure your masters, add your assets, and start tracking in minutes.
+              No complex onboarding. Configure your masters, add your assets, and start tracking in
+              minutes.
             </p>
           </div>
 
@@ -509,9 +549,9 @@ export default function LandingPage() {
               Get instant details.
             </h2>
             <p className="text-gray-400 leading-relaxed mb-6 text-sm">
-              Every registered asset gets a unique QR code that encodes key details
-              directly — asset tag, serial number, category, status, and warranty
-              expiry. Scan with any phone camera. No app, no login needed.
+              Every registered asset gets a unique QR code that encodes key details directly — asset
+              tag, serial number, category, status, and warranty expiry. Scan with any phone camera.
+              No app, no login needed.
             </p>
             <ul className="space-y-3">
               {[
@@ -540,10 +580,7 @@ export default function LandingPage() {
                 {/* Static QR grid */}
                 <div className="w-24 h-24 mx-auto bg-white rounded-lg p-2 mb-3 grid grid-cols-7 gap-px">
                   {QR_CELLS.map((cell, i) => (
-                    <div
-                      key={i}
-                      className={`rounded-[1px] ${cell ? "bg-gray-900" : "bg-white"}`}
-                    />
+                    <div key={i} className={`rounded-[1px] ${cell ? "bg-gray-900" : "bg-white"}`} />
                   ))}
                 </div>
                 <p className="text-[9px] text-gray-500">Scan to get details</p>
@@ -564,14 +601,17 @@ export default function LandingPage() {
               The right access for every team member
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              Four predefined roles with granular permissions. Assign the right
-              level of access to every person in your organisation.
+              Four predefined roles with granular permissions. Assign the right level of access to
+              every person in your organisation.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {roles.map((r, i) => (
-              <div key={r.role} className="bg-[#f8fafc] rounded-xl border border-gray-100 p-5 hover:shadow-md transition-all duration-200">
+              <div
+                key={r.role}
+                className="bg-[#f8fafc] rounded-xl border border-gray-100 p-5 hover:shadow-md transition-all duration-200"
+              >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full bg-gray-900" />
                   <span className="text-sm font-bold text-gray-900">{r.role}</span>
@@ -599,19 +639,38 @@ export default function LandingPage() {
               Secure, reliable, and enterprise-ready
             </h2>
             <p className="mt-3 text-gray-500 max-w-lg mx-auto text-sm">
-              Built with security and auditability at the core so your
-              organisation stays compliant and in control.
+              Built with security and auditability at the core so your organisation stays compliant
+              and in control.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { icon: <Lock size={18} />, title: "JWT Authentication", desc: "Secure token-based auth with httpOnly cookies. Sessions expire automatically." },
-              { icon: <ShieldCheck size={18} />, title: "Role-Based Access", desc: "Every API endpoint is protected with role and permission checks." },
-              { icon: <Globe size={18} />, title: "Cloud-Hosted", desc: "MongoDB Atlas backend with automatic backups and 99.9% uptime SLA." },
-              { icon: <BadgeCheck size={18} />, title: "Full Audit Trail", desc: "Every change is logged — who did what, when, and on which asset." },
+              {
+                icon: <Lock size={18} />,
+                title: "JWT Authentication",
+                desc: "Secure token-based auth with httpOnly cookies. Sessions expire automatically.",
+              },
+              {
+                icon: <ShieldCheck size={18} />,
+                title: "Role-Based Access",
+                desc: "Every API endpoint is protected with role and permission checks.",
+              },
+              {
+                icon: <Globe size={18} />,
+                title: "Cloud-Hosted",
+                desc: "MongoDB Atlas backend with automatic backups and 99.9% uptime SLA.",
+              },
+              {
+                icon: <BadgeCheck size={18} />,
+                title: "Full Audit Trail",
+                desc: "Every change is logged — who did what, when, and on which asset.",
+              },
             ].map((c) => (
-              <div key={c.title} className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+              <div
+                key={c.title}
+                className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm"
+              >
                 <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center text-white mb-3">
                   {c.icon}
                 </div>
@@ -635,8 +694,8 @@ export default function LandingPage() {
               Ready to take control of your assets?
             </h2>
             <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-              Join hundreds of organisations that use AssetFlow to track, manage,
-              and optimise their physical assets every day.
+              Join hundreds of organisations that use AssetFlow to track, manage, and optimise their
+              physical assets every day.
             </p>
             <div className="space-y-3">
               {[
@@ -644,7 +703,10 @@ export default function LandingPage() {
                 "Reduce risks and costs",
                 "End-to-end lifecycle management",
               ].map((pt) => (
-                <div key={pt} className="flex items-center justify-center gap-2 text-sm text-gray-300">
+                <div
+                  key={pt}
+                  className="flex items-center justify-center gap-2 text-sm text-gray-300"
+                >
                   <span className="text-green-400 text-xs">✔</span>
                   {pt}
                 </div>
@@ -694,25 +756,55 @@ export default function LandingPage() {
               <div>
                 <p className="font-semibold text-gray-400 mb-3">Platform</p>
                 <ul className="space-y-2 text-gray-500">
-                  <li><a href="#features" className="hover:text-white transition">Features</a></li>
-                  <li><a href="#modules" className="hover:text-white transition">Modules</a></li>
-                  <li><a href="#how-it-works" className="hover:text-white transition">How It Works</a></li>
+                  <li>
+                    <a href="#features" className="hover:text-white transition">
+                      Features
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#modules" className="hover:text-white transition">
+                      Modules
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#how-it-works" className="hover:text-white transition">
+                      How It Works
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <p className="font-semibold text-gray-400 mb-3">Access</p>
                 <ul className="space-y-2 text-gray-500">
-                  <li><a href="#roles" className="hover:text-white transition">Roles</a></li>
-                  <li><Link href="/login" className="hover:text-white transition">Login</Link></li>
-                  <li><Link href="/login" className="hover:text-white transition">Get Started</Link></li>
+                  <li>
+                    <a href="#roles" className="hover:text-white transition">
+                      Roles
+                    </a>
+                  </li>
+                  <li>
+                    <Link href="/login" className="hover:text-white transition">
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/login" className="hover:text-white transition">
+                      Get Started
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <div>
                 <p className="font-semibold text-gray-400 mb-3">Company</p>
                 <ul className="space-y-2 text-gray-500">
-                  <li><span>About</span></li>
-                  <li><span>Contact</span></li>
-                  <li><span>Privacy</span></li>
+                  <li>
+                    <span>About</span>
+                  </li>
+                  <li>
+                    <span>Contact</span>
+                  </li>
+                  <li>
+                    <span>Privacy</span>
+                  </li>
                 </ul>
               </div>
             </div>

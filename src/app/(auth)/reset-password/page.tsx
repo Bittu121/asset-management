@@ -9,9 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function ResetPassword() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { otpEmail, resetLoading, error } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { otpEmail, resetLoading, error } = useSelector((state: RootState) => state.auth);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -45,26 +43,17 @@ export default function ResetPassword() {
       <div className="hidden md:flex w-1/2 items-center justify-center bg-[#060c2c] p-10">
         <div className="max-w-md w-full bg-linear-to-br from-[#0f172a] to-[#1e293b] rounded-xl p-10 shadow-sm border border-white/5">
           <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
-            <svg
-              width="24"
-              height="24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-            >
+            <svg width="24" height="24" fill="none" stroke="white" strokeWidth="2">
               <rect x="3" y="3" width="18" height="18" rx="3" />
               <path d="M7 7h4M7 11h4M7 15h4" />
               <path d="M13 7l2 2 3-3" />
             </svg>
           </div>
 
-          <h2 className="text-3xl font-semibold text-white leading-tight">
-            Asset Management
-          </h2>
+          <h2 className="text-3xl font-semibold text-white leading-tight">Asset Management</h2>
 
           <p className="mt-4 text-gray-400 text-sm leading-relaxed">
-            Track, manage, and optimize assets with real-time visibility and
-            automation.
+            Track, manage, and optimize assets with real-time visibility and automation.
           </p>
 
           <div className="mt-8 space-y-4">
@@ -80,9 +69,7 @@ export default function ResetPassword() {
 
             <div className="flex gap-3">
               <span className="text-green-400">✔</span>
-              <p className="text-sm text-gray-300">
-                End-to-end lifecycle management
-              </p>
+              <p className="text-sm text-gray-300">End-to-end lifecycle management</p>
             </div>
           </div>
         </div>
@@ -91,9 +78,7 @@ export default function ResetPassword() {
       {/* RIGHT */}
       <div className="flex w-full md:w-1/2 items-center justify-center">
         <div className="w-full max-w-sm px-6">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Reset Password
-          </h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Reset Password</h1>
           <p className="text-sm text-gray-500 mt-1">
             Create a new secure password for your account
           </p>

@@ -3,13 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/auth/store";
-import {
-  FiPackage,
-  FiCheckCircle,
-  FiLink,
-  FiDollarSign,
-  FiSearch,
-} from "react-icons/fi";
+import { FiPackage, FiCheckCircle, FiLink, FiDollarSign, FiSearch } from "react-icons/fi";
 import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
 import Pagination from "../../../components/common/Pagination";
@@ -31,9 +25,7 @@ export default function AssetStatusTab() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const assets = useSelector(
-    (state: RootState) => state.reports.data?.assets,
-  );
+  const assets = useSelector((state: RootState) => state.reports.data?.assets);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -46,22 +38,16 @@ export default function AssetStatusTab() {
   const categories = Array.from(new Set(records.map((a) => a.category))).filter(Boolean);
 
   const filteredAssets = records.filter((asset) => {
-    const matchesCategory =
-      categoryFilter === "ALL" || asset.category === categoryFilter;
-    const matchesStatus =
-      statusFilter === "ALL" || asset.status === statusFilter;
+    const matchesCategory = categoryFilter === "ALL" || asset.category === categoryFilter;
+    const matchesStatus = statusFilter === "ALL" || asset.status === statusFilter;
     const q = search.toLowerCase();
     const matchesSearch =
-      asset.assetTag.toLowerCase().includes(q) ||
-      asset.assetName.toLowerCase().includes(q);
+      asset.assetTag.toLowerCase().includes(q) || asset.assetName.toLowerCase().includes(q);
     return matchesCategory && matchesStatus && matchesSearch;
   });
 
   const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-  const currentPageItems = filteredAssets.slice(
-    startIndex,
-    startIndex + ROWS_PER_PAGE,
-  );
+  const currentPageItems = filteredAssets.slice(startIndex, startIndex + ROWS_PER_PAGE);
   const totalPages = Math.ceil(filteredAssets.length / ROWS_PER_PAGE);
 
   function handleExport() {
@@ -178,10 +164,7 @@ export default function AssetStatusTab() {
             <tbody>
               {filteredAssets.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={6}
-                    className="py-8 text-center text-gray-400 text-sm"
-                  >
+                  <td colSpan={6} className="py-8 text-center text-gray-400 text-sm">
                     No assets found.
                   </td>
                 </tr>
@@ -191,25 +174,15 @@ export default function AssetStatusTab() {
                     key={asset._id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition"
                   >
-                    <td className="py-3 px-4 font-semibold text-indigo-600">
-                      {asset.assetTag}
-                    </td>
-                    <td className="py-3 px-4 text-gray-800">
-                      {asset.assetName || "—"}
-                    </td>
-                    <td className="py-3 px-4 text-gray-500">
-                      {asset.category || "—"}
-                    </td>
+                    <td className="py-3 px-4 font-semibold text-indigo-600">{asset.assetTag}</td>
+                    <td className="py-3 px-4 text-gray-800">{asset.assetName || "—"}</td>
+                    <td className="py-3 px-4 text-gray-500">{asset.category || "—"}</td>
                     <td className="py-3 px-4">
                       <Badge label={asset.status} type={asset.status} />
                     </td>
-                    <td className="py-3 px-4 text-gray-500">
-                      {asset.purchaseDate || "—"}
-                    </td>
+                    <td className="py-3 px-4 text-gray-500">{asset.purchaseDate || "—"}</td>
                     <td className="py-3 px-4 font-medium text-gray-700">
-                      {asset.value > 0
-                        ? `₹${asset.value.toLocaleString()}`
-                        : "—"}
+                      {asset.value > 0 ? `₹${asset.value.toLocaleString()}` : "—"}
                     </td>
                   </tr>
                 ))

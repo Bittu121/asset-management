@@ -69,8 +69,7 @@ export const createSupportGroupAction =
   };
 
 export const updateSupportGroupAction =
-  (id: string, groupData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, groupData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_SUPPORT_GROUP_LOADING });
     try {
       const res = await fetch(`/api/admin/support-groups/${id}`, {
@@ -98,46 +97,41 @@ export const updateSupportGroupAction =
     }
   };
 
-export const deleteSupportGroupAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_SUPPORT_GROUP_LOADING });
-    try {
-      const res = await fetch(`/api/admin/support-groups/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteSupportGroupAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_SUPPORT_GROUP_LOADING });
+  try {
+    const res = await fetch(`/api/admin/support-groups/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: SUPPORT_GROUPS_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete support group");
-        return;
-      }
-
-      dispatch({ type: DELETE_SUPPORT_GROUP_SUCCESS, payload: id });
-      toast.success(data.message || "Support group deleted successfully");
-
-      await dispatch(fetchSupportGroups() as any);
-    } catch (error) {
-      dispatch({ type: SUPPORT_GROUPS_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: SUPPORT_GROUPS_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete support group");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_SUPPORT_GROUP_SUCCESS, payload: id });
+    toast.success(data.message || "Support group deleted successfully");
+
+    await dispatch(fetchSupportGroups() as any);
+  } catch (error) {
+    dispatch({ type: SUPPORT_GROUPS_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};
 
 export const addMemberAction =
-  (groupId: string, userId: string, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (groupId: string, userId: string, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_MEMBER_LOADING });
     try {
-      const res = await fetch(
-        `/api/admin/support-groups/${groupId}/members`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId }),
-          credentials: "include",
-        },
-      );
+      const res = await fetch(`/api/admin/support-groups/${groupId}/members`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (!res.ok) {
@@ -156,17 +150,13 @@ export const addMemberAction =
   };
 
 export const removeMemberAction =
-  (groupId: string, userId: string, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (groupId: string, userId: string, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: REMOVE_MEMBER_LOADING, payload: userId });
     try {
-      const res = await fetch(
-        `/api/admin/support-groups/${groupId}/members/${userId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        },
-      );
+      const res = await fetch(`/api/admin/support-groups/${groupId}/members/${userId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (!res.ok) {

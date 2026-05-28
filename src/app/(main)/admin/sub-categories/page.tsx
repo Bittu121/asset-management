@@ -21,11 +21,10 @@ import { fetchAssetCategories } from "@/store/assetCategories/assetCategoriesAct
 function AssetSubCategories() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { subCategories, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.subCategories);
-  const { assetCategories } = useSelector(
-    (state: RootState) => state.assetCategories,
+  const { subCategories, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.subCategories
   );
+  const { assetCategories } = useSelector((state: RootState) => state.assetCategories);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -52,15 +51,14 @@ function AssetSubCategories() {
       statusFilter === "All" ||
       (statusFilter === "Active" && sc.isActive) ||
       (statusFilter === "Inactive" && !sc.isActive);
-    const matchesCategory =
-      categoryFilter === "" || sc.category?._id === categoryFilter;
+    const matchesCategory = categoryFilter === "" || sc.category?._id === categoryFilter;
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const totalPages = Math.ceil(filteredSubCategories.length / itemsPerPage);
   const paginatedSubCategories = filteredSubCategories.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAdd = (data: any) => {
@@ -75,9 +73,7 @@ function AssetSubCategories() {
   const handleUpdate = (updatedData: any) => {
     if (selectedSubCategory) {
       dispatch(
-        updateSubCategoryAction(selectedSubCategory._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
+        updateSubCategoryAction(selectedSubCategory._id, updatedData, () => setIsUpdateOpen(false))
       );
     }
   };
@@ -92,16 +88,13 @@ function AssetSubCategories() {
     uploadedData.forEach((item) => {
       const categoryName = item.Category || item.category || "";
       const matchedCategory = assetCategories.find(
-        (c) => c.name.toLowerCase() === categoryName.toLowerCase(),
+        (c) => c.name.toLowerCase() === categoryName.toLowerCase()
       );
       const subCategoryData = {
         name: item["Sub Category"] || item.name || "",
         category: matchedCategory?._id || "",
         description: item.Description || item.description || "",
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
       if (subCategoryData.name && subCategoryData.category) {
         dispatch(createSubCategoryAction(subCategoryData));
@@ -124,9 +117,7 @@ function AssetSubCategories() {
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">
-            Asset Sub Categories
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900">Asset Sub Categories</h1>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -241,24 +232,15 @@ function AssetSubCategories() {
               </tr>
             ) : (
               paginatedSubCategories.map((sc: any) => (
-                <tr
-                  key={sc._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={sc._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {sc._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{sc._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {sc.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{sc.name}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {sc.category?.name || "-"}
-                    </div>
+                    <div className="text-sm text-gray-700">{sc.category?.name || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700 max-w-xs truncate">
@@ -268,9 +250,7 @@ function AssetSubCategories() {
                   <td className="px-6 py-5">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        sc.isActive
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-500"
+                        sc.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {sc.isActive ? "Active" : "Inactive"}

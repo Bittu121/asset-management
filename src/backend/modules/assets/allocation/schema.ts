@@ -19,10 +19,15 @@ const allocationSchema = new mongoose.Schema(
     returnNotes: { type: String, default: "" },
     returnDate: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const Allocation =
-  mongoose.models.Allocation || mongoose.model("Allocation", allocationSchema);
+// Prevent double-allocating the same asset: only one ACTIVE record per asset allowed
+allocationSchema.index(
+  { asset: 1 },
+  { unique: true, partialFilterExpression: { status: "ACTIVE" }, name: "unique_active_per_asset" }
+);
+
+const Allocation = mongoose.models.Allocation || mongoose.model("Allocation", allocationSchema);
 
 export default Allocation;

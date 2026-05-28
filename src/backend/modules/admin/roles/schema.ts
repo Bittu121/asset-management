@@ -22,10 +22,9 @@ const roleSchema = new mongoose.Schema<RoleDocument>(
     isActive: { type: Boolean, default: true },
     permissions: [{ type: String }],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const Role =
-  mongoose.models.Role || mongoose.model<RoleDocument>("Role", roleSchema);
+const Role = mongoose.models.Role || mongoose.model<RoleDocument>("Role", roleSchema);
 
 export default Role;

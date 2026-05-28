@@ -31,9 +31,7 @@ export default function TechOverduePage() {
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">Overdue Allocations</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Assets past their expected return date
-        </p>
+        <p className="text-sm text-gray-500 mt-1">Assets past their expected return date</p>
       </div>
       {!loading && list.length > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-3 text-red-700 text-sm">
@@ -48,18 +46,13 @@ export default function TechOverduePage() {
         {loading ? (
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-gray-100 rounded-xl animate-pulse"
-              />
+              <div key={i} className="h-12 bg-gray-100 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : list.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-gray-400">
             <AlertTriangle size={40} className="mb-3 opacity-40" />
-            <p className="text-sm font-medium text-green-600">
-              No overdue allocations!
-            </p>
+            <p className="text-sm font-medium text-green-600">No overdue allocations!</p>
             <p className="text-xs mt-1">All assets are returned on time</p>
           </div>
         ) : (
@@ -91,19 +84,11 @@ export default function TechOverduePage() {
                     key={a._id}
                     className="border-b border-red-50 hover:bg-red-50 transition-colors"
                   >
-                    <td className="py-3 pr-4 font-semibold text-red-600">
-                      {a.assetTag}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-700">
-                      {a.device || "—"}
-                    </td>
+                    <td className="py-3 pr-4 font-semibold text-red-600">{a.assetTag}</td>
+                    <td className="py-3 pr-4 text-gray-700">{a.device || "—"}</td>
                     <td className="py-3 pr-4 text-gray-700">{a.allocatedTo}</td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {a.allocatedToEmail}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {a.department || "—"}
-                    </td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{a.allocatedToEmail}</td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{a.department || "—"}</td>
                     <td className="py-3 pr-4 text-gray-500 text-xs whitespace-nowrap">
                       {a.expectedReturn}
                     </td>

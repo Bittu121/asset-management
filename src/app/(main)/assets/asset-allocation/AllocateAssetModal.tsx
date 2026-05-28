@@ -30,17 +30,11 @@ type Props = {
   }) => void;
 };
 
-export default function AllocateAssetModal({
-  isOpen,
-  onClose,
-  assets,
-  users,
-  onSubmit,
-}: Props) {
+export default function AllocateAssetModal({ isOpen, onClose, assets, users, onSubmit }: Props) {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-  const [selectedUser, setSelectedUser]   = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [expectedReturn, setExpectedReturn] = useState("");
-  const [notes, setNotes]                 = useState("");
+  const [notes, setNotes] = useState("");
 
   if (!isOpen) return null;
 
@@ -51,7 +45,7 @@ export default function AllocateAssetModal({
     if (!isReady) return;
     onSubmit({
       assetId: selectedAsset!._id,
-      userId:  selectedUser!._id,
+      userId: selectedUser!._id,
       expectedReturn,
       notes,
     });
@@ -85,12 +79,7 @@ export default function AllocateAssetModal({
               onChange={(_e, value) => setSelectedAsset(value)}
               noOptionsText="No available assets"
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Select asset"
-                  size="small"
-                  sx={inputStyle}
-                />
+                <TextField {...params} placeholder="Select asset" size="small" sx={inputStyle} />
               )}
             />
           </div>
@@ -105,12 +94,7 @@ export default function AllocateAssetModal({
               value={selectedUser}
               onChange={(_e, value) => setSelectedUser(value)}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Select user"
-                  size="small"
-                  sx={inputStyle}
-                />
+                <TextField {...params} placeholder="Select user" size="small" sx={inputStyle} />
               )}
             />
           </div>
@@ -128,9 +112,7 @@ export default function AllocateAssetModal({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Notes
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Notes</label>
             <textarea
               value={notes}
               placeholder="Any notes about this allocation..."

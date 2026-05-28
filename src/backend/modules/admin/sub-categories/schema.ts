@@ -24,7 +24,7 @@ const subCategorySchema = new mongoose.Schema<SubCategoryDocument>(
     description: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 subCategorySchema.index({ name: 1, category: 1 }, { unique: true });

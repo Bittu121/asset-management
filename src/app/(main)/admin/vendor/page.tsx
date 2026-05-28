@@ -19,8 +19,9 @@ import {
 
 function VendorPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { vendors, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.vendor);
+  const { vendors, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.vendor
+  );
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -47,15 +48,14 @@ function VendorPage() {
       statusFilter === "All" ||
       (statusFilter === "Active" && v.isActive) ||
       (statusFilter === "Inactive" && !v.isActive);
-    const matchesVendor =
-      vendorFilter === "" || v._id === vendorFilter;
+    const matchesVendor = vendorFilter === "" || v._id === vendorFilter;
     return matchesSearch && matchesStatus && matchesVendor;
   });
 
   const totalPages = Math.ceil(filteredVendors.length / itemsPerPage);
   const paginatedVendors = filteredVendors.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAdd = (data: any) => {
@@ -69,11 +69,7 @@ function VendorPage() {
 
   const handleUpdate = (updatedData: any) => {
     if (selectedVendor) {
-      dispatch(
-        updateVendorAction(selectedVendor._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
-      );
+      dispatch(updateVendorAction(selectedVendor._id, updatedData, () => setIsUpdateOpen(false)));
     }
   };
 
@@ -92,10 +88,7 @@ function VendorPage() {
         address: item.Address || item.address || "",
         gstNumber: item["GST Number"] || item.gstNumber || "",
         contractExpiry: item["Contract Expiry"] || item.contractExpiry || "",
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
       if (vendorData.vendorName && vendorData.email && vendorData.phone) {
         dispatch(createVendorAction(vendorData));
@@ -226,12 +219,8 @@ function VendorPage() {
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
                       <FiBriefcase size={18} />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Vendors Found
-                    </h3>
-                    <p className="text-xs text-gray-500">
-                      You haven't added any vendors yet.
-                    </p>
+                    <h3 className="text-sm font-semibold text-gray-700">No Vendors Found</h3>
+                    <p className="text-xs text-gray-500">You haven't added any vendors yet.</p>
                     <button
                       onClick={() => setIsAddOpen(true)}
                       className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
@@ -243,37 +232,20 @@ function VendorPage() {
               </tr>
             ) : (
               paginatedVendors.map((v) => (
-                <tr
-                  key={v._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
-                  <td className="px-6 py-5 text-sm font-medium text-gray-900">
-                    {v._id.slice(-6)}
-                  </td>
-                  <td className="px-6 py-5 text-sm font-medium text-gray-900">
-                    {v.vendorName}
-                  </td>
-                  <td className="px-6 py-5 text-sm text-gray-700">
-                    {v.email}
-                  </td>
-                  <td className="px-6 py-5 text-sm text-gray-700">
-                    {v.phone}
-                  </td>
+                <tr key={v._id} className="hover:bg-gray-50 transition-all duration-150">
+                  <td className="px-6 py-5 text-sm font-medium text-gray-900">{v._id.slice(-6)}</td>
+                  <td className="px-6 py-5 text-sm font-medium text-gray-900">{v.vendorName}</td>
+                  <td className="px-6 py-5 text-sm text-gray-700">{v.email}</td>
+                  <td className="px-6 py-5 text-sm text-gray-700">{v.phone}</td>
                   <td className="px-6 py-5 text-sm text-gray-700 max-w-45 truncate">
                     {v.address || "-"}
                   </td>
-                  <td className="px-6 py-5 text-sm text-gray-700">
-                    {v.gstNumber || "-"}
-                  </td>
-                  <td className="px-6 py-5 text-sm text-gray-700">
-                    {v.contractExpiry || "-"}
-                  </td>
+                  <td className="px-6 py-5 text-sm text-gray-700">{v.gstNumber || "-"}</td>
+                  <td className="px-6 py-5 text-sm text-gray-700">{v.contractExpiry || "-"}</td>
                   <td className="px-6 py-5">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        v.isActive
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-500"
+                        v.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {v.isActive ? "Active" : "Inactive"}

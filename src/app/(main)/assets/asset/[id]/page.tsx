@@ -2,16 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  Cpu,
-  DollarSign,
-  Package,
-  Tag,
-  Calendar,
-  Monitor,
-  Wifi,
-} from "lucide-react";
+import { ArrowLeft, Cpu, DollarSign, Package, Tag, Calendar, Monitor, Wifi } from "lucide-react";
 
 type Asset = {
   _id: string;
@@ -48,9 +39,7 @@ function InfoRow({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="flex justify-between items-start py-2.5 border-b border-gray-50 last:border-0">
       <span className="text-xs text-gray-400 w-36 shrink-0">{label}</span>
-      <span className="text-xs text-gray-800 font-medium text-right break-all">
-        {value}
-      </span>
+      <span className="text-xs text-gray-800 font-medium text-right break-all">{value}</span>
     </div>
   );
 }
@@ -122,9 +111,7 @@ export default function AssetDetailsPage() {
           <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
             <Package size={24} className="text-red-400" />
           </div>
-          <h2 className="text-base font-semibold text-gray-800">
-            Asset Not Found
-          </h2>
+          <h2 className="text-base font-semibold text-gray-800">Asset Not Found</h2>
           <p className="text-sm text-gray-400 mt-1">
             {error || "This asset does not exist or has been removed."}
           </p>
@@ -139,8 +126,7 @@ export default function AssetDetailsPage() {
     );
   }
 
-  const fmt = (v?: string) =>
-    v ? `₹${Number(v).toLocaleString("en-IN")}` : "—";
+  const fmt = (v?: string) => (v ? `₹${Number(v).toLocaleString("en-IN")}` : "—");
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-10">
@@ -159,9 +145,7 @@ export default function AssetDetailsPage() {
           </div>
           <span
             className={`ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-              asset.isActive
-                ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-500"
+              asset.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
             }`}
           >
             <span
@@ -175,7 +159,6 @@ export default function AssetDetailsPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pt-5 space-y-4">
-
         {/* ── HERO CARD ───────────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="h-1.5 bg-indigo-600" />
@@ -185,9 +168,7 @@ export default function AssetDetailsPage() {
                 <p className="text-2xl font-extrabold text-gray-900 tracking-wide">
                   {asset.assetTag}
                 </p>
-                <p className="text-sm text-gray-500 mt-0.5">
-                  {asset.device || asset.model || "—"}
-                </p>
+                <p className="text-sm text-gray-500 mt-0.5">{asset.device || asset.model || "—"}</p>
               </div>
 
               <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
@@ -220,9 +201,7 @@ export default function AssetDetailsPage() {
             </div>
 
             {asset.description && (
-              <p className="mt-3 text-xs text-gray-400 leading-relaxed">
-                {asset.description}
-              </p>
+              <p className="mt-3 text-xs text-gray-400 leading-relaxed">{asset.description}</p>
             )}
           </div>
         </div>

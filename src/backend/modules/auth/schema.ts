@@ -17,11 +17,10 @@ const authUserSchema = new mongoose.Schema<AuthUserDocument>(
     otpExpiry: { type: Date, default: null },
     isVerified: { type: Boolean, default: false },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const AuthUser =
-  mongoose.models.AuthUser ||
-  mongoose.model<AuthUserDocument>("AuthUser", authUserSchema);
+  mongoose.models.AuthUser || mongoose.model<AuthUserDocument>("AuthUser", authUserSchema);
 
 export default AuthUser;

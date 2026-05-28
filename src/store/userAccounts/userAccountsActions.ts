@@ -65,8 +65,7 @@ export const createUserAccountAction =
   };
 
 export const updateUserAccountAction =
-  (id: string, userData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, userData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_USER_LOADING });
     try {
       const res = await fetch(`/api/admin/user-account/${id}`, {
@@ -94,31 +93,30 @@ export const updateUserAccountAction =
     }
   };
 
-export const deleteUserAccountAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_USER_LOADING });
-    try {
-      const res = await fetch(`/api/admin/user-account/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteUserAccountAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_USER_LOADING });
+  try {
+    const res = await fetch(`/api/admin/user-account/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: USERS_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete user");
-        return;
-      }
-
-      dispatch({ type: DELETE_USER_SUCCESS, payload: id });
-      toast.success(data.message || "User deleted successfully");
-
-      await dispatch(fetchUserAccounts() as any);
-    } catch (error) {
-      dispatch({ type: USERS_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: USERS_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete user");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_USER_SUCCESS, payload: id });
+    toast.success(data.message || "User deleted successfully");
+
+    await dispatch(fetchUserAccounts() as any);
+  } catch (error) {
+    dispatch({ type: USERS_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};
 
 export const setSelectedUser = (user: any) => (dispatch: Dispatch) => {
   dispatch({ type: SET_SELECTED_USER, payload: user });

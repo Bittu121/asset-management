@@ -33,12 +33,8 @@ function UpdateSupportGroup({
       <div className="bg-white w-full max-w-lg rounded-lg shadow-2xl overflow-hidden">
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Update Support Group
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Update support group details
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Update Support Group</h2>
+            <p className="text-gray-500 text-sm mt-1">Update support group details</p>
           </div>
 
           <button
@@ -75,9 +71,7 @@ function UpdateSupportGroup({
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Level
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Level</label>
 
               <Autocomplete
                 options={levels || []}
@@ -88,26 +82,18 @@ function UpdateSupportGroup({
                 }
                 disabled={loading}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    size="small"
-                    placeholder="Select Level"
-                  />
+                  <TextField {...params} size="small" placeholder="Select Level" />
                 )}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Manager
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Manager</label>
 
               <Autocomplete
                 options={managers || []}
                 getOptionLabel={(option: any) => option?.name || ""}
-                isOptionEqualToValue={(option: any, value: any) =>
-                  option._id === value._id
-                }
+                isOptionEqualToValue={(option: any, value: any) => option._id === value._id}
                 value={managers.find((m: any) => m._id === form.manager) || null}
                 onChange={(_e, value: any) =>
                   setForm((prev: any) => ({
@@ -117,19 +103,13 @@ function UpdateSupportGroup({
                 }
                 disabled={loading}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    size="small"
-                    placeholder="Select Manager"
-                  />
+                  <TextField {...params} size="small" placeholder="Select Manager" />
                 )}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Max Tickets
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Max Tickets</label>
               <input
                 type="number"
                 value={form.maxTickets || ""}
@@ -156,9 +136,7 @@ function UpdateSupportGroup({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Description
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Description</label>
             <textarea
               value={form.description || ""}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -170,9 +148,7 @@ function UpdateSupportGroup({
           </div>
 
           <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50">
-            <span className="text-sm font-semibold text-gray-500">
-              Active Status
-            </span>
+            <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
             <button
               onClick={() =>

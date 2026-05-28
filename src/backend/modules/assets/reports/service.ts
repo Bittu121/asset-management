@@ -13,9 +13,7 @@ const ALLOCATION_POPULATE = [
   { path: "allocatedTo", select: "name email" },
 ];
 
-const GATE_PASS_POPULATE = [
-  { path: "asset", select: "assetTag device model manufacturer" },
-];
+const GATE_PASS_POPULATE = [{ path: "asset", select: "assetTag device model manufacturer" }];
 
 export async function getReportData(): Promise<ReportData> {
   const today = new Date().toISOString().split("T")[0];
@@ -61,9 +59,10 @@ export async function getReportData(): Promise<ReportData> {
     const name = (asset.category as any)?.name ?? "Unknown";
     categoryMap[name] = (categoryMap[name] ?? 0) + 1;
   }
-  const categoryBreakdown = Object.entries(categoryMap).map(
-    ([category, count]) => ({ category, count }),
-  );
+  const categoryBreakdown = Object.entries(categoryMap).map(([category, count]) => ({
+    category,
+    count,
+  }));
 
   // Build audit trail from allocations + gate passes
   const auditEntries: (AuditEntry & { sortKey: string })[] = [];
@@ -71,12 +70,9 @@ export async function getReportData(): Promise<ReportData> {
   for (const alloc of allocations) {
     const assetTag = (alloc.asset as any)?.assetTag ?? "Unknown";
     const userName =
-      (alloc.allocatedTo as any)?.name ??
-      (alloc.allocatedTo as any)?.email ??
-      "Unknown";
+      (alloc.allocatedTo as any)?.name ?? (alloc.allocatedTo as any)?.email ?? "Unknown";
     const userEmail = (alloc.allocatedTo as any)?.email ?? "Unknown";
-    const allocDate =
-      alloc.allocationDate ?? String(alloc.createdAt).split("T")[0];
+    const allocDate = alloc.allocationDate ?? String(alloc.createdAt).split("T")[0];
 
     auditEntries.push({
       action: "Asset Allocated",
@@ -159,43 +155,28 @@ export async function getReportData(): Promise<ReportData> {
   }
 
   auditEntries.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
-  const fullAuditTrail: AuditEntry[] = auditEntries.map(
-    ({ sortKey: _s, ...rest }) => rest,
-  );
+  const fullAuditTrail: AuditEntry[] = auditEntries.map(({ sortKey: _s, ...rest }) => rest);
 
   // Allocation records (compute OVERDUE from ACTIVE + past expectedReturn)
   const allocationRecords = allocations.map((alloc) => {
-    const isOverdue =
-      alloc.status === "ACTIVE" && alloc.expectedReturn < today;
+    const isOverdue = alloc.status === "ACTIVE" && alloc.expectedReturn < today;
     return {
       _id: String(alloc._id),
       assetTag: (alloc.asset as any)?.assetTag ?? "",
       assetName:
         `${(alloc.asset as any)?.manufacturer ?? ""} ${(alloc.asset as any)?.model ?? (alloc.asset as any)?.device ?? ""}`.trim(),
-      allocatedTo:
-        (alloc.allocatedTo as any)?.name ??
-        (alloc.allocatedTo as any)?.email ??
-        "",
+      allocatedTo: (alloc.allocatedTo as any)?.name ?? (alloc.allocatedTo as any)?.email ?? "",
       allocatedToEmail: (alloc.allocatedTo as any)?.email ?? "",
       allocationDate: alloc.allocationDate ?? "",
       expectedReturn: alloc.expectedReturn ?? "",
-      status: (isOverdue ? "OVERDUE" : alloc.status) as
-        | "ACTIVE"
-        | "OVERDUE"
-        | "RETURNED",
+      status: (isOverdue ? "OVERDUE" : alloc.status) as "ACTIVE" | "OVERDUE" | "RETURNED",
       returnDate: alloc.returnDate ?? "",
     };
   });
 
-  const activeCount = allocationRecords.filter(
-    (a) => a.status === "ACTIVE",
-  ).length;
-  const overdueCount = allocationRecords.filter(
-    (a) => a.status === "OVERDUE",
-  ).length;
-  const returnedCount = allocationRecords.filter(
-    (a) => a.status === "RETURNED",
-  ).length;
+  const activeCount = allocationRecords.filter((a) => a.status === "ACTIVE").length;
+  const overdueCount = allocationRecords.filter((a) => a.status === "OVERDUE").length;
+  const returnedCount = allocationRecords.filter((a) => a.status === "RETURNED").length;
 
   const userMap: Record<
     string,
@@ -203,8 +184,7 @@ export async function getReportData(): Promise<ReportData> {
   > = {};
   for (const alloc of allocationRecords) {
     const user = alloc.allocatedTo;
-    if (!userMap[user])
-      userMap[user] = { active: 0, overdue: 0, returned: 0, total: 0 };
+    if (!userMap[user]) userMap[user] = { active: 0, overdue: 0, returned: 0, total: 0 };
     userMap[user].total++;
     if (alloc.status === "ACTIVE") userMap[user].active++;
     else if (alloc.status === "OVERDUE") userMap[user].overdue++;
@@ -229,12 +209,7 @@ export async function getReportData(): Promise<ReportData> {
     expectedReturn: gp.expectedReturn ?? "",
     carrierName: gp.carrierName ?? "",
     requestedBy: gp.requestedBy ?? "",
-    status: gp.status as
-      | "PENDING"
-      | "APPROVED"
-      | "ISSUED"
-      | "RETURNED"
-      | "REJECTED",
+    status: gp.status as "PENDING" | "APPROVED" | "ISSUED" | "RETURNED" | "REJECTED",
     date: String(gp.createdAt).split("T")[0],
     createdAt: String(gp.createdAt),
   }));
@@ -247,12 +222,11 @@ export async function getReportData(): Promise<ReportData> {
   const assetRecords = assets.map((asset) => ({
     _id: String(asset._id),
     assetTag: asset.assetTag,
-    assetName:
-      `${asset.manufacturer ?? ""} ${asset.model ?? asset.device ?? ""}`.trim(),
+    assetName: `${asset.manufacturer ?? ""} ${asset.model ?? asset.device ?? ""}`.trim(),
     category: (asset.category as any)?.name ?? "",
-    status: (
-      allocatedAssetIds.has(String(asset._id)) ? "ALLOCATED" : "AVAILABLE"
-    ) as "ALLOCATED" | "AVAILABLE",
+    status: (allocatedAssetIds.has(String(asset._id)) ? "ALLOCATED" : "AVAILABLE") as
+      | "ALLOCATED"
+      | "AVAILABLE",
     purchaseDate: asset.purchaseDate ?? "",
     value: parseFloat(asset.purchaseCost || asset.currentValue || "0") || 0,
     isActive: asset.isActive,

@@ -11,10 +11,7 @@ export const getAllSubLocations = async () => {
 
 // Get single sub location
 export const getSubLocationById = async (id: string) => {
-  const subLocation = await SubLocation.findById(id).populate(
-    "locationId",
-    "locationName city",
-  );
+  const subLocation = await SubLocation.findById(id).populate("locationId", "locationName city");
   return subLocation;
 };
 
@@ -25,10 +22,7 @@ export const createSubLocation = async (data: CreateSubLocationDto) => {
 };
 
 // Update sub location
-export const updateSubLocation = async (
-  id: string,
-  data: UpdateSubLocationDto,
-) => {
+export const updateSubLocation = async (id: string, data: UpdateSubLocationDto) => {
   const subLocation = await SubLocation.findByIdAndUpdate(id, data, {
     new: true,
   });

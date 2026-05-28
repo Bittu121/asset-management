@@ -57,9 +57,7 @@ const vendorReducer = (state = initialState, action: Action): VendorState => {
       return {
         ...state,
         updateLoading: false,
-        vendors: state.vendors.map((v) =>
-          v._id === action.payload._id ? action.payload : v,
-        ),
+        vendors: state.vendors.map((v) => (v._id === action.payload._id ? action.payload : v)),
       };
 
     case DELETE_VENDOR_LOADING:

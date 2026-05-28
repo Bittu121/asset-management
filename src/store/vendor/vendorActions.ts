@@ -63,8 +63,7 @@ export const createVendorAction =
   };
 
 export const updateVendorAction =
-  (id: string, vendorData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, vendorData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_VENDOR_LOADING });
     try {
       const res = await fetch(`/api/admin/vendor/${id}`, {
@@ -92,28 +91,27 @@ export const updateVendorAction =
     }
   };
 
-export const deleteVendorAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_VENDOR_LOADING });
-    try {
-      const res = await fetch(`/api/admin/vendor/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteVendorAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_VENDOR_LOADING });
+  try {
+    const res = await fetch(`/api/admin/vendor/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: VENDORS_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete vendor");
-        return;
-      }
-
-      dispatch({ type: DELETE_VENDOR_SUCCESS, payload: id });
-      toast.success(data.message || "Vendor deleted successfully");
-
-      await dispatch(fetchVendors() as any);
-    } catch {
-      dispatch({ type: VENDORS_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: VENDORS_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete vendor");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_VENDOR_SUCCESS, payload: id });
+    toast.success(data.message || "Vendor deleted successfully");
+
+    await dispatch(fetchVendors() as any);
+  } catch {
+    dispatch({ type: VENDORS_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};

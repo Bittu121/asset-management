@@ -36,7 +36,7 @@ const supportGroupSchema = new mongoose.Schema<SupportGroupDocument>(
     description: { type: String, default: "", trim: true },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const SupportGroup =

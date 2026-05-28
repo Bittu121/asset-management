@@ -28,8 +28,7 @@ const normalizeUser = (user: any): AuthUser => {
 };
 
 export const loginAction =
-  (email: string, password: string, router: any) =>
-  async (dispatch: Dispatch) => {
+  (email: string, password: string, router: any) => async (dispatch: Dispatch) => {
     dispatch({ type: AUTH_LOADING });
 
     try {
@@ -131,47 +130,46 @@ export const logoutAction = (router: any) => async (dispatch: Dispatch) => {
   }
 };
 
-export const forgotPasswordAction =
-  (email: string, router: any) => async (dispatch: Dispatch) => {
-    dispatch({ type: FORGOT_LOADING });
+export const forgotPasswordAction = (email: string, router: any) => async (dispatch: Dispatch) => {
+  dispatch({ type: FORGOT_LOADING });
 
-    try {
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+  try {
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({
-          type: AUTH_ERROR,
-          payload: data.message || "Email not found",
-        });
-        toast.error(data.message || "Email not found");
-        return;
-      }
-
-      dispatch({
-        type: SET_OTP_EMAIL,
-        payload: email,
-      });
-
-      dispatch({ type: FORGOT_SUCCESS });
-
-      toast.success(data.message || "OTP sent to your email");
-      router.push("/verify-otp");
-    } catch (error) {
+    if (!res.ok) {
       dispatch({
         type: AUTH_ERROR,
-        payload: "Something went wrong",
+        payload: data.message || "Email not found",
       });
-      toast.error("Something went wrong");
+      toast.error(data.message || "Email not found");
+      return;
     }
-  };
+
+    dispatch({
+      type: SET_OTP_EMAIL,
+      payload: email,
+    });
+
+    dispatch({ type: FORGOT_SUCCESS });
+
+    toast.success(data.message || "OTP sent to your email");
+    router.push("/verify-otp");
+  } catch (error) {
+    dispatch({
+      type: AUTH_ERROR,
+      payload: "Something went wrong",
+    });
+    toast.error("Something went wrong");
+  }
+};
 
 export const verifyOtpAction =
   (email: string, otp: string, router: any) => async (dispatch: Dispatch) => {
@@ -211,8 +209,7 @@ export const verifyOtpAction =
   };
 
 export const resetPasswordAction =
-  (email: string, password: string, router: any) =>
-  async (dispatch: Dispatch) => {
+  (email: string, password: string, router: any) => async (dispatch: Dispatch) => {
     dispatch({ type: RESET_LOADING });
 
     try {
@@ -248,29 +245,28 @@ export const resetPasswordAction =
     }
   };
 
-export const resendOtpAction =
-  (email: string) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+export const resendOtpAction = (email: string) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to resend OTP");
-        return;
-      }
-
-      toast.success("OTP resent successfully");
-    } catch (error) {
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to resend OTP");
+      return;
     }
-  };
+
+    toast.success("OTP resent successfully");
+  } catch (error) {
+    toast.error("Something went wrong");
+  }
+};
 
 export const clearError = () => (dispatch: Dispatch) => {
   dispatch({ type: CLEAR_ERROR });

@@ -34,31 +34,30 @@ export const getDepartmentsAction = () => async (dispatch: Dispatch) => {
 };
 
 // Create department
-export const createDepartmentAction =
-  (departmentData: any) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch("/api/admin/department", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(departmentData),
-      });
+export const createDepartmentAction = (departmentData: any) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch("/api/admin/department", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(departmentData),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to create department");
-        return false;
-      }
-
-      dispatch({ type: CREATE_DEPARTMENT_SUCCESS, payload: data.data });
-      toast.success(data.message || "Department created successfully");
-      return true;
-    } catch (error) {
-      toast.error("Failed to create department");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to create department");
       return false;
     }
-  };
+
+    dispatch({ type: CREATE_DEPARTMENT_SUCCESS, payload: data.data });
+    toast.success(data.message || "Department created successfully");
+    return true;
+  } catch (error) {
+    toast.error("Failed to create department");
+    return false;
+  }
+};
 
 // Update department
 export const updateDepartmentAction =
@@ -88,24 +87,23 @@ export const updateDepartmentAction =
   };
 
 // Delete department
-export const deleteDepartmentAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch(`/api/admin/department/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+export const deleteDepartmentAction = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch(`/api/admin/department/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to delete department");
-        return;
-      }
-
-      dispatch({ type: DELETE_DEPARTMENT_SUCCESS, payload: id });
-      toast.success(data.message || "Department deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete department");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to delete department");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_DEPARTMENT_SUCCESS, payload: id });
+    toast.success(data.message || "Department deleted successfully");
+  } catch (error) {
+    toast.error("Failed to delete department");
+  }
+};

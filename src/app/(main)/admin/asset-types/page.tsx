@@ -22,14 +22,11 @@ import { fetchSubCategories } from "@/store/subCategories/subCategoriesActions";
 function AssetTypes() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { assetTypes, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.assetTypes);
-  const { assetCategories } = useSelector(
-    (state: RootState) => state.assetCategories,
+  const { assetTypes, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.assetTypes
   );
-  const { subCategories } = useSelector(
-    (state: RootState) => state.subCategories,
-  );
+  const { assetCategories } = useSelector((state: RootState) => state.assetCategories);
+  const { subCategories } = useSelector((state: RootState) => state.subCategories);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -57,15 +54,14 @@ function AssetTypes() {
       statusFilter === "All" ||
       (statusFilter === "Active" && at.isActive) ||
       (statusFilter === "Inactive" && !at.isActive);
-    const matchesCategory =
-      categoryFilter === "" || at.category?._id === categoryFilter;
+    const matchesCategory = categoryFilter === "" || at.category?._id === categoryFilter;
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const totalPages = Math.ceil(filteredAssetTypes.length / itemsPerPage);
   const paginatedAssetTypes = filteredAssetTypes.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAdd = (data: any) => {
@@ -80,9 +76,7 @@ function AssetTypes() {
   const handleUpdate = (updatedData: any) => {
     if (selectedAssetType) {
       dispatch(
-        updateAssetTypeAction(selectedAssetType._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
+        updateAssetTypeAction(selectedAssetType._id, updatedData, () => setIsUpdateOpen(false))
       );
     }
   };
@@ -99,12 +93,12 @@ function AssetTypes() {
       const subCategoryName = item["Sub Category"] || item.subCategory || "";
 
       const matchedCategory = assetCategories.find(
-        (c) => c.name.toLowerCase() === categoryName.toLowerCase(),
+        (c) => c.name.toLowerCase() === categoryName.toLowerCase()
       );
       const matchedSubCategory = subCategories.find(
         (s) =>
           s.name.toLowerCase() === subCategoryName.toLowerCase() &&
-          s.category?._id === matchedCategory?._id,
+          s.category?._id === matchedCategory?._id
       );
 
       const assetTypeData = {
@@ -112,10 +106,7 @@ function AssetTypes() {
         category: matchedCategory?._id || "",
         subCategory: matchedSubCategory?._id || null,
         description: item.Description || item.description || "",
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
 
       if (assetTypeData.name && assetTypeData.category) {
@@ -240,12 +231,8 @@ function AssetTypes() {
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
                       <FiSettings size={18} />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Asset Types Found
-                    </h3>
-                    <p className="text-xs text-gray-500">
-                      You haven't added any asset types yet.
-                    </p>
+                    <h3 className="text-sm font-semibold text-gray-700">No Asset Types Found</h3>
+                    <p className="text-xs text-gray-500">You haven't added any asset types yet.</p>
                     <button
                       onClick={() => setIsAddOpen(true)}
                       className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
@@ -257,29 +244,18 @@ function AssetTypes() {
               </tr>
             ) : (
               paginatedAssetTypes.map((at: any) => (
-                <tr
-                  key={at._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={at._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {at._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{at._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {at.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{at.name}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {at.category?.name || "-"}
-                    </div>
+                    <div className="text-sm text-gray-700">{at.category?.name || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {at.subCategory?.name || "-"}
-                    </div>
+                    <div className="text-sm text-gray-700">{at.subCategory?.name || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700 max-w-xs truncate">
@@ -289,9 +265,7 @@ function AssetTypes() {
                   <td className="px-6 py-5">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        at.isActive
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-500"
+                        at.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {at.isActive ? "Active" : "Inactive"}

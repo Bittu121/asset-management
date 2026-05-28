@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "../../../backend/config/db";
-import {
-  getAssets,
-  createAsset,
-} from "../../../backend/modules/assets/controller";
+import { getAssets, createAsset } from "../../../backend/modules/assets/controller";
 import { handleError } from "../../../backend/middleware/error";
 
 export const GET = async (req: NextRequest) => {

@@ -22,7 +22,7 @@ const groupMemberSchema = new mongoose.Schema<GroupMemberDocument>(
     joinedAt: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 groupMemberSchema.index({ supportGroup: 1, user: 1 }, { unique: true });

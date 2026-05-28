@@ -9,7 +9,7 @@ import { handleError } from "../../../../backend/middleware/error";
 
 type Params = { params: Promise<{ id: string }> };
 
-// GET /api/gate-passes/:id 
+// GET /api/gate-passes/:id
 export async function GET(req: NextRequest, { params }: Params) {
   await connectDB();
   try {

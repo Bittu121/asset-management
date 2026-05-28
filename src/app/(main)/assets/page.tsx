@@ -53,9 +53,7 @@ function StatCard({ card }: { card: StatCard }) {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-gray-500 font-medium mb-1">{card.title}</p>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            {card.value}
-          </h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">{card.value}</h3>
           {card.trend && (
             <div
               className={`inline-flex items-center text-xs font-medium ${
@@ -76,17 +74,10 @@ function StatCard({ card }: { card: StatCard }) {
 }
 
 // Component: Quick Action Button
-function QuickActionBtn({
-  action,
-  onClick,
-}: {
-  action: QuickAction;
-  onClick: () => void;
-}) {
+function QuickActionBtn({ action, onClick }: { action: QuickAction; onClick: () => void }) {
   const variants = {
     primary: "bg-slate-700 hover:bg-slate-800 text-white border-slate-700",
-    secondary:
-      "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200",
+    secondary: "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200",
     tertiary: "bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200",
     outline: "bg-white hover:bg-gray-50 text-gray-700 border-gray-300",
   };
@@ -102,13 +93,7 @@ function QuickActionBtn({
 }
 
 // Component: Progress Bar
-function ProgressBar({
-  percentage,
-  color,
-}: {
-  percentage: number;
-  color: string;
-}) {
+function ProgressBar({ percentage, color }: { percentage: number; color: string }) {
   return (
     <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
       <div
@@ -124,9 +109,7 @@ function StatusBreakdown({ items }: { items: StatusItem[] }) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-semibold text-gray-700">
-          Status Breakdown
-        </h3>
+        <h3 className="text-base font-semibold text-gray-700">Status Breakdown</h3>
         <ChartBarIcon className="w-5 h-5 text-gray-400" />
       </div>
 
@@ -136,13 +119,9 @@ function StatusBreakdown({ items }: { items: StatusItem[] }) {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className={`w-3 h-3 rounded-full ${item.color}`} />
-                <span className="text-sm text-gray-700 font-medium">
-                  {item.label}
-                </span>
+                <span className="text-sm text-gray-700 font-medium">{item.label}</span>
               </div>
-              <span className="text-sm font-semibold text-gray-900">
-                {item.value}
-              </span>
+              <span className="text-sm font-semibold text-gray-900">{item.value}</span>
             </div>
             <ProgressBar percentage={item.percentage} color={item.color} />
           </div>
@@ -157,9 +136,7 @@ function WarrantyStatus({ items }: { items: WarrantyItem[] }) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-semibold text-gray-700">
-          Warranty Status
-        </h3>
+        <h3 className="text-base font-semibold text-gray-700">Warranty Status</h3>
         <ClockIcon className="w-5 h-5 text-gray-400" />
       </div>
 
@@ -170,9 +147,7 @@ function WarrantyStatus({ items }: { items: WarrantyItem[] }) {
             className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
           >
             <span className="text-sm text-gray-700">{item.label}</span>
-            <span
-              className={`px-3 py-1 text-xs font-semibold rounded-full ${item.badgeColor}`}
-            >
+            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${item.badgeColor}`}>
               {item.value}
             </span>
           </div>
@@ -183,15 +158,7 @@ function WarrantyStatus({ items }: { items: WarrantyItem[] }) {
 }
 
 // Component: Category Distribution Card
-function CategoryCard({
-  title,
-  count,
-  icon: Icon,
-}: {
-  title: string;
-  count: number;
-  icon: any;
-}) {
+function CategoryCard({ title, count, icon: Icon }: { title: string; count: number; icon: any }) {
   const total = 16;
   const percentage = (count / total) * 100;
 
@@ -208,9 +175,7 @@ function CategoryCard({
           <span className="text-xl font-semibold text-gray-700">{count}</span>
         </div>
         <ProgressBar percentage={percentage} color="bg-slate-600" />
-        <p className="text-xs text-gray-500 text-right">
-          {percentage.toFixed(0)}% of total assets
-        </p>
+        <p className="text-xs text-gray-500 text-right">{percentage.toFixed(0)}% of total assets</p>
       </div>
     </div>
   );
@@ -220,9 +185,7 @@ function CategoryCard({
 function ValueOverview() {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="text-base font-semibold text-gray-900 mb-5">
-        Asset Value Overview
-      </h3>
+      <h3 className="text-base font-semibold text-gray-900 mb-5">Asset Value Overview</h3>
 
       <div className="grid grid-cols-2 gap-6 mb-5">
         <div>
@@ -252,9 +215,7 @@ function ValueOverview() {
 function AssignmentOverview() {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="text-base font-semibold text-gray-900 mb-5">
-        Assignment Overview
-      </h3>
+      <h3 className="text-base font-semibold text-gray-900 mb-5">Assignment Overview</h3>
 
       <div className="grid grid-cols-2 gap-6 mb-5">
         <div>
@@ -277,9 +238,7 @@ function AssignmentOverview() {
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-medium text-gray-600">
-              Unassigned
-            </span>
+            <span className="text-xs font-medium text-gray-600">Unassigned</span>
             <span className="text-xs font-semibold text-gray-600">50%</span>
           </div>
           <ProgressBar percentage={50} color="bg-gray-400" />
@@ -398,9 +357,7 @@ function Dashboard() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-700">
-              Asset Management Dashboard
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-700">Asset Management Dashboard</h2>
           </div>
 
           <div className="flex flex-wrap gap-3">

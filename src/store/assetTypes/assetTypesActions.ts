@@ -36,8 +36,7 @@ export const fetchAssetTypes = () => async (dispatch: Dispatch) => {
 };
 
 export const createAssetTypeAction =
-  (assetTypeData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (assetTypeData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: CREATE_ASSET_TYPE_LOADING });
     try {
       const res = await fetch("/api/admin/asset-types", {
@@ -66,8 +65,7 @@ export const createAssetTypeAction =
   };
 
 export const updateAssetTypeAction =
-  (id: string, assetTypeData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, assetTypeData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_ASSET_TYPE_LOADING });
     try {
       const res = await fetch(`/api/admin/asset-types/${id}`, {
@@ -95,36 +93,34 @@ export const updateAssetTypeAction =
     }
   };
 
-export const deleteAssetTypeAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_ASSET_TYPE_LOADING });
-    try {
-      const res = await fetch(`/api/admin/asset-types/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteAssetTypeAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_ASSET_TYPE_LOADING });
+  try {
+    const res = await fetch(`/api/admin/asset-types/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: ASSET_TYPES_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete asset type");
-        return;
-      }
-
-      dispatch({ type: DELETE_ASSET_TYPE_SUCCESS, payload: id });
-      toast.success(data.message || "Asset type deleted successfully");
-
-      await dispatch(fetchAssetTypes() as any);
-    } catch {
-      dispatch({ type: ASSET_TYPES_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: ASSET_TYPES_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete asset type");
+      return;
     }
-  };
 
-export const setSelectedAssetType =
-  (assetType: any) => (dispatch: Dispatch) => {
-    dispatch({ type: SET_SELECTED_ASSET_TYPE, payload: assetType });
-  };
+    dispatch({ type: DELETE_ASSET_TYPE_SUCCESS, payload: id });
+    toast.success(data.message || "Asset type deleted successfully");
+
+    await dispatch(fetchAssetTypes() as any);
+  } catch {
+    dispatch({ type: ASSET_TYPES_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};
+
+export const setSelectedAssetType = (assetType: any) => (dispatch: Dispatch) => {
+  dispatch({ type: SET_SELECTED_ASSET_TYPE, payload: assetType });
+};
 
 export const clearAssetTypesError = () => (dispatch: Dispatch) => {
   dispatch({ type: CLEAR_ASSET_TYPES_ERROR });

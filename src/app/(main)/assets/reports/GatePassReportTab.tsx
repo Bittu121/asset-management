@@ -18,12 +18,7 @@ import { StatCard, SectionHeader, Badge } from "./SharedComponents";
 import { exportToCSV } from "./exportToCSV";
 import Pagination from "../../../components/common/Pagination";
 
-type GatePassStatus =
-  | "PENDING"
-  | "APPROVED"
-  | "ISSUED"
-  | "RETURNED"
-  | "REJECTED";
+type GatePassStatus = "PENDING" | "APPROVED" | "ISSUED" | "RETURNED" | "REJECTED";
 
 const ROWS_PER_PAGE = 4;
 
@@ -43,23 +38,9 @@ const STATUS_ICON: Record<GatePassStatus, ReactNode> = {
   REJECTED: <FiXCircle size={22} />,
 };
 
-const ALL_STATUSES: GatePassStatus[] = [
-  "PENDING",
-  "APPROVED",
-  "ISSUED",
-  "RETURNED",
-  "REJECTED",
-];
+const ALL_STATUSES: GatePassStatus[] = ["PENDING", "APPROVED", "ISSUED", "RETURNED", "REJECTED"];
 
-const TABLE_HEADERS = [
-  "Gate Pass #",
-  "Asset",
-  "Type",
-  "Purpose",
-  "Carrier",
-  "Status",
-  "Date",
-];
+const TABLE_HEADERS = ["Gate Pass #", "Asset", "Type", "Purpose", "Carrier", "Status", "Date"];
 
 export default function GatePassReportTab() {
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -67,9 +48,7 @@ export default function GatePassReportTab() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const gatePasses = useSelector(
-    (state: RootState) => state.reports.data?.gatePasses,
-  );
+  const gatePasses = useSelector((state: RootState) => state.reports.data?.gatePasses);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -80,8 +59,7 @@ export default function GatePassReportTab() {
   const { summary, outCount, inCount, records } = gatePasses;
 
   const filteredPasses = records.filter((pass) => {
-    const matchesStatus =
-      statusFilter === "ALL" || pass.status === statusFilter;
+    const matchesStatus = statusFilter === "ALL" || pass.status === statusFilter;
     const matchesType = typeFilter === "ALL" || pass.type === typeFilter;
     const q = search.toLowerCase();
     const matchesSearch =
@@ -92,10 +70,7 @@ export default function GatePassReportTab() {
   });
 
   const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-  const currentPageItems = filteredPasses.slice(
-    startIndex,
-    startIndex + ROWS_PER_PAGE,
-  );
+  const currentPageItems = filteredPasses.slice(startIndex, startIndex + ROWS_PER_PAGE);
   const totalPages = Math.ceil(filteredPasses.length / ROWS_PER_PAGE);
 
   function handleExport() {
@@ -222,10 +197,7 @@ export default function GatePassReportTab() {
             <tbody>
               {filteredPasses.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={7}
-                    className="py-8 text-center text-gray-400 text-sm"
-                  >
+                  <td colSpan={7} className="py-8 text-center text-gray-400 text-sm">
                     No records found.
                   </td>
                 </tr>
@@ -235,13 +207,9 @@ export default function GatePassReportTab() {
                     key={pass._id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition"
                   >
-                    <td className="py-3 px-4 font-semibold text-indigo-600">
-                      {pass.gatePassId}
-                    </td>
+                    <td className="py-3 px-4 font-semibold text-indigo-600">{pass.gatePassId}</td>
                     <td className="py-3 px-4">
-                      <p className="font-medium text-gray-800">
-                        {pass.assetTag}
-                      </p>
+                      <p className="font-medium text-gray-800">{pass.assetTag}</p>
                       <p className="text-xs text-gray-400">{pass.assetModel || "—"}</p>
                     </td>
                     <td className="py-3 px-4">
@@ -261,9 +229,7 @@ export default function GatePassReportTab() {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-gray-600">{pass.purpose}</td>
-                    <td className="py-3 px-4 text-gray-600">
-                      {pass.carrierName}
-                    </td>
+                    <td className="py-3 px-4 text-gray-600">{pass.carrierName}</td>
                     <td className="py-3 px-4">
                       <Badge label={pass.status} type={pass.status} />
                     </td>

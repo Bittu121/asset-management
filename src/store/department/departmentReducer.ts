@@ -31,10 +31,7 @@ const initialState: DepartmentState = {
   error: null,
 };
 
-const departmentReducer = (
-  state = initialState,
-  action: Action,
-): DepartmentState => {
+const departmentReducer = (state = initialState, action: Action): DepartmentState => {
   switch (action.type) {
     case DEPARTMENT_LOADING:
       return { ...state, loading: true, error: null };
@@ -55,16 +52,14 @@ const departmentReducer = (
       return {
         ...state,
         departments: state.departments.map((dept) =>
-          dept._id === action.payload._id ? action.payload : dept,
+          dept._id === action.payload._id ? action.payload : dept
         ),
       };
 
     case DELETE_DEPARTMENT_SUCCESS:
       return {
         ...state,
-        departments: state.departments.filter(
-          (dept) => dept._id !== action.payload,
-        ),
+        departments: state.departments.filter((dept) => dept._id !== action.payload),
       };
 
     default:

@@ -2,14 +2,7 @@
 import React, { useState } from "react";
 import { TextField, Autocomplete } from "@mui/material";
 
-function AddSupportGroup({
-  isOpen,
-  onClose,
-  onAdd,
-  levels = [],
-  managers = [],
-  loading,
-}: any) {
+function AddSupportGroup({ isOpen, onClose, onAdd, levels = [], managers = [], loading }: any) {
   const [form, setForm] = useState({
     name: "",
     code: "",
@@ -43,12 +36,8 @@ function AddSupportGroup({
       <div className="bg-white w-full max-w-lg rounded-lg shadow-2xl overflow-hidden">
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Add Support Group
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Create a new support group
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Add Support Group</h2>
+            <p className="text-gray-500 text-sm mt-1">Create a new support group</p>
           </div>
 
           <button
@@ -84,17 +73,13 @@ function AddSupportGroup({
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Level
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Level</label>
 
               <Autocomplete
                 options={levels || []}
                 getOptionLabel={(option: string) => option}
                 value={form.level || null}
-                onChange={(_e, value: string | null) =>
-                  setForm({ ...form, level: value || "" })
-                }
+                onChange={(_e, value: string | null) => setForm({ ...form, level: value || "" })}
                 disabled={loading}
                 renderInput={(params) => (
                   <TextField
@@ -122,22 +107,14 @@ function AddSupportGroup({
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Manager
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Manager</label>
 
               <Autocomplete
                 options={managers || []}
                 getOptionLabel={(option: any) => option.name || ""}
-                isOptionEqualToValue={(option: any, value: any) =>
-                  option._id === value._id
-                }
-                value={
-                  managers.find((m: any) => m._id === form.manager) || null
-                }
-                onChange={(_e, value: any) =>
-                  setForm({ ...form, manager: value?._id || "" })
-                }
+                isOptionEqualToValue={(option: any, value: any) => option._id === value._id}
+                value={managers.find((m: any) => m._id === form.manager) || null}
+                onChange={(_e, value: any) => setForm({ ...form, manager: value?._id || "" })}
                 disabled={loading}
                 renderInput={(params) => (
                   <TextField
@@ -165,9 +142,7 @@ function AddSupportGroup({
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Max Tickets
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Max Tickets</label>
               <input
                 type="number"
                 value={form.maxTickets}
@@ -193,14 +168,10 @@ function AddSupportGroup({
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Description
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Description</label>
             <textarea
               value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
               placeholder="Enter description"
               rows={3}
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none disabled:bg-gray-100"
@@ -208,9 +179,7 @@ function AddSupportGroup({
             />
           </div>
           <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-2">
-            <span className="text-sm font-semibold text-gray-500">
-              Active Status
-            </span>
+            <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
             <button
               onClick={() =>

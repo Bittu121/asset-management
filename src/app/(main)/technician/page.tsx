@@ -15,14 +15,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/auth/store";
 import { useRouter } from "next/navigation";
 
-type BadgeColor =
-  | "green"
-  | "red"
-  | "yellow"
-  | "blue"
-  | "purple"
-  | "gray"
-  | "orange";
+type BadgeColor = "green" | "red" | "yellow" | "blue" | "purple" | "gray" | "orange";
 const badgeClasses: Record<BadgeColor, string> = {
   green: "bg-green-50 text-green-600 border-green-200",
   red: "bg-red-50 text-red-500 border-red-200",
@@ -32,17 +25,9 @@ const badgeClasses: Record<BadgeColor, string> = {
   gray: "bg-gray-50 text-gray-500 border-gray-200",
   orange: "bg-orange-50 text-orange-600 border-orange-200",
 };
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string | number;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string | number; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}>
       {label}
     </span>
   );
@@ -125,9 +110,7 @@ function StatCard({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start justify-between hover:shadow-md transition-shadow">
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-          {title}
-        </p>
+        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{title}</p>
         <h3 className="text-2xl font-bold text-gray-900 mt-1">{value}</h3>
         {sub && <span className="text-xs text-gray-400">{sub}</span>}
       </div>
@@ -167,7 +150,7 @@ export default function TechnicianDashboard() {
           setPendingGatePasses(
             (d.data.gatePassList ?? [])
               .filter((g: GatePassRow) => g.status === "PENDING")
-              .slice(0, 5),
+              .slice(0, 5)
           );
         }
       })
@@ -191,9 +174,7 @@ export default function TechnicianDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">
-          Technician Dashboard
-        </h1>
+        <h1 className="text-xl font-bold text-gray-900">Technician Dashboard</h1>
         <p className="text-sm text-gray-500 mt-1">
           Welcome, {user?.name ?? "Technician"} — Operational overview
         </p>
@@ -204,8 +185,7 @@ export default function TechnicianDashboard() {
           <AlertTriangle size={16} className="shrink-0" />
           <span>
             <strong>{overdueList.length}</strong> allocation
-            {overdueList.length > 1 ? "s" : ""} are overdue and need immediate
-            follow-up.
+            {overdueList.length > 1 ? "s" : ""} are overdue and need immediate follow-up.
           </span>
         </div>
       )}
@@ -265,12 +245,8 @@ export default function TechnicianDashboard() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-800 text-sm">
-                Overdue Allocations
-              </h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Require immediate action
-              </p>
+              <h3 className="font-semibold text-gray-800 text-sm">Overdue Allocations</h3>
+              <p className="text-xs text-gray-400 mt-0.5">Require immediate action</p>
             </div>
             <button
               onClick={() => router.push("/technician/asset-overdue")}
@@ -280,28 +256,19 @@ export default function TechnicianDashboard() {
             </button>
           </div>
           {overdueList.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-6">
-              No overdue allocations
-            </p>
+            <p className="text-sm text-gray-400 text-center py-6">No overdue allocations</p>
           ) : (
             <div className="space-y-3">
               {overdueList.slice(0, 4).map((o) => (
-                <div
-                  key={o._id}
-                  className="p-3 rounded-xl bg-red-50 border border-red-100"
-                >
+                <div key={o._id} className="p-3 rounded-xl bg-red-50 border border-red-100">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-red-700">
-                      {o.assetTag}
-                    </span>
+                    <span className="text-sm font-semibold text-red-700">{o.assetTag}</span>
                     <Badge label={`${o.daysOverdue}d overdue`} color="red" />
                   </div>
                   <p className="text-xs text-red-600 mt-1">
                     {o.device || "Asset"} — {o.allocatedTo}
                   </p>
-                  <p className="text-xs text-red-500 mt-0.5">
-                    Due: {o.expectedReturn}
-                  </p>
+                  <p className="text-xs text-red-500 mt-0.5">Due: {o.expectedReturn}</p>
                 </div>
               ))}
             </div>
@@ -311,9 +278,7 @@ export default function TechnicianDashboard() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-800 text-sm">
-                Pending Gate Passes
-              </h3>
+              <h3 className="font-semibold text-gray-800 text-sm">Pending Gate Passes</h3>
               <p className="text-xs text-gray-400 mt-0.5">Awaiting approval</p>
             </div>
             <button
@@ -324,16 +289,11 @@ export default function TechnicianDashboard() {
             </button>
           </div>
           {pendingGatePasses.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-6">
-              No pending gate passes
-            </p>
+            <p className="text-sm text-gray-400 text-center py-6">No pending gate passes</p>
           ) : (
             <div className="space-y-3">
               {pendingGatePasses.map((gp) => (
-                <div
-                  key={gp._id}
-                  className="p-3 rounded-xl bg-yellow-50 border border-yellow-100"
-                >
+                <div key={gp._id} className="p-3 rounded-xl bg-yellow-50 border border-yellow-100">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-yellow-700">
                       {gp.gatePassId || "Gate Pass"}
@@ -347,9 +307,7 @@ export default function TechnicianDashboard() {
                   <p className="text-xs text-yellow-700 mt-1">
                     {gp.assetTag} — {gp.purpose}
                   </p>
-                  <p className="text-xs text-yellow-600 mt-0.5">
-                    By: {gp.requestedBy}
-                  </p>
+                  <p className="text-xs text-yellow-600 mt-0.5">By: {gp.requestedBy}</p>
                 </div>
               ))}
             </div>
@@ -359,9 +317,7 @@ export default function TechnicianDashboard() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-800 text-sm">
-                Recent Allocations
-              </h3>
+              <h3 className="font-semibold text-gray-800 text-sm">Recent Allocations</h3>
               <p className="text-xs text-gray-400 mt-0.5">Latest assignments</p>
             </div>
             <button
@@ -372,9 +328,7 @@ export default function TechnicianDashboard() {
             </button>
           </div>
           {recentAllocations.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-6">
-              No allocations yet
-            </p>
+            <p className="text-sm text-gray-400 text-center py-6">No allocations yet</p>
           ) : (
             <div className="space-y-3">
               {recentAllocations.map((a) => (
@@ -383,9 +337,7 @@ export default function TechnicianDashboard() {
                   className="flex items-center justify-between p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">
-                      {a.assetTag}
-                    </p>
+                    <p className="text-sm font-semibold text-gray-800">{a.assetTag}</p>
                     <p className="text-xs text-gray-500">
                       {a.allocatedTo} · {a.allocationDate}
                     </p>
@@ -399,9 +351,7 @@ export default function TechnicianDashboard() {
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
-        <h3 className="font-semibold text-gray-800 text-sm mb-4">
-          Quick Navigation
-        </h3>
+        <h3 className="font-semibold text-gray-800 text-sm mb-4">Quick Navigation</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             {
@@ -457,9 +407,7 @@ export default function TechnicianDashboard() {
               >
                 {item.icon}
               </div>
-              <span className="text-sm font-medium text-gray-700">
-                {item.label}
-              </span>
+              <span className="text-sm font-medium text-gray-700">{item.label}</span>
             </button>
           ))}
         </div>

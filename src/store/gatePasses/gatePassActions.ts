@@ -41,7 +41,7 @@ export const createGatePassAction =
       carrierContact: string;
       carrierIdProof: string;
     },
-    onSuccess?: () => void,
+    onSuccess?: () => void
   ) =>
   async (dispatch: Dispatch) => {
     dispatch({ type: CREATE_GATE_PASS_LOADING });
@@ -74,11 +74,7 @@ export const createGatePassAction =
 
 // Sends a PUT request to approve, reject, issue, or return a gate pass
 export const updateGatePassStatusAction =
-  (
-    id: string,
-    updateData: { status: string; notes?: string },
-    onSuccess?: () => void,
-  ) =>
+  (id: string, updateData: { status: string; notes?: string }, onSuccess?: () => void) =>
   async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_GATE_PASS_LOADING });
     try {

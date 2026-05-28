@@ -1,14 +1,3 @@
-// import React from "react";
-
-// function AdminProfile() {
-//   return (
-//     <>
-//       <div>Admin, Full details, Team / reports, system info</div>
-//     </>
-//   );
-// }
-
-// export default AdminProfile;
 "use client";
 
 import {
@@ -23,27 +12,15 @@ import {
   LayoutGrid,
   CalendarDays,
   Clock,
-  Monitor,
   Activity,
 } from "lucide-react";
-import type { ProfileUser } from "./page";
+import type { ProfileData } from "./page";
 
-type Props = { user: ProfileUser };
+type Props = { profile: ProfileData };
 
-const teamMembers = [
-  { name: "Sarah Wilson", role: "Frontend Lead", status: "Active" },
-  { name: "Mike Chen", role: "Backend Engineer", status: "Active" },
-  { name: "Priya Sharma", role: "QA Engineer", status: "On Leave" },
-  { name: "Tom Hayes", role: "DevOps Engineer", status: "Active" },
-];
+export default function AdminProfile({ profile }: Props) {
+  const { user, teamSize = 0, recentUsers = [] } = profile;
 
-const systemLogs = [
-  { event: "User Created", detail: "EMP045 — Rita Patel", date: "10 Jun 2024" },
-  { event: "Role Changed", detail: "EMP012 — Admin → Viewer", date: "8 Jun 2024" },
-  { event: "Asset Assigned", detail: "MacBook Pro → EMP033", date: "5 Jun 2024" },
-];
-
-export default function AdminProfile({ user }: Props) {
   const initials = user.name
     .split(" ")
     .map((n) => n[0])
@@ -51,33 +28,30 @@ export default function AdminProfile({ user }: Props) {
 
   const infoItems = [
     { icon: Hash, label: "Employee Code", value: user.employeeCode },
-    { icon: Briefcase, label: "Designation", value: user.designation },
-    { icon: LayoutGrid, label: "Department", value: user.department },
-    { icon: MapPin, label: "Location", value: user.location },
-    { icon: Shield, label: "System Role", value: user.systemRole ?? "—" },
-    { icon: Clock, label: "Last Login", value: user.lastLogin ?? "—" },
+    { icon: Briefcase, label: "Designation", value: user.designation || "—" },
+    { icon: LayoutGrid, label: "Department", value: user.department || "—" },
+    { icon: MapPin, label: "Location", value: user.location || "—" },
+    { icon: Shield, label: "System Role", value: user.role },
     { icon: CalendarDays, label: "Join Date", value: user.joinDate },
+    { icon: Clock, label: "Status", value: user.status },
   ];
 
   const stats = [
-    { label: "Team Size", value: user.teamSize ?? 0, icon: Users },
-    { label: "System Role", value: user.systemRole ?? "—", icon: Shield },
+    { label: "Team Size", value: teamSize, icon: Users },
+    { label: "System Role", value: user.role, icon: Shield },
     { label: "Status", value: user.status, icon: Activity },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 py-3 text-sm text-gray-400">
-            <span className="hover:text-gray-600 cursor-pointer">Users</span>
+            <span>Users</span>
             <ChevronRight className="w-3.5 h-3.5" />
             <span className="text-gray-700 font-medium">{user.name}</span>
           </div>
 
-          {/* Profile Hero */}
           <div className="flex items-center gap-4 pb-5">
             <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center text-white text-lg font-semibold shrink-0">
               {initials}
@@ -88,9 +62,9 @@ export default function AdminProfile({ user }: Props) {
                   {user.name}
                 </h1>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-200">
-                  Admin
+                  {user.role}
                 </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-200">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
                   {user.status}
                 </span>
               </div>
@@ -101,11 +75,11 @@ export default function AdminProfile({ user }: Props) {
                 </span>
                 <span className="flex items-center gap-1">
                   <Phone className="w-3.5 h-3.5" />
-                  {user.phone}
+                  {user.phone || "—"}
                 </span>
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5" />
-                  {user.location}
+                  {user.location || "—"}
                 </span>
               </div>
             </div>
@@ -113,10 +87,8 @@ export default function AdminProfile({ user }: Props) {
         </div>
       </div>
 
-      {/* Body */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl border border-gray-200 p-4">
               <h2 className="text-sm font-semibold text-gray-700 mb-3">
@@ -138,9 +110,7 @@ export default function AdminProfile({ user }: Props) {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3 space-y-4">
-            {/* Stats */}
             <div className="grid grid-cols-3 gap-3">
               {stats.map((stat) => (
                 <div
@@ -158,66 +128,78 @@ export default function AdminProfile({ user }: Props) {
               ))}
             </div>
 
-            {/* Team Members */}
             <div className="bg-white rounded-xl border border-gray-200 p-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-semibold text-gray-700">
-                  Team Members
+                  Recently Added Users
                 </h2>
                 <span className="text-xs text-gray-400">
-                  {teamMembers.length} members
+                  {recentUsers.length} users
                 </span>
               </div>
-              <ul className="divide-y divide-gray-100">
-                {teamMembers.map((member) => (
-                  <li
-                    key={member.name}
-                    className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-semibold">
-                        {member.name[0]}
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-800 font-medium">
-                          {member.name}
-                        </p>
-                        <p className="text-xs text-gray-400">{member.role}</p>
-                      </div>
-                    </div>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full border ${
-                        member.status === "Active"
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                      }`}
+              {recentUsers.length === 0 ? (
+                <p className="text-sm text-gray-400 py-4 text-center">
+                  No users found.
+                </p>
+              ) : (
+                <ul className="divide-y divide-gray-100">
+                  {recentUsers.map((member) => (
+                    <li
+                      key={member.employeeCode}
+                      className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0"
                     >
-                      {member.status}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-semibold">
+                          {member.name[0]}
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-800 font-medium">
+                            {member.name}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {member.employeeCode} · {member.role}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-400">
+                        {member.joinedAt}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
-            {/* System Logs */}
             <div className="bg-white rounded-xl border border-gray-200 p-4">
               <h2 className="text-sm font-semibold text-gray-700 mb-3">
-                System Logs
+                Department Overview
               </h2>
-              <ul className="divide-y divide-gray-100">
-                {systemLogs.map((log, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0"
-                  >
-                    <div>
-                      <p className="text-sm text-gray-700">{log.event}</p>
-                      <p className="text-xs text-gray-400">{log.detail}</p>
-                    </div>
-                    <span className="text-xs text-gray-400">{log.date}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-gray-400">Department</p>
+                  <p className="text-sm text-gray-700 font-medium mt-0.5">
+                    {user.department || "—"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Sub Department</p>
+                  <p className="text-sm text-gray-700 font-medium mt-0.5">
+                    {user.subDepartment || "—"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Location</p>
+                  <p className="text-sm text-gray-700 font-medium mt-0.5">
+                    {user.location || "—"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Sub Location</p>
+                  <p className="text-sm text-gray-700 font-medium mt-0.5">
+                    {user.subLocation || "—"}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

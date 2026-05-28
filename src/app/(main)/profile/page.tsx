@@ -1,16 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/auth/store";
 import AdminProfile from "./AdminProfile";
 import TechnicianProfile from "./TechnicianProfile";
 import UserProfile from "./UserProfile";
 
 export type ProfileUser = {
-  role: "admin" | "technician" | "user";
   name: string;
-  employeeCode: string;
   email: string;
   phone: string;
+  employeeCode: string;
   designation: string;
+  role: string;
   reportingTo: string;
   department: string;
   subDepartment: string;
@@ -18,44 +21,92 @@ export type ProfileUser = {
   subLocation: string;
   joinDate: string;
   status: string;
-  // admin only
+};
+
+export type ProfileAllocation = {
+  _id: string;
+  asset: {
+    assetTag: string;
+    device: string;
+    manufacturer?: string;
+    model?: string;
+    warrantyExpiry?: string;
+  };
+  allocationDate: string;
+  expectedReturn: string;
+  status: "ACTIVE" | "RETURNED";
+};
+
+export type ProfileData = {
+  user: ProfileUser;
+  allocations: ProfileAllocation[];
+  // admin / manager
   teamSize?: number;
-  systemRole?: string;
-  lastLogin?: string;
-  // technician only
-  assignedTickets?: number;
-  resolvedThisMonth?: number;
+  recentUsers?: {
+    name: string;
+    employeeCode: string;
+    role: string;
+    joinedAt: string;
+  }[];
+  // technician
+  activeCount?: number;
+  returnedCount?: number;
+  recentActivity?: { action: string; detail: string; date: string }[];
+  // end user
+  gatePasses?: {
+    gatePassId: string;
+    type: string;
+    purpose: string;
+    status: string;
+    createdAt: string;
+  }[];
 };
 
-const currentUser: ProfileUser = {
-  role: "user", // change to "admin" | "technician" | "user"
-  name: "John Doe",
-  employeeCode: "EMP001",
-  email: "john.doe@company.com",
-  phone: "+91 98765 43210",
-  designation: "Senior Software Engineer",
-  reportingTo: "Sarah Wilson",
-  department: "Engineering",
-  subDepartment: "Frontend Development",
-  location: "Bangalore",
-  subLocation: "HSR Layout, Sector 2",
-  joinDate: "15 Jan 2023",
-  status: "Active",
-  teamSize: 12,
-  systemRole: "Super Admin",
-  lastLogin: "Today, 9:42 AM",
-  assignedTickets: 8,
-  resolvedThisMonth: 24,
-};
+export default function ProfilePage() {
+  const { user } = useSelector((s: RootState) => s.auth);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-export default function Page() {
+  useEffect(() => {
+    fetch("/api/profile", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.data) setProfile(data.data);
+        else setError(true);
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-sm text-gray-400">Loading profile...</p>
+      </div>
+    );
+  }
+
+  if (error || !profile) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-sm text-gray-400">
+          Could not load profile. Please try again.
+        </p>
+      </div>
+    );
+  }
+
+  const role = (user?.role ?? profile.user.role).toUpperCase();
+  const isAdmin =
+    role === "ADMIN" || role === "MANAGER" || role === "SUPERADMIN";
+  const isTechnician = role === "TECHNICIAN";
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {currentUser.role === "admin" && <AdminProfile user={currentUser} />}
-      {currentUser.role === "technician" && (
-        <TechnicianProfile user={currentUser} />
-      )}
-      {currentUser.role === "user" && <UserProfile user={currentUser} />}
+      {isAdmin && <AdminProfile profile={profile} />}
+      {isTechnician && <TechnicianProfile profile={profile} />}
+      {!isAdmin && !isTechnician && <UserProfile profile={profile} />}
     </div>
   );
 }

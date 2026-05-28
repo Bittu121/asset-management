@@ -16,19 +16,13 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Only ACTIVE allocations that are not yet overdue
-  const activeList = allocations.filter(
-    (a) => a.status !== "RETURNED" && !isOverdue(a),
-  );
+  const activeList = allocations.filter((a) => a.status !== "RETURNED" && !isOverdue(a));
 
   const totalPages = Math.ceil(activeList.length / PER_PAGE);
-  const pageItems  = activeList.slice(
-    (currentPage - 1) * PER_PAGE,
-    currentPage * PER_PAGE,
-  );
+  const pageItems = activeList.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
         <div>
@@ -54,7 +48,6 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-
             {pageItems.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-6 py-14 text-center">
@@ -69,7 +62,6 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
 
             {pageItems.map((item) => (
               <tr key={item._id} className="hover:bg-gray-50 transition-colors">
-
                 {/* Asset tag + device name */}
                 <td className="px-6 py-4">
                   <p className="font-semibold text-gray-900">{item.asset.assetTag}</p>
@@ -107,10 +99,8 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
                     Return
                   </button>
                 </td>
-
               </tr>
             ))}
-
           </tbody>
         </table>
       </div>
@@ -121,10 +111,13 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
             Showing {(currentPage - 1) * PER_PAGE + 1}–
             {Math.min(currentPage * PER_PAGE, activeList.length)} of {activeList.length}
           </span>
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
-
     </div>
   );
 }

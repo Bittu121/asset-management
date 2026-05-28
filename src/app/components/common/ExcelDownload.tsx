@@ -16,11 +16,7 @@ type ExcelDownloadProps = {
 };
 
 //Export data TO Excel
-const exportToExcel = (
-  data: any[],
-  fileName: string,
-  headers?: HeaderConfig[],
-) => {
+const exportToExcel = (data: any[], fileName: string, headers?: HeaderConfig[]) => {
   if (!data || data.length === 0) {
     toast.error("No data available to export");
     return;

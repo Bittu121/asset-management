@@ -7,6 +7,6 @@ export async function getEndUser(req: NextRequest) {
   const auth = await authenticate(req);
   if ("statusCode" in auth) return auth;
 
-  const data = await getEndUserData(auth.user._id);
+  const data = await getEndUserData(auth.user._id, auth.user.email);
   return successResponse(data, "End user data fetched successfully", 200);
 }

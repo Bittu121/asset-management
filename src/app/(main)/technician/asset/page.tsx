@@ -10,17 +10,9 @@ const bCls: Record<BadgeColor, string> = {
   gray: "bg-gray-50 text-gray-500 border-gray-200",
   orange: "bg-orange-50 text-orange-600 border-orange-200",
 };
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${bCls[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${bCls[color]}`}>
       {label}
     </span>
   );
@@ -56,7 +48,7 @@ export default function TechAssetPage() {
     (a) =>
       a.assetTag.toLowerCase().includes(search.toLowerCase()) ||
       a.device.toLowerCase().includes(search.toLowerCase()) ||
-      a.category.toLowerCase().includes(search.toLowerCase()),
+      a.category.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -73,17 +65,12 @@ export default function TechAssetPage() {
             placeholder="Search assets..."
             className="h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 w-full max-w-xs"
           />
-          <span className="text-sm text-gray-400 self-center">
-            {filtered.length} assets
-          </span>
+          <span className="text-sm text-gray-400 self-center">{filtered.length} assets</span>
         </div>
         {loading ? (
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-gray-100 rounded-xl animate-pulse"
-              />
+              <div key={i} className="h-12 bg-gray-100 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -96,21 +83,16 @@ export default function TechAssetPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100">
-                  {[
-                    "Asset Tag",
-                    "Device",
-                    "Category",
-                    "Warranty Expiry",
-                    "Active",
-                    "Status",
-                  ].map((c) => (
-                    <th
-                      key={c}
-                      className="text-left text-xs font-semibold text-gray-400 uppercase pb-3 pr-4 whitespace-nowrap"
-                    >
-                      {c}
-                    </th>
-                  ))}
+                  {["Asset Tag", "Device", "Category", "Warranty Expiry", "Active", "Status"].map(
+                    (c) => (
+                      <th
+                        key={c}
+                        className="text-left text-xs font-semibold text-gray-400 uppercase pb-3 pr-4 whitespace-nowrap"
+                      >
+                        {c}
+                      </th>
+                    )
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -119,15 +101,9 @@ export default function TechAssetPage() {
                     key={a._id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="py-3 pr-4 font-semibold text-indigo-600">
-                      {a.assetTag}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-800">
-                      {a.device || "—"}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {a.category || "—"}
-                    </td>
+                    <td className="py-3 pr-4 font-semibold text-indigo-600">{a.assetTag}</td>
+                    <td className="py-3 pr-4 text-gray-800">{a.device || "—"}</td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{a.category || "—"}</td>
                     <td className="py-3 pr-4 text-gray-500 text-xs whitespace-nowrap">
                       {a.warrantyExpiry || "N/A"}
                     </td>

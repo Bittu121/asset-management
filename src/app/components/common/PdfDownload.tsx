@@ -381,10 +381,7 @@ function PdfDownload({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -407,9 +404,7 @@ function PdfDownload({
       pdfMake.vfs = pdfFonts.vfs;
 
       const limitedData = rowLimit === "all" ? data : data.slice(0, rowLimit);
-      const headerLabels = headers.map((h) =>
-        typeof h === "string" ? h : h.label,
-      );
+      const headerLabels = headers.map((h) => (typeof h === "string" ? h : h.label));
 
       // Header row
       const tableBody: any[][] = [
@@ -434,7 +429,7 @@ function PdfDownload({
               fontSize: 8,
               margin: [5, 4, 5, 4],
               color: "#374151",
-            })),
+            }))
           );
         });
       } else {
@@ -447,7 +442,7 @@ function PdfDownload({
               fontSize: 8,
               margin: [5, 4, 5, 4],
               color: "#374151",
-            })),
+            }))
           );
         });
       }
@@ -546,9 +541,7 @@ function PdfDownload({
         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
           {/* Dropdown Header */}
           <div className="px-3 py-2 border-b border-gray-100">
-            <p className="text-xs font-medium text-gray-600">
-              {data.length} records available
-            </p>
+            <p className="text-xs font-medium text-gray-600">{data.length} records available</p>
           </div>
 
           {/* Options */}

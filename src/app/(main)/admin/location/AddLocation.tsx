@@ -46,14 +46,9 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
           <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Add Location</h2>
-              <p className="text-gray-500 text-sm mt-1">
-                Create a new location entry
-              </p>
+              <p className="text-gray-500 text-sm mt-1">Create a new location entry</p>
             </div>
-            <button
-              onClick={onClose}
-              className="text-black-800 text-xl font-bold cursor-pointer"
-            >
+            <button onClick={onClose} className="text-black-800 text-xl font-bold cursor-pointer">
               ✕
             </button>
           </div>
@@ -142,9 +137,7 @@ function AddLocation({ isOpen, onClose, onAdd }: any) {
                 />
               </div>
               <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-5">
-                <span className="text-sm font-semibold text-gray-500">
-                  Active Status
-                </span>
+                <span className="text-sm font-semibold text-gray-500">Active Status</span>
                 <button
                   onClick={() =>
                     setFormData((prev) => ({

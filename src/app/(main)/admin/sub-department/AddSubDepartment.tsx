@@ -20,11 +20,7 @@ function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
   };
 
   const handleSubmit = () => {
-    if (
-      !formData.subDepartmentName ||
-      !formData.departmentId ||
-      !formData.departmentName
-    ) {
+    if (!formData.subDepartmentName || !formData.departmentId || !formData.departmentName) {
       alert("Please fill all required fields");
       return;
     }
@@ -52,18 +48,11 @@ function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
         {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Add Sub Department
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Create a new sub department
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Add Sub Department</h2>
+            <p className="text-gray-500 text-sm mt-1">Create a new sub department</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -94,14 +83,8 @@ function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
               <Autocomplete
                 options={deptOptions}
                 getOptionLabel={(option: any) => option.label}
-                isOptionEqualToValue={(option, value: any) =>
-                  option.id === value.id
-                }
-                value={
-                  deptOptions.find(
-                    (d: any) => d.id === formData.departmentId,
-                  ) || null
-                }
+                isOptionEqualToValue={(option, value: any) => option.id === value.id}
+                value={deptOptions.find((d: any) => d.id === formData.departmentId) || null}
                 onChange={(e, value) =>
                   setFormData((prev) => ({
                     ...prev,
@@ -155,14 +138,10 @@ function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Description
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Description</label>
               <textarea
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Description"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 min-h-[70px]"
               />
@@ -170,9 +149,7 @@ function AddSubDepartment({ isOpen, onClose, onAdd, departments }: any) {
 
             {/* Toggle */}
             <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-5">
-              <span className="text-sm font-semibold text-gray-500">
-                Active Status
-              </span>
+              <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
               <button
                 onClick={() =>

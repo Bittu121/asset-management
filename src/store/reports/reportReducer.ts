@@ -9,10 +9,7 @@ const initialState: ReportState = {
 
 type Action = { type: string; payload?: any };
 
-export default function reportReducer(
-  state = initialState,
-  action: Action,
-): ReportState {
+export default function reportReducer(state = initialState, action: Action): ReportState {
   switch (action.type) {
     case REPORTS_LOADING:
       return { ...state, loading: true, error: null };

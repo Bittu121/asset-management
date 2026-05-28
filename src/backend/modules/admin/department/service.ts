@@ -29,13 +29,8 @@ export const createDepartment = async (data: CreateDepartmentDto) => {
 };
 
 // Update department
-export const updateDepartment = async (
-  id: string,
-  data: UpdateDepartmentDto,
-) => {
-  const updateData = data.code
-    ? { ...data, code: data.code.toUpperCase() }
-    : data;
+export const updateDepartment = async (id: string, data: UpdateDepartmentDto) => {
+  const updateData = data.code ? { ...data, code: data.code.toUpperCase() } : data;
 
   const department = await Department.findByIdAndUpdate(id, updateData, {
     new: true,

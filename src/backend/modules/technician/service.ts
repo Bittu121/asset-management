@@ -21,23 +21,17 @@ export async function getTechnicianData() {
       ])
       .sort({ createdAt: -1 }),
     GatePass.find()
-      .populate([
-        { path: "asset", select: "assetTag device manufacturer model" },
-      ])
+      .populate([{ path: "asset", select: "assetTag device manufacturer model" }])
       .sort({ createdAt: -1 }),
   ]);
 
   const activeAllocations = allocations.filter((a) => a.status === "ACTIVE");
-  const overdueAllocations = activeAllocations.filter(
-    (a) => a.expectedReturn < today,
-  );
-  const returnedAllocations = allocations.filter(
-    (a) => a.status === "RETURNED",
-  );
+  const overdueAllocations = activeAllocations.filter((a) => a.expectedReturn < today);
+  const returnedAllocations = allocations.filter((a) => a.status === "RETURNED");
   const pendingGatePasses = gatePasses.filter((gp) => gp.status === "PENDING");
 
   const allocatedAssetIds = new Set(
-    activeAllocations.map((a) => String((a.asset as any)?._id ?? a.asset)),
+    activeAllocations.map((a) => String((a.asset as any)?._id ?? a.asset))
   );
 
   const stats = {
@@ -75,15 +69,12 @@ export async function getTechnicianData() {
     const asset = a.asset as any;
     const user = a.allocatedTo as any;
     const daysOverdue = Math.floor(
-      (new Date().getTime() - new Date(a.expectedReturn).getTime()) /
-        (1000 * 60 * 60 * 24),
+      (new Date().getTime() - new Date(a.expectedReturn).getTime()) / (1000 * 60 * 60 * 24)
     );
     return {
       _id: String(a._id),
       assetTag: asset?.assetTag ?? "",
-      device:
-        `${asset?.manufacturer ?? ""} ${asset?.model ?? asset?.device ?? ""}`.trim() ||
-        "",
+      device: `${asset?.manufacturer ?? ""} ${asset?.model ?? asset?.device ?? ""}`.trim() || "",
       allocatedTo: user?.name ?? user?.email ?? "",
       allocatedToEmail: user?.email ?? "",
       department: user?.department ?? "",
@@ -103,12 +94,7 @@ export async function getTechnicianData() {
     purpose: gp.purpose ?? "",
     carrierName: gp.carrierName ?? "",
     requestedBy: gp.requestedBy ?? "",
-    status: gp.status as
-      | "PENDING"
-      | "APPROVED"
-      | "ISSUED"
-      | "RETURNED"
-      | "REJECTED",
+    status: gp.status as "PENDING" | "APPROVED" | "ISSUED" | "RETURNED" | "REJECTED",
     date: String(gp.createdAt).split("T")[0],
     issuedAt: gp.issuedAt ?? "",
   }));
@@ -119,9 +105,7 @@ export async function getTechnicianData() {
     return {
       _id: String(a._id),
       assetTag: asset?.assetTag ?? "",
-      device:
-        `${asset?.manufacturer ?? ""} ${asset?.model ?? asset?.device ?? ""}`.trim() ||
-        "",
+      device: `${asset?.manufacturer ?? ""} ${asset?.model ?? asset?.device ?? ""}`.trim() || "",
       returnedBy: user?.name ?? user?.email ?? "",
       returnedByEmail: user?.email ?? "",
       allocationDate: a.allocationDate ?? "",
@@ -134,10 +118,7 @@ export async function getTechnicianData() {
   const assetList = assets.slice(0, 50).map((a) => ({
     _id: String(a._id),
     assetTag: a.assetTag,
-    device:
-      `${a.manufacturer ?? ""} ${a.model ?? a.device ?? ""}`.trim() ||
-      a.device ||
-      "",
+    device: `${a.manufacturer ?? ""} ${a.model ?? a.device ?? ""}`.trim() || a.device || "",
     category: (a.category as any)?.name ?? "",
     warrantyExpiry: a.warrantyExpiry ?? "",
     isActive: a.isActive,

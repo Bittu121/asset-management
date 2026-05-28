@@ -34,31 +34,30 @@ export const getSubDepartmentsAction = () => async (dispatch: Dispatch) => {
 };
 
 // Create sub department
-export const createSubDepartmentAction =
-  (subDepartmentData: any) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch("/api/admin/sub-department", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(subDepartmentData),
-      });
+export const createSubDepartmentAction = (subDepartmentData: any) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch("/api/admin/sub-department", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(subDepartmentData),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to create sub department");
-        return false;
-      }
-
-      dispatch({ type: CREATE_SUBDEPARTMENT_SUCCESS, payload: data.data });
-      toast.success(data.message || "Sub department created successfully");
-      return true;
-    } catch (error) {
-      toast.error("Failed to create sub department");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to create sub department");
       return false;
     }
-  };
+
+    dispatch({ type: CREATE_SUBDEPARTMENT_SUCCESS, payload: data.data });
+    toast.success(data.message || "Sub department created successfully");
+    return true;
+  } catch (error) {
+    toast.error("Failed to create sub department");
+    return false;
+  }
+};
 
 // Update sub department
 export const updateSubDepartmentAction =
@@ -88,24 +87,23 @@ export const updateSubDepartmentAction =
   };
 
 // Delete sub department
-export const deleteSubDepartmentAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch(`/api/admin/sub-department/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+export const deleteSubDepartmentAction = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch(`/api/admin/sub-department/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to delete sub department");
-        return;
-      }
-
-      dispatch({ type: DELETE_SUBDEPARTMENT_SUCCESS, payload: id });
-      toast.success(data.message || "Sub department deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete sub department");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to delete sub department");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_SUBDEPARTMENT_SUCCESS, payload: id });
+    toast.success(data.message || "Sub department deleted successfully");
+  } catch (error) {
+    toast.error("Failed to delete sub department");
+  }
+};

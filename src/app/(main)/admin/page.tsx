@@ -38,23 +38,8 @@ import {
   Zap,
 } from "lucide-react";
 
-type BadgeColor =
-  | "green"
-  | "red"
-  | "yellow"
-  | "blue"
-  | "purple"
-  | "gray"
-  | "orange"
-  | "teal";
-const COLORS = [
-  "#4f46e5",
-  "#22c55e",
-  "#f59e0b",
-  "#ef4444",
-  "#06b6d4",
-  "#8b5cf6",
-];
+type BadgeColor = "green" | "red" | "yellow" | "blue" | "purple" | "gray" | "orange" | "teal";
+const COLORS = ["#4f46e5", "#22c55e", "#f59e0b", "#ef4444", "#06b6d4", "#8b5cf6"];
 const badgeClasses: Record<BadgeColor, string> = {
   green: "bg-green-50 text-green-600 border-green-200",
   red: "bg-red-50 text-red-500 border-red-200",
@@ -66,17 +51,9 @@ const badgeClasses: Record<BadgeColor, string> = {
   teal: "bg-teal-50 text-teal-600 border-teal-200",
 };
 
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string | number;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string | number; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}>
       {label}
     </span>
   );
@@ -144,9 +121,7 @@ function ChartCard({
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="font-semibold text-gray-800 text-sm">{title}</h3>
-          {subtitle && (
-            <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
         </div>
         <button className="text-gray-300 hover:text-gray-500">
           <MoreHorizontal size={16} />
@@ -172,9 +147,7 @@ function SectionCard({
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="font-semibold text-gray-800 text-sm">{title}</h3>
-          {subtitle && (
-            <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
         </div>
         {action}
       </div>
@@ -279,9 +252,7 @@ function fmtVal(v: number) {
 
 export default function AdminDashboard() {
   const dispatch = useDispatch<AppDispatch>();
-  const { data, loading, error } = useSelector(
-    (state: RootState) => state.dashboard,
-  );
+  const { data, loading, error } = useSelector((state: RootState) => state.dashboard);
   useEffect(() => {
     dispatch(fetchDashboard() as any);
   }, [dispatch]);
@@ -325,9 +296,7 @@ export default function AdminDashboard() {
     value,
   }));
   const utilPct =
-    stats.totalAssets > 0
-      ? Math.round((stats.allocated / stats.totalAssets) * 100)
-      : 0;
+    stats.totalAssets > 0 ? Math.round((stats.allocated / stats.totalAssets) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
@@ -403,16 +372,11 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid xl:grid-cols-3 gap-5">
-        <ChartCard
-          title="Asset Category Distribution"
-          subtitle="By device type"
-        >
+        <ChartCard title="Asset Category Distribution" subtitle="By device type">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={
-                  pieData.length ? pieData : [{ name: "No data", value: 1 }]
-                }
+                data={pieData.length ? pieData : [{ name: "No data", value: 1 }]}
                 cx="50%"
                 cy="50%"
                 outerRadius={85}
@@ -432,10 +396,7 @@ export default function AdminDashboard() {
           </ResponsiveContainer>
         </ChartCard>
         <div className="xl:col-span-2">
-          <ChartCard
-            title="Monthly Allocation vs Returns"
-            subtitle="Last 6 months"
-          >
+          <ChartCard title="Monthly Allocation vs Returns" subtitle="Last 6 months">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyTrend} barSize={16}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
@@ -443,18 +404,8 @@ export default function AdminDashboard() {
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
                 <Legend iconType="circle" iconSize={8} />
-                <Bar
-                  dataKey="allocated"
-                  fill="#4f46e5"
-                  radius={[6, 6, 0, 0]}
-                  name="Allocated"
-                />
-                <Bar
-                  dataKey="returned"
-                  fill="#22c55e"
-                  radius={[6, 6, 0, 0]}
-                  name="Returned"
-                />
+                <Bar dataKey="allocated" fill="#4f46e5" radius={[6, 6, 0, 0]} name="Allocated" />
+                <Bar dataKey="returned" fill="#22c55e" radius={[6, 6, 0, 0]} name="Returned" />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -463,10 +414,7 @@ export default function AdminDashboard() {
 
       <div className="grid xl:grid-cols-3 gap-5">
         <div className="xl:col-span-2">
-          <ChartCard
-            title="Asset Growth Trend"
-            subtitle="Registered assets over time"
-          >
+          <ChartCard title="Asset Growth Trend" subtitle="Registered assets over time">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={assetTrend}>
                 <GradDef id="assetGrad" color="#4f46e5" />
@@ -522,23 +470,11 @@ export default function AdminDashboard() {
           >
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <THead
-                  cols={[
-                    "Asset Tag",
-                    "Device",
-                    "Assigned To",
-                    "Dept",
-                    "Date",
-                    "Status",
-                  ]}
-                />
+                <THead cols={["Asset Tag", "Device", "Assigned To", "Dept", "Date", "Status"]} />
                 <tbody>
                   {recentAllocations.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={6}
-                        className="py-8 text-center text-gray-400 text-sm"
-                      >
+                      <td colSpan={6} className="py-8 text-center text-gray-400 text-sm">
                         No allocations yet
                       </td>
                     </tr>
@@ -551,23 +487,14 @@ export default function AdminDashboard() {
                         <td className="py-3 pr-4 font-semibold text-indigo-600 text-sm">
                           {row.assetTag}
                         </td>
-                        <td className="py-3 pr-4 text-gray-700">
-                          {row.device || "?"}
-                        </td>
-                        <td className="py-3 pr-4 text-gray-600">
-                          {row.allocatedTo}
-                        </td>
-                        <td className="py-3 pr-4 text-gray-500 text-xs">
-                          {row.department || "?"}
-                        </td>
+                        <td className="py-3 pr-4 text-gray-700">{row.device || "?"}</td>
+                        <td className="py-3 pr-4 text-gray-600">{row.allocatedTo}</td>
+                        <td className="py-3 pr-4 text-gray-500 text-xs">{row.department || "?"}</td>
                         <td className="py-3 pr-4 text-gray-400 text-xs whitespace-nowrap">
                           {row.allocationDate}
                         </td>
                         <td className="py-3">
-                          <Badge
-                            label={row.status}
-                            color={statusColor(row.status)}
-                          />
+                          <Badge label={row.status} color={statusColor(row.status)} />
                         </td>
                       </tr>
                     ))
@@ -579,9 +506,7 @@ export default function AdminDashboard() {
         </div>
         <SectionCard title="Recent Activity" subtitle="Latest asset events">
           {recentActivity.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">
-              No activity yet
-            </p>
+            <p className="text-sm text-gray-400 text-center py-4">No activity yet</p>
           ) : (
             recentActivity.slice(0, 8).map((item, i) => (
               <div
@@ -598,12 +523,8 @@ export default function AdminDashboard() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-700">
-                    {item.action}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-0.5 truncate">
-                    {item.detail}
-                  </p>
+                  <p className="text-sm font-medium text-gray-700">{item.action}</p>
+                  <p className="text-xs text-gray-400 mt-0.5 truncate">{item.detail}</p>
                 </div>
               </div>
             ))
@@ -638,14 +559,10 @@ export default function AdminDashboard() {
         <SectionCard title="Warranty Status" subtitle="Expiry overview">
           <ProgressRow
             label="Valid"
-            value={
-              stats.totalAssets - stats.expiredWarranty - stats.expiringSoon
-            }
+            value={stats.totalAssets - stats.expiredWarranty - stats.expiringSoon}
             max={stats.totalAssets}
             color="bg-green-400"
-            count={
-              stats.totalAssets - stats.expiredWarranty - stats.expiringSoon
-            }
+            count={stats.totalAssets - stats.expiredWarranty - stats.expiringSoon}
           />
           <ProgressRow
             label="Expiring Soon"
@@ -755,10 +672,7 @@ export default function AdminDashboard() {
             <tbody>
               {recentGatePasses.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={8}
-                    className="py-8 text-center text-gray-400 text-sm"
-                  >
+                  <td colSpan={8} className="py-8 text-center text-gray-400 text-sm">
                     No gate passes yet
                   </td>
                 </tr>
@@ -772,29 +686,19 @@ export default function AdminDashboard() {
                       {gp.gatePassId || "?"}
                     </td>
                     <td className="py-3 pr-4">
-                      <div className="font-medium text-gray-700">
-                        {gp.assetTag}
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        {gp.assetModel}
-                      </div>
+                      <div className="font-medium text-gray-700">{gp.assetTag}</div>
+                      <div className="text-xs text-gray-400">{gp.assetModel}</div>
                     </td>
                     <td className="py-3 pr-4">
                       <TypeBadge type={gp.type} />
                     </td>
                     <td className="py-3 pr-4 text-gray-600">{gp.purpose}</td>
-                    <td className="py-3 pr-4 text-gray-500">
-                      {gp.carrierName || "?"}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {gp.requestedBy}
-                    </td>
+                    <td className="py-3 pr-4 text-gray-500">{gp.carrierName || "?"}</td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{gp.requestedBy}</td>
                     <td className="py-3 pr-4">
                       <Badge label={gp.status} color={statusColor(gp.status)} />
                     </td>
-                    <td className="py-3 text-gray-400 text-xs whitespace-nowrap">
-                      {gp.date}
-                    </td>
+                    <td className="py-3 text-gray-400 text-xs whitespace-nowrap">{gp.date}</td>
                   </tr>
                 ))
               )}

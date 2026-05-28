@@ -368,8 +368,9 @@ import { fetchRoles } from "@/store/roles/rolesActions";
 
 function UserAccount() {
   const dispatch = useDispatch<AppDispatch>();
-  const { users, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.userAccounts);
+  const { users, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.userAccounts
+  );
   const { roles } = useSelector((state: RootState) => state.roles);
   console.log("roles", roles);
 
@@ -391,25 +392,15 @@ function UserAccount() {
   }, [dispatch]);
 
   // Get unique values for filters
-  const managers = users.filter((u) =>
-    ["ADMIN", "MANAGER"].includes(u.role.name),
-  );
+  const managers = users.filter((u) => ["ADMIN", "MANAGER"].includes(u.role.name));
 
-  const departments = Array.from(
-    new Set(users.map((u) => u.department).filter(Boolean)),
-  );
+  const departments = Array.from(new Set(users.map((u) => u.department).filter(Boolean)));
 
-  const subDepartments = Array.from(
-    new Set(users.map((u) => u.subDepartment).filter(Boolean)),
-  );
+  const subDepartments = Array.from(new Set(users.map((u) => u.subDepartment).filter(Boolean)));
 
-  const locations = Array.from(
-    new Set(users.map((u) => u.location).filter(Boolean)),
-  );
+  const locations = Array.from(new Set(users.map((u) => u.location).filter(Boolean)));
 
-  const subLocations = Array.from(
-    new Set(users.map((u) => u.subLocation).filter(Boolean)),
-  );
+  const subLocations = Array.from(new Set(users.map((u) => u.subLocation).filter(Boolean)));
 
   const filteredUserAccount = users.filter((u) => {
     const matchesSearch =
@@ -420,11 +411,9 @@ function UserAccount() {
 
     const matchesRole = roleFilter === "" || u.role.name === roleFilter;
 
-    const matchesDepartment =
-      departmentFilter === "" || u.department === departmentFilter;
+    const matchesDepartment = departmentFilter === "" || u.department === departmentFilter;
 
-    const matchesLocation =
-      locationFilter === "" || u.location === locationFilter;
+    const matchesLocation = locationFilter === "" || u.location === locationFilter;
 
     return matchesSearch && matchesRole && matchesDepartment && matchesLocation;
   });
@@ -432,7 +421,7 @@ function UserAccount() {
   const totalPages = Math.ceil(filteredUserAccount.length / itemsPerPage);
   const paginatedUserAccount = filteredUserAccount.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAddUserAccount = (data: any) => {
@@ -447,9 +436,7 @@ function UserAccount() {
   const handleUpdateUserAccount = (updatedData: any) => {
     if (selectedUserAccount) {
       dispatch(
-        updateUserAccountAction(selectedUserAccount._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
+        updateUserAccountAction(selectedUserAccount._id, updatedData, () => setIsUpdateOpen(false))
       );
     }
   };
@@ -615,12 +602,8 @@ function UserAccount() {
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
                       <FiUser size={18} />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No User Account Found
-                    </h3>
-                    <p className="text-xs text-gray-500">
-                      You haven't added any User Account yet.
-                    </p>
+                    <h3 className="text-sm font-semibold text-gray-700">No User Account Found</h3>
+                    <p className="text-xs text-gray-500">You haven't added any User Account yet.</p>
                     <button
                       onClick={() => setIsAddOpen(true)}
                       className="mt-2 px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
@@ -632,19 +615,12 @@ function UserAccount() {
               </tr>
             ) : (
               paginatedUserAccount.map((user) => (
-                <tr
-                  key={user._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={user._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {user._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{user._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {user.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700">{user.email}</div>
@@ -655,19 +631,13 @@ function UserAccount() {
                     </span>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {user.employeeCode}
-                    </div>
+                    <div className="text-sm text-gray-700">{user.employeeCode}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {user.department || "-"}
-                    </div>
+                    <div className="text-sm text-gray-700">{user.department || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {user.location || "-"}
-                    </div>
+                    <div className="text-sm text-gray-700">{user.location || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700">

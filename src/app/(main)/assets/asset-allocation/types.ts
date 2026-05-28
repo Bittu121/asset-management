@@ -13,7 +13,7 @@ export type User = {
 export type Asset = {
   _id: string;
   assetTag: string;
-  device: string;      // display name of the device
+  device: string; // display name of the device
   isActive: boolean;
   status?: "AVAILABLE" | "ALLOCATED"; // computed on the frontend
 };
@@ -32,13 +32,13 @@ export type Allocation = {
     email: string;
     employeeCode: string;
   };
-  allocationDate:  string; // "YYYY-MM-DD"
-  expectedReturn:  string; // "YYYY-MM-DD"
-  status:          "ACTIVE" | "RETURNED";
+  allocationDate: string; // "YYYY-MM-DD"
+  expectedReturn: string; // "YYYY-MM-DD"
+  status: "ACTIVE" | "RETURNED";
   returnCondition: string;
-  returnNotes:     string;
-  returnDate:      string;
-  createdAt:       string;
+  returnNotes: string;
+  returnDate: string;
+  createdAt: string;
 };
 
 // ─── Helper functions ─────────────────────────────────────────────────────────

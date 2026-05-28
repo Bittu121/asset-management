@@ -11,21 +11,15 @@ type Props = {
   onAssign: (assetId: string, userId: string) => void;
 };
 
-export default function DragDropArea({
-  assets,
-  users,
-  allocations,
-  onAssign,
-}: Props) {
+export default function DragDropArea({ assets, users, allocations, onAssign }: Props) {
   const [draggingAssetId, setDraggingAssetId] = useState<string | null>(null);
   const [hoverUserId, setHoverUserId] = useState<string | null>(null);
 
   const availableAssets = assets.filter((a) => a.status === "AVAILABLE");
 
   function countAssigned(userId: string): number {
-    return allocations.filter(
-      (a) => a.allocatedTo._id === userId && a.status !== "RETURNED",
-    ).length;
+    return allocations.filter((a) => a.allocatedTo._id === userId && a.status !== "RETURNED")
+      .length;
   }
 
   return (
@@ -33,12 +27,8 @@ export default function DragDropArea({
       {/* LEFT — Available assets */}
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50">
-          <h3 className="text-sm font-semibold text-gray-700">
-            Available Assets
-          </h3>
-          <p className="text-xs text-gray-400 mt-0.5">
-            Drag an asset onto a user to assign it
-          </p>
+          <h3 className="text-sm font-semibold text-gray-700">Available Assets</h3>
+          <p className="text-xs text-gray-400 mt-0.5">Drag an asset onto a user to assign it</p>
         </div>
 
         <div className="p-4 space-y-2 min-h-48">
@@ -61,9 +51,7 @@ export default function DragDropArea({
               >
                 <GripVertical size={14} className="text-gray-300 shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-gray-800">
-                    {asset.assetTag}
-                  </p>
+                  <p className="text-sm font-semibold text-gray-800">{asset.assetTag}</p>
                   <p className="text-xs text-gray-400">{asset.device}</p>
                 </div>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">
@@ -94,8 +82,7 @@ export default function DragDropArea({
               }}
               onDragLeave={() => setHoverUserId(null)}
               onDrop={() => {
-                if (draggingAssetId !== null)
-                  onAssign(draggingAssetId, user._id);
+                if (draggingAssetId !== null) onAssign(draggingAssetId, user._id);
                 setDraggingAssetId(null);
                 setHoverUserId(null);
               }}

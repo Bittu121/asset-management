@@ -25,12 +25,7 @@ type Props = {
   onSubmit: (data: { condition: string; notes: string }) => void;
 };
 
-export default function ReturnAssetModal({
-  isOpen,
-  onClose,
-  assetTag,
-  onSubmit,
-}: Props) {
+export default function ReturnAssetModal({ isOpen, onClose, assetTag, onSubmit }: Props) {
   const [condition, setCondition] = useState("Good");
   const [notes, setNotes] = useState("");
   if (!isOpen) return null;
@@ -41,9 +36,7 @@ export default function ReturnAssetModal({
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Return Asset</h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Record the asset return details
-            </p>
+            <p className="text-sm text-gray-500 mt-1">Record the asset return details</p>
           </div>
           <button
             onClick={onClose}
@@ -55,8 +48,7 @@ export default function ReturnAssetModal({
 
         <div className="px-6 py-5">
           <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-100 text-sm text-gray-600">
-            Returning:{" "}
-            <span className="font-semibold text-gray-900">{assetTag}</span>
+            Returning: <span className="font-semibold text-gray-900">{assetTag}</span>
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-500 mb-1">
@@ -78,9 +70,7 @@ export default function ReturnAssetModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-500 mb-1">
-              Notes
-            </label>
+            <label className="block text-sm font-semibold text-gray-500 mb-1">Notes</label>
             <textarea
               value={notes}
               placeholder="Any notes about this return..."

@@ -19,9 +19,7 @@ const downloadTemplate = (headers: HeaderConfig[], fileName: string) => {
     const worksheet = XLSX.utils.json_to_sheet([]);
 
     // Extract header labels
-    const headerLabels = headers.map((h) =>
-      typeof h === "string" ? h : h.label,
-    );
+    const headerLabels = headers.map((h) => (typeof h === "string" ? h : h.label));
 
     // Add headers manually
     XLSX.utils.sheet_add_aoa(worksheet, [headerLabels]);
@@ -30,9 +28,7 @@ const downloadTemplate = (headers: HeaderConfig[], fileName: string) => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
 
     XLSX.writeFile(workbook, `${fileName}_template.xlsx`);
-    toast.success(
-      `Template downloaded successfully: ${fileName}_template.xlsx`,
-    );
+    toast.success(`Template downloaded successfully: ${fileName}_template.xlsx`);
   } catch (error) {
     toast.error("Failed to download template");
   }
@@ -47,9 +43,7 @@ function DownloadTemplate({ headers, fileName }: DownloadTemplateProps) {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-blue-900 mb-1">
-              Step 1: Download Template
-            </h3>
+            <h3 className="text-sm font-semibold text-blue-900 mb-1">Step 1: Download Template</h3>
             <p className="text-xs text-blue-700">
               Download the Excel template and fill in your data
             </p>

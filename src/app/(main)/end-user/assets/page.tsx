@@ -12,17 +12,9 @@ const badgeClasses: Record<BadgeColor, string> = {
   orange: "bg-orange-50 text-orange-600 border-orange-200",
 };
 
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}>
       {label}
     </span>
   );
@@ -71,16 +63,14 @@ export default function MyAssetsPage() {
     (a) =>
       a.assetTag.toLowerCase().includes(search.toLowerCase()) ||
       a.device.toLowerCase().includes(search.toLowerCase()) ||
-      a.assetType.toLowerCase().includes(search.toLowerCase()),
+      a.assetType.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">My Assets</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          All assets currently assigned to you
-        </p>
+        <p className="text-sm text-gray-500 mt-1">All assets currently assigned to you</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
@@ -99,10 +89,7 @@ export default function MyAssetsPage() {
         {loading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="h-14 bg-gray-100 rounded-xl animate-pulse"
-              />
+              <div key={i} className="h-14 bg-gray-100 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -140,15 +127,9 @@ export default function MyAssetsPage() {
                     key={a._id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="py-3 pr-4 font-semibold text-indigo-600">
-                      {a.assetTag}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-800 font-medium">
-                      {a.device || "—"}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500">
-                      {a.assetType || "—"}
-                    </td>
+                    <td className="py-3 pr-4 font-semibold text-indigo-600">{a.assetTag}</td>
+                    <td className="py-3 pr-4 text-gray-800 font-medium">{a.device || "—"}</td>
+                    <td className="py-3 pr-4 text-gray-500">{a.assetType || "—"}</td>
                     <td className="py-3 pr-4 text-gray-500 text-xs whitespace-nowrap">
                       {a.allocationDate}
                     </td>

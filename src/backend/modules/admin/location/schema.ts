@@ -15,11 +15,10 @@ const locationSchema = new mongoose.Schema<LocationDocument>(
     city: { type: String, required: true, trim: true },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Location =
-  mongoose.models.Location ||
-  mongoose.model<LocationDocument>("Location", locationSchema);
+  mongoose.models.Location || mongoose.model<LocationDocument>("Location", locationSchema);
 
 export default Location;

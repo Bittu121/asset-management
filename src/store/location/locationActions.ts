@@ -34,29 +34,28 @@ export const getLocationsAction = () => async (dispatch: Dispatch) => {
 };
 
 // Create location
-export const createLocationAction =
-  (locationData: any) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch("/api/admin/location", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(locationData),
-      });
+export const createLocationAction = (locationData: any) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch("/api/admin/location", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(locationData),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to create location");
-        return;
-      }
-
-      dispatch({ type: CREATE_LOCATION_SUCCESS, payload: data.data });
-      toast.success(data.message || "Location created successfully");
-    } catch (error) {
-      toast.error("Failed to create location");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to create location");
+      return;
     }
-  };
+
+    dispatch({ type: CREATE_LOCATION_SUCCESS, payload: data.data });
+    toast.success(data.message || "Location created successfully");
+  } catch (error) {
+    toast.error("Failed to create location");
+  }
+};
 
 // Update location
 export const updateLocationAction =
@@ -84,24 +83,23 @@ export const updateLocationAction =
   };
 
 // Delete location
-export const deleteLocationAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    try {
-      const res = await fetch(`/api/admin/location/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+export const deleteLocationAction = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    const res = await fetch(`/api/admin/location/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        toast.error(data.message || "Failed to delete location");
-        return;
-      }
-
-      dispatch({ type: DELETE_LOCATION_SUCCESS, payload: id });
-      toast.success(data.message || "Location deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete location");
+    if (!res.ok) {
+      toast.error(data.message || "Failed to delete location");
+      return;
     }
-  };
+
+    dispatch({ type: DELETE_LOCATION_SUCCESS, payload: id });
+    toast.success(data.message || "Location deleted successfully");
+  } catch (error) {
+    toast.error("Failed to delete location");
+  }
+};

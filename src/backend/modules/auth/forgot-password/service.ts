@@ -8,7 +8,8 @@ const generateOTP = (): string => {
 
 export const forgotPasswordService = async (email: string) => {
   const user = await UserAccount.findOne({ email });
-  if (!user) return null;
+  // Always return success to prevent user enumeration
+  if (!user) return { email };
 
   const otp = generateOTP();
 

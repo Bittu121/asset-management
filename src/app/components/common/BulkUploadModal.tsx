@@ -43,13 +43,7 @@ const readExcelFile = (file: File): Promise<any[]> => {
   });
 };
 
-function BulkUploadModal({
-  isOpen,
-  onClose,
-  headers,
-  fileName,
-  onUpload,
-}: BulkUploadModalProps) {
+function BulkUploadModal({ isOpen, onClose, headers, fileName, onUpload }: BulkUploadModalProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewData, setPreviewData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -158,9 +152,7 @@ function BulkUploadModal({
               <h3 className="mt-2 text-sm font-semibold text-gray-900">
                 Step 2: Upload Excel File
               </h3>
-              <p className="mt-1 text-xs text-gray-500">
-                Select the filled Excel file to upload
-              </p>
+              <p className="mt-1 text-xs text-gray-500">Select the filled Excel file to upload</p>
 
               <div className="mt-4">
                 <label className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-semibold rounded-md hover:bg-gray-800 cursor-pointer transition">
@@ -178,8 +170,7 @@ function BulkUploadModal({
 
               {selectedFile && (
                 <div className="mt-3 text-sm text-gray-600">
-                  Selected:{" "}
-                  <span className="font-semibold">{selectedFile.name}</span>
+                  Selected: <span className="font-semibold">{selectedFile.name}</span>
                 </div>
               )}
             </div>
@@ -189,9 +180,7 @@ function BulkUploadModal({
           {previewData.length > 0 && (
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               <div className="bg-gray-50 px-4 py-2 border-b">
-                <h3 className="text-sm font-semibold text-gray-900">
-                  Preview (First 5 rows)
-                </h3>
+                <h3 className="text-sm font-semibold text-gray-900">Preview (First 5 rows)</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -215,10 +204,7 @@ function BulkUploadModal({
                         {Object.entries(row)
                           .filter(([key]) => key !== "__rowNum__")
                           .map(([key, value], i) => (
-                            <td
-                              key={i}
-                              className="px-4 py-2 text-xs text-gray-900"
-                            >
+                            <td key={i} className="px-4 py-2 text-xs text-gray-900">
                               {String(value)}
                             </td>
                           ))}

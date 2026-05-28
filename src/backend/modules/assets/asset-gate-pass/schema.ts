@@ -31,10 +31,9 @@ const gatePassSchema = new mongoose.Schema(
     issuedAt: { type: String, default: "" },
     returnedAt: { type: String, default: "" },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const GatePass =
-  mongoose.models.GatePass || mongoose.model("GatePass", gatePassSchema);
+const GatePass = mongoose.models.GatePass || mongoose.model("GatePass", gatePassSchema);
 
 export default GatePass;

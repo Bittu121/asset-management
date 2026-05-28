@@ -65,8 +65,7 @@ export const createAssetCategoryAction =
   };
 
 export const updateAssetCategoryAction =
-  (id: string, categoryData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, categoryData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_ASSET_CATEGORY_LOADING });
     try {
       const res = await fetch(`/api/admin/asset-categories/${id}`, {
@@ -94,36 +93,34 @@ export const updateAssetCategoryAction =
     }
   };
 
-export const deleteAssetCategoryAction =
-  (id: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: DELETE_ASSET_CATEGORY_LOADING });
-    try {
-      const res = await fetch(`/api/admin/asset-categories/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+export const deleteAssetCategoryAction = (id: string) => async (dispatch: Dispatch) => {
+  dispatch({ type: DELETE_ASSET_CATEGORY_LOADING });
+  try {
+    const res = await fetch(`/api/admin/asset-categories/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
 
-      if (!res.ok) {
-        dispatch({ type: ASSET_CATEGORIES_ERROR, payload: data.message });
-        toast.error(data.message || "Failed to delete asset category");
-        return;
-      }
-
-      dispatch({ type: DELETE_ASSET_CATEGORY_SUCCESS, payload: id });
-      toast.success(data.message || "Asset category deleted successfully");
-
-      await dispatch(fetchAssetCategories() as any);
-    } catch {
-      dispatch({ type: ASSET_CATEGORIES_ERROR, payload: "Something went wrong" });
-      toast.error("Something went wrong");
+    if (!res.ok) {
+      dispatch({ type: ASSET_CATEGORIES_ERROR, payload: data.message });
+      toast.error(data.message || "Failed to delete asset category");
+      return;
     }
-  };
 
-export const setSelectedAssetCategory =
-  (category: any) => (dispatch: Dispatch) => {
-    dispatch({ type: SET_SELECTED_ASSET_CATEGORY, payload: category });
-  };
+    dispatch({ type: DELETE_ASSET_CATEGORY_SUCCESS, payload: id });
+    toast.success(data.message || "Asset category deleted successfully");
+
+    await dispatch(fetchAssetCategories() as any);
+  } catch {
+    dispatch({ type: ASSET_CATEGORIES_ERROR, payload: "Something went wrong" });
+    toast.error("Something went wrong");
+  }
+};
+
+export const setSelectedAssetCategory = (category: any) => (dispatch: Dispatch) => {
+  dispatch({ type: SET_SELECTED_ASSET_CATEGORY, payload: category });
+};
 
 export const clearAssetCategoriesError = () => (dispatch: Dispatch) => {
   dispatch({ type: CLEAR_ASSET_CATEGORIES_ERROR });

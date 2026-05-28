@@ -34,10 +34,7 @@ const initialState: SubLocationState = {
   error: null,
 };
 
-const subLocationReducer = (
-  state = initialState,
-  action: Action,
-): SubLocationState => {
+const subLocationReducer = (state = initialState, action: Action): SubLocationState => {
   switch (action.type) {
     case SUBLOCATION_LOADING:
       return { ...state, loading: true, error: null };
@@ -58,16 +55,14 @@ const subLocationReducer = (
       return {
         ...state,
         subLocations: state.subLocations.map((loc) =>
-          loc._id === action.payload._id ? action.payload : loc,
+          loc._id === action.payload._id ? action.payload : loc
         ),
       };
 
     case DELETE_SUBLOCATION_SUCCESS:
       return {
         ...state,
-        subLocations: state.subLocations.filter(
-          (loc) => loc._id !== action.payload,
-        ),
+        subLocations: state.subLocations.filter((loc) => loc._id !== action.payload),
       };
 
     default:

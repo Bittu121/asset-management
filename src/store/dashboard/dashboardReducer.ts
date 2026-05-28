@@ -1,8 +1,4 @@
-import {
-  DASHBOARD_LOADING,
-  DASHBOARD_SUCCESS,
-  DASHBOARD_ERROR,
-} from "./dashboardActions";
+import { DASHBOARD_LOADING, DASHBOARD_SUCCESS, DASHBOARD_ERROR } from "./dashboardActions";
 import { DashboardState } from "./dashboardTypes";
 
 const initialState: DashboardState = {
@@ -13,10 +9,7 @@ const initialState: DashboardState = {
 
 type Action = { type: string; payload?: any };
 
-export default function dashboardReducer(
-  state = initialState,
-  action: Action,
-): DashboardState {
+export default function dashboardReducer(state = initialState, action: Action): DashboardState {
   switch (action.type) {
     case DASHBOARD_LOADING:
       return { ...state, loading: true, error: null };

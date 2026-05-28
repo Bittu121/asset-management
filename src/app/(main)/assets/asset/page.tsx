@@ -24,14 +24,11 @@ import { fetchVendors } from "@/store/vendor/vendorActions";
 function Page() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { assets, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.assets);
-  const { assetCategories } = useSelector(
-    (state: RootState) => state.assetCategories,
+  const { assets, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.assets
   );
-  const { subCategories } = useSelector(
-    (state: RootState) => state.subCategories,
-  );
+  const { assetCategories } = useSelector((state: RootState) => state.assetCategories);
+  const { subCategories } = useSelector((state: RootState) => state.subCategories);
   const { vendors } = useSelector((state: RootState) => state.vendor);
 
   const [search, setSearch] = useState("");
@@ -70,11 +67,9 @@ function Page() {
         (statusFilter === "Active" && asset.isActive) ||
         (statusFilter === "Inactive" && !asset.isActive);
 
-      const matchesCategory =
-        categoryFilter === "All" || asset.category?._id === categoryFilter;
+      const matchesCategory = categoryFilter === "All" || asset.category?._id === categoryFilter;
 
-      const matchesVendor =
-        vendorFilter === "All" || asset.vendor?._id === vendorFilter;
+      const matchesVendor = vendorFilter === "All" || asset.vendor?._id === vendorFilter;
 
       return matchesSearch && matchesStatus && matchesCategory && matchesVendor;
     });
@@ -83,14 +78,11 @@ function Page() {
   const totalPages = Math.ceil(filteredAssets.length / itemsPerPage);
   const paginatedAssets = filteredAssets.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const isFiltered =
-    search !== "" ||
-    statusFilter !== "All" ||
-    categoryFilter !== "All" ||
-    vendorFilter !== "All";
+    search !== "" || statusFilter !== "All" || categoryFilter !== "All" || vendorFilter !== "All";
 
   const handleClearFilters = () => {
     setSearch("");
@@ -145,12 +137,8 @@ function Page() {
       <div className="mb-6 space-y-4">
         {/* Header */}
         <div>
-          <h1 className="text-xl font-bold text-gray-900 tracking-tight">
-            Assets
-          </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Manage and track all your company assets
-          </p>
+          <h1 className="text-xl font-bold text-gray-900 tracking-tight">Assets</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Manage and track all your company assets</p>
         </div>
 
         <div className="border-t border-gray-200" />
@@ -245,13 +233,8 @@ function Page() {
           </div>
 
           <p className="text-sm text-gray-500 hidden lg:block">
-            Showing{" "}
-            <span className="font-semibold text-gray-700">
-              {filteredAssets.length}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-700">{assets.length}</span>{" "}
-            assets
+            Showing <span className="font-semibold text-gray-700">{filteredAssets.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{assets.length}</span> assets
           </p>
         </div>
 
@@ -321,9 +304,7 @@ function Page() {
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 text-xl">
                       🗂️
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Assets Found
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-700">No Assets Found</h3>
                     <p className="text-xs text-gray-500">
                       {isFiltered
                         ? "No assets match your current filters."
@@ -349,38 +330,25 @@ function Page() {
               </tr>
             ) : (
               paginatedAssets.map((item) => (
-                <tr
-                  key={item._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={item._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-4">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {item.assetTag}
-                    </span>
+                    <span className="text-sm font-semibold text-gray-900">{item.assetTag}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      {item.device || "-"}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{item.device || "-"}</div>
                     <div className="text-xs text-gray-400">
                       {item.category?.name || "-"}
-                      {item.subCategory?.name
-                        ? ` • ${item.subCategory.name}`
-                        : ""}
+                      {item.subCategory?.name ? ` • ${item.subCategory.name}` : ""}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {item.serialNumber}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{item.serialNumber}</td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {item.vendor?.vendorName || "-"}
                   </td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        item.isActive
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-500"
+                        item.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       <span
@@ -396,9 +364,7 @@ function Page() {
                       ? `₹${Number(item.purchaseCost).toLocaleString("en-IN")}`
                       : "-"}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {item.warrantyExpiry || "-"}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{item.warrantyExpiry || "-"}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="inline-flex items-center gap-3">
                       <button

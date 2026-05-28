@@ -19,10 +19,7 @@ const initialState: AllocationState = {
 
 type Action = { type: string; payload?: any };
 
-export default function allocationReducer(
-  state = initialState,
-  action: Action,
-): AllocationState {
+export default function allocationReducer(state = initialState, action: Action): AllocationState {
   switch (action.type) {
     case ALLOCATIONS_LOADING:
       return { ...state, loading: true, error: null };
@@ -58,7 +55,7 @@ export default function allocationReducer(
         returnLoading: false,
         // Replace the updated allocation in the list
         allocations: state.allocations.map((a) =>
-          a._id === action.payload._id ? action.payload : a,
+          a._id === action.payload._id ? action.payload : a
         ),
       };
 

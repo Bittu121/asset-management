@@ -21,11 +21,9 @@ const vendorSchema = new mongoose.Schema<VendorDocument>(
     contractExpiry: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const Vendor =
-  mongoose.models.Vendor ||
-  mongoose.model<VendorDocument>("Vendor", vendorSchema);
+const Vendor = mongoose.models.Vendor || mongoose.model<VendorDocument>("Vendor", vendorSchema);
 
 export default Vendor;

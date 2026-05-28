@@ -33,10 +33,7 @@ const initialState: LocationState = {
   error: null,
 };
 
-const locationReducer = (
-  state = initialState,
-  action: Action,
-): LocationState => {
+const locationReducer = (state = initialState, action: Action): LocationState => {
   switch (action.type) {
     case LOCATION_LOADING:
       return { ...state, loading: true, error: null };
@@ -57,7 +54,7 @@ const locationReducer = (
       return {
         ...state,
         locations: state.locations.map((loc) =>
-          loc._id === action.payload._id ? action.payload : loc,
+          loc._id === action.payload._id ? action.payload : loc
         ),
       };
 

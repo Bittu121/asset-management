@@ -344,8 +344,9 @@ import {
 
 function Roles() {
   const dispatch = useDispatch<AppDispatch>();
-  const { roles, loading, createLoading, updateLoading, deleteLoading } =
-    useSelector((state: RootState) => state.roles);
+  const { roles, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.roles
+  );
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -378,7 +379,7 @@ function Roles() {
   const totalPages = Math.ceil(filteredRoles.length / itemsPerPage);
   const paginatedRoles = filteredRoles.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAddRoles = (data: any) => {
@@ -392,11 +393,7 @@ function Roles() {
 
   const handleUpdateRoles = (updatedData: any) => {
     if (selectedRoles) {
-      dispatch(
-        updateRoleAction(selectedRoles._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
-      );
+      dispatch(updateRoleAction(selectedRoles._id, updatedData, () => setIsUpdateOpen(false)));
     }
   };
 
@@ -415,10 +412,7 @@ function Roles() {
           typeof item.Permissions === "string"
             ? item.Permissions.split(",").map((p: string) => p.trim())
             : item.permissions || [],
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
 
       if (roleData.name) {
@@ -442,9 +436,7 @@ function Roles() {
     <div className="p-4 bg-[#f8fafc] min-h-screen">
       <div className="mb-4 space-y-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">
-            Roles & Permissions
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900">Roles & Permissions</h1>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -559,19 +551,12 @@ function Roles() {
               </tr>
             ) : (
               paginatedRoles.map((rol: any) => (
-                <tr
-                  key={rol._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={rol._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {rol._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{rol._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {rol.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{rol.name}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700 max-w-xs truncate">
@@ -586,9 +571,7 @@ function Roles() {
                   <td className="px-6 py-5">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        rol.isActive
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-500"
+                        rol.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {rol.isActive ? "Active" : "Inactive"}

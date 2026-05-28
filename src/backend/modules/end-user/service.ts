@@ -2,7 +2,7 @@ import Allocation from "../assets/allocation/schema";
 import GatePass from "../assets/asset-gate-pass/schema";
 import "../admin/asset-categories/schema";
 
-export async function getEndUserData(userId: string) {
+export async function getEndUserData(userId: string, userEmail: string) {
   const today = new Date().toISOString().split("T")[0];
 
   const allocations = await Allocation.find({ allocatedTo: userId })
@@ -10,43 +10,30 @@ export async function getEndUserData(userId: string) {
     .populate([
       {
         path: "asset",
-        select:
-          "assetTag device manufacturer model warrantyExpiry purchaseCost currentValue",
+        select: "assetTag device manufacturer model warrantyExpiry purchaseCost currentValue",
       },
     ])
     .sort({ createdAt: -1 })
     .lean();
 
-  const userAssetIds = allocations.map(
-    (a) => (a.asset as any)?._id ?? a.asset,
-  );
-
-  const myGatePasses =
-    userAssetIds.length === 0
-      ? []
-      : await GatePass.find({ asset: { $in: userAssetIds } })
-          .select("asset gatePassId type purpose expectedReturn status requestedBy createdAt")
-          .populate([{ path: "asset", select: "assetTag device manufacturer model" }])
-          .sort({ createdAt: -1 })
-          .limit(50)
-          .lean();
+  // Fetch gate passes scoped to this user by email (not by asset, which leaks cross-user data)
+  const myGatePasses = await GatePass.find({ requestedBy: userEmail })
+    .select("asset gatePassId type purpose expectedReturn status requestedBy createdAt")
+    .populate([{ path: "asset", select: "assetTag device manufacturer model" }])
+    .sort({ createdAt: -1 })
+    .limit(50)
+    .lean();
 
   // Active allocations
   const activeAllocations = allocations.filter((a) => a.status === "ACTIVE");
-  const overdueAllocations = activeAllocations.filter(
-    (a) => a.expectedReturn < today,
-  );
-  const returnedAllocations = allocations.filter(
-    (a) => a.status === "RETURNED",
-  );
+  const overdueAllocations = activeAllocations.filter((a) => a.expectedReturn < today);
+  const returnedAllocations = allocations.filter((a) => a.status === "RETURNED");
 
   const stats = {
     totalAssets: activeAllocations.length,
-    pendingGatePasses: myGatePasses.filter((gp) => gp.status === "PENDING")
+    pendingGatePasses: myGatePasses.filter((gp) => gp.status === "PENDING").length,
+    activeGatePasses: myGatePasses.filter((gp) => ["APPROVED", "ISSUED"].includes(gp.status))
       .length,
-    activeGatePasses: myGatePasses.filter((gp) =>
-      ["APPROVED", "ISSUED"].includes(gp.status),
-    ).length,
     returnDue: overdueAllocations.length,
   };
 
@@ -77,9 +64,7 @@ export async function getEndUserData(userId: string) {
       _id: String(a._id),
       assetId: String(asset?._id ?? ""),
       assetTag: asset?.assetTag ?? "",
-      device:
-        `${asset?.manufacturer ?? ""} ${asset?.model ?? asset?.device ?? ""}`.trim() ||
-        "",
+      device: `${asset?.manufacturer ?? ""} ${asset?.model ?? asset?.device ?? ""}`.trim() || "",
       assetType: asset?.device || "Asset",
       allocationDate: a.allocationDate ?? "",
       returnDate: a.returnDate ?? "",
@@ -96,12 +81,7 @@ export async function getEndUserData(userId: string) {
     type: gp.type as "OUT" | "IN",
     purpose: gp.purpose ?? "",
     expectedReturn: gp.expectedReturn ?? "",
-    status: gp.status as
-      | "PENDING"
-      | "APPROVED"
-      | "ISSUED"
-      | "RETURNED"
-      | "REJECTED",
+    status: gp.status as "PENDING" | "APPROVED" | "ISSUED" | "RETURNED" | "REJECTED",
     date: String(gp.createdAt).split("T")[0],
   }));
 

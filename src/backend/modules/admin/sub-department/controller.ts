@@ -13,11 +13,7 @@ export const getSubDepartments = async (req: NextRequest) => {
   if (roleCheck) return roleCheck;
 
   const subDepartments = await subDepartmentService.getAllSubDepartments();
-  return successResponse(
-    subDepartments,
-    "Sub departments fetched successfully",
-    200,
-  );
+  return successResponse(subDepartments, "Sub departments fetched successfully", 200);
 };
 
 export const getSingleSubDepartment = async (req: NextRequest, id: string) => {
@@ -30,11 +26,7 @@ export const getSingleSubDepartment = async (req: NextRequest, id: string) => {
   const subDepartment = await subDepartmentService.getSubDepartmentById(id);
   if (!subDepartment) return errorResponse("Sub department not found", 404);
 
-  return successResponse(
-    subDepartment,
-    "Sub department fetched successfully",
-    200,
-  );
+  return successResponse(subDepartment, "Sub department fetched successfully", 200);
 };
 
 export const createSubDepartment = async (req: NextRequest) => {
@@ -46,19 +38,11 @@ export const createSubDepartment = async (req: NextRequest) => {
 
   const body = await req.json();
 
-  const validation = validateFields(body, [
-    "subDepartmentName",
-    "departmentId",
-    "departmentName",
-  ]);
+  const validation = validateFields(body, ["subDepartmentName", "departmentId", "departmentName"]);
   if (validation) return validation;
 
   const subDepartment = await subDepartmentService.createSubDepartment(body);
-  return successResponse(
-    subDepartment,
-    "Sub department created successfully",
-    201,
-  );
+  return successResponse(subDepartment, "Sub department created successfully", 201);
 };
 
 export const updateSubDepartment = async (req: NextRequest, id: string) => {
@@ -70,17 +54,10 @@ export const updateSubDepartment = async (req: NextRequest, id: string) => {
 
   const body = await req.json();
 
-  const subDepartment = await subDepartmentService.updateSubDepartment(
-    id,
-    body,
-  );
+  const subDepartment = await subDepartmentService.updateSubDepartment(id, body);
   if (!subDepartment) return errorResponse("Sub department not found", 404);
 
-  return successResponse(
-    subDepartment,
-    "Sub department updated successfully",
-    200,
-  );
+  return successResponse(subDepartment, "Sub department updated successfully", 200);
 };
 
 export const deleteSubDepartment = async (req: NextRequest, id: string) => {

@@ -38,7 +38,7 @@ export const createAllocationAction =
       allocationDate: string;
       expectedReturn: string;
     },
-    onSuccess?: () => void,
+    onSuccess?: () => void
   ) =>
   async (dispatch: Dispatch) => {
     dispatch({ type: CREATE_ALLOCATION_LOADING });
@@ -70,11 +70,7 @@ export const createAllocationAction =
 
 // Return an asset
 export const returnAllocationAction =
-  (
-    id: string,
-    returnData: { condition: string; notes: string },
-    onSuccess?: () => void,
-  ) =>
+  (id: string, returnData: { condition: string; notes: string }, onSuccess?: () => void) =>
   async (dispatch: Dispatch) => {
     dispatch({ type: RETURN_ALLOCATION_LOADING });
     try {

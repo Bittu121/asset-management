@@ -30,15 +30,11 @@ type Location = {
 
 function Location() {
   const dispatch = useDispatch<AppDispatch>();
-  const { locations, loading } = useSelector(
-    (state: RootState) => state.location,
-  );
+  const { locations, loading } = useSelector((state: RootState) => state.location);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    null,
-  );
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
 
   //pagination step-1
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,13 +77,11 @@ function Location() {
 
   const paginatedLocation = filteredLocations.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   //Create Api
-  const handleAddLocation = async (
-    data: Omit<Location, "_id" | "createdAt">,
-  ) => {
+  const handleAddLocation = async (data: Omit<Location, "_id" | "createdAt">) => {
     await dispatch(createLocationAction(data));
     dispatch(getLocationsAction());
   };
@@ -208,13 +202,9 @@ function Location() {
                       <CiLocationOn size={24} className="font-bold" />
                     </div>
 
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Locations Found
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-700">No Locations Found</h3>
 
-                    <p className="text-xs text-gray-500">
-                      You haven’t added any locations yet.
-                    </p>
+                    <p className="text-xs text-gray-500">You haven’t added any locations yet.</p>
 
                     <button
                       onClick={() => setIsAddOpen(true)}
@@ -228,29 +218,18 @@ function Location() {
             ) : (
               <>
                 {paginatedLocation.map((loc) => (
-                  <tr
-                    key={loc._id}
-                    className="hover:bg-gray-50 transition-all duration-150"
-                  >
+                  <tr key={loc._id} className="hover:bg-gray-50 transition-all duration-150">
                     <td className="px-6 py-5">
-                      <div className="text-sm font-medium text-gray-900">
-                        {loc._id}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{loc._id}</div>
                     </td>
                     <td className="px-6 py-5">
-                      <div className="text-sm font-medium text-gray-900">
-                        {loc.locationName}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{loc.locationName}</div>
                     </td>
                     <td className="px-6 py-5">
-                      <div className="text-sm font-medium text-gray-900">
-                        {loc.city}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{loc.city}</div>
                     </td>
                     <td className="px-6 py-5">
-                      <div className="text-sm font-medium text-gray-900">
-                        {loc.address}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{loc.address}</div>
                     </td>
 
                     <td className="px-6 py-5">

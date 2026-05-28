@@ -3,13 +3,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/auth/store";
-import {
-  FiPackage,
-  FiLink,
-  FiCheckCircle,
-  FiDollarSign,
-  FiClipboard,
-} from "react-icons/fi";
+import { FiPackage, FiLink, FiCheckCircle, FiDollarSign, FiClipboard } from "react-icons/fi";
 import { StatCard, SectionHeader } from "./SharedComponents";
 import Pagination from "../../../components/common/Pagination";
 
@@ -25,9 +19,7 @@ export default function OverviewTab() {
   const [categoryPage, setCategoryPage] = useState(1);
   const [activityPage, setActivityPage] = useState(1);
 
-  const overview = useSelector(
-    (state: RootState) => state.reports.data?.overview,
-  );
+  const overview = useSelector((state: RootState) => state.reports.data?.overview);
 
   if (!overview) return null;
 
@@ -41,30 +33,24 @@ export default function OverviewTab() {
     recentActivity,
   } = overview;
 
-  const gatePassData = Object.entries(gatePassSummary).map(
-    ([label, count]) => ({
-      label,
-      count,
-      color:
-        label === "PENDING"
-          ? "bg-amber-300"
-          : label === "APPROVED"
-            ? "bg-sky-400"
-            : label === "ISSUED"
-              ? "bg-violet-400"
-              : label === "RETURNED"
-                ? "bg-emerald-400"
-                : "bg-rose-400",
-    }),
-  );
+  const gatePassData = Object.entries(gatePassSummary).map(([label, count]) => ({
+    label,
+    count,
+    color:
+      label === "PENDING"
+        ? "bg-amber-300"
+        : label === "APPROVED"
+          ? "bg-sky-400"
+          : label === "ISSUED"
+            ? "bg-violet-400"
+            : label === "RETURNED"
+              ? "bg-emerald-400"
+              : "bg-rose-400",
+  }));
 
-  const totalGatePasses = Object.values(gatePassSummary).reduce(
-    (s, n) => s + n,
-    0,
-  );
+  const totalGatePasses = Object.values(gatePassSummary).reduce((s, n) => s + n, 0);
 
-  const cardClass =
-    "bg-white border border-gray-200 rounded-2xl flex flex-col min-h-[320px]";
+  const cardClass = "bg-white border border-gray-200 rounded-2xl flex flex-col min-h-[320px]";
 
   return (
     <div className="space-y-6">
@@ -112,27 +98,20 @@ export default function OverviewTab() {
         {/* Gate Pass summary */}
         <div className={cardClass}>
           <div className="p-6 flex-1">
-            <SectionHeader
-              title="Gate Pass Summary"
-              subtitle="Status overview"
-            />
+            <SectionHeader title="Gate Pass Summary" subtitle="Status overview" />
             <div className="space-y-5 mt-5">
               {paginate(gatePassData, gatePage).map((item) => (
                 <div key={item.label}>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-500">{item.label}</span>
-                    <span className="font-medium text-gray-700">
-                      {item.count}
-                    </span>
+                    <span className="font-medium text-gray-700">{item.count}</span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className={`${item.color} h-full rounded-full`}
                       style={{
                         width:
-                          totalGatePasses > 0
-                            ? `${(item.count / totalGatePasses) * 100}%`
-                            : "0%",
+                          totalGatePasses > 0 ? `${(item.count / totalGatePasses) * 100}%` : "0%",
                       }}
                     />
                   </div>
@@ -152,36 +131,26 @@ export default function OverviewTab() {
         {/* Assets by category */}
         <div className={cardClass}>
           <div className="p-6 flex-1">
-            <SectionHeader
-              title="Assets by Category"
-              subtitle="Inventory split"
-            />
+            <SectionHeader title="Assets by Category" subtitle="Inventory split" />
             <div className="space-y-5 mt-5">
               {paginate(categoryBreakdown, categoryPage).map((item) => (
                 <div key={item.category}>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-500">{item.category}</span>
-                    <span className="font-medium text-gray-700">
-                      {item.count}
-                    </span>
+                    <span className="font-medium text-gray-700">{item.count}</span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="bg-indigo-300 h-full rounded-full"
                       style={{
-                        width:
-                          totalAssets > 0
-                            ? `${(item.count / totalAssets) * 100}%`
-                            : "0%",
+                        width: totalAssets > 0 ? `${(item.count / totalAssets) * 100}%` : "0%",
                       }}
                     />
                   </div>
                 </div>
               ))}
               {categoryBreakdown.length === 0 && (
-                <p className="text-sm text-gray-400 text-center py-4">
-                  No data
-                </p>
+                <p className="text-sm text-gray-400 text-center py-4">No data</p>
               )}
             </div>
           </div>
@@ -197,33 +166,21 @@ export default function OverviewTab() {
         {/* Recent activity */}
         <div className={cardClass}>
           <div className="p-6 flex-1">
-            <SectionHeader
-              title="Recent Activity"
-              subtitle="Latest internal logs"
-            />
+            <SectionHeader title="Recent Activity" subtitle="Latest internal logs" />
             <div className="space-y-3 mt-5">
               {paginate(recentActivity, activityPage).map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50"
-                >
+                <div key={idx} className="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50">
                   <div className="w-10 h-10 rounded-2xl bg-violet-50 text-violet-500 flex items-center justify-center shrink-0">
                     <FiClipboard size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800">
-                      {item.action}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      {item.detail}
-                    </p>
+                    <p className="text-sm font-medium text-gray-800">{item.action}</p>
+                    <p className="text-xs text-gray-500 truncate">{item.detail}</p>
                   </div>
                 </div>
               ))}
               {recentActivity.length === 0 && (
-                <p className="text-sm text-gray-400 text-center py-4">
-                  No activity yet
-                </p>
+                <p className="text-sm text-gray-400 text-center py-4">No activity yet</p>
               )}
             </div>
           </div>

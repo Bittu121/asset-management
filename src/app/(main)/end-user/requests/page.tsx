@@ -13,17 +13,9 @@ const badgeClasses: Record<BadgeColor, string> = {
   gray: "bg-gray-50 text-gray-500 border-gray-200",
 };
 
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}>
       {label}
     </span>
   );
@@ -68,8 +60,8 @@ export default function MyRequestsPage() {
         if (d.data)
           setGatePasses(
             (d.data.gatePassList ?? []).filter((g: GatePass) =>
-              ["PENDING", "APPROVED", "ISSUED"].includes(g.status),
-            ),
+              ["PENDING", "APPROVED", "ISSUED"].includes(g.status)
+            )
           );
       })
       .finally(() => setLoading(false));
@@ -79,31 +71,22 @@ export default function MyRequestsPage() {
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">My Requests</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Pending and active gate pass requests
-        </p>
+        <p className="text-sm text-gray-500 mt-1">Pending and active gate pass requests</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
-        <h3 className="font-semibold text-gray-800 text-sm mb-4">
-          Active Gate Pass Requests
-        </h3>
+        <h3 className="font-semibold text-gray-800 text-sm mb-4">Active Gate Pass Requests</h3>
         {loading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="h-14 bg-gray-100 rounded-xl animate-pulse"
-              />
+              <div key={i} className="h-14 bg-gray-100 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : gatePasses.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-gray-400">
             <ShieldCheck size={40} className="mb-3 opacity-40" />
             <p className="text-sm">No active requests</p>
-            <p className="text-xs mt-1">
-              Gate pass requests you have submitted will appear here
-            </p>
+            <p className="text-xs mt-1">Gate pass requests you have submitted will appear here</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -146,8 +129,8 @@ export default function MyRequestsPage() {
           </div>
           <h3 className="font-semibold text-gray-800 mb-1">Asset Requests</h3>
           <p className="text-sm text-gray-400 max-w-xs">
-            To request a new asset, please contact your admin or IT department.
-            They will allocate the asset and it will appear in your dashboard.
+            To request a new asset, please contact your admin or IT department. They will allocate
+            the asset and it will appear in your dashboard.
           </p>
         </div>
       </div>

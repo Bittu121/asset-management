@@ -13,11 +13,7 @@ export const getSubCategories = async (req: NextRequest) => {
   if (roleCheck) return roleCheck;
 
   const subCategories = await subCategoryService.getAllSubCategories();
-  return successResponse(
-    subCategories,
-    "Sub categories fetched successfully",
-    200,
-  );
+  return successResponse(subCategories, "Sub categories fetched successfully", 200);
 };
 
 export const getSingleSubCategory = async (req: NextRequest, id: string) => {
@@ -47,20 +43,16 @@ export const createSubCategory = async (req: NextRequest) => {
 
   const existing = await subCategoryService.getSubCategoryByNameAndCategory(
     body.name,
-    body.category,
+    body.category
   );
   if (existing)
     return errorResponse(
       "Sub category with this name already exists in the selected category",
-      409,
+      409
     );
 
   const subCategory = await subCategoryService.createSubCategory(body);
-  return successResponse(
-    subCategory,
-    "Sub category created successfully",
-    201,
-  );
+  return successResponse(subCategory, "Sub category created successfully", 201);
 };
 
 export const updateSubCategory = async (req: NextRequest, id: string) => {

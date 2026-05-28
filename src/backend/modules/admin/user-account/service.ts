@@ -62,10 +62,7 @@ export const createUserAccount = async (data: CreateUserAccountDto) => {
   return await getUserAccountById(user._id.toString());
 };
 
-export const updateUserAccount = async (
-  id: string,
-  data: UpdateUserAccountDto,
-) => {
+export const updateUserAccount = async (id: string, data: UpdateUserAccountDto) => {
   if (data.password) {
     data.password = await hashPassword(data.password);
   }

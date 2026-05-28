@@ -42,8 +42,7 @@ export const createVendor = async (req: NextRequest) => {
   if (validation) return validation;
 
   const existing = await vendorService.getVendorByEmail(body.email);
-  if (existing)
-    return errorResponse("Vendor with this email already exists", 409);
+  if (existing) return errorResponse("Vendor with this email already exists", 409);
 
   const vendor = await vendorService.createVendor(body);
   return successResponse(vendor, "Vendor created successfully", 201);

@@ -25,10 +25,7 @@ const initialState: AssetTypesState = {
 
 type Action = { type: string; payload?: any };
 
-const assetTypesReducer = (
-  state = initialState,
-  action: Action,
-): AssetTypesState => {
+const assetTypesReducer = (state = initialState, action: Action): AssetTypesState => {
   switch (action.type) {
     case ASSET_TYPES_LOADING:
       return { ...state, loading: true, error: null };
@@ -64,7 +61,7 @@ const assetTypesReducer = (
         ...state,
         updateLoading: false,
         assetTypes: state.assetTypes.map((at) =>
-          at._id === action.payload._id ? action.payload : at,
+          at._id === action.payload._id ? action.payload : at
         ),
       };
 

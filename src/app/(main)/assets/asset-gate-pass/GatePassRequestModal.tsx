@@ -23,10 +23,7 @@ type Props = {
   isLoading?: boolean;
 };
 
-const MOVEMENT_OPTIONS = [
-  "OUT (leaving premises)",
-  "IN (arriving / returning)",
-];
+const MOVEMENT_OPTIONS = ["OUT (leaving premises)", "IN (arriving / returning)"];
 
 export default function GatePassRequestModal({
   onClose,
@@ -55,16 +52,10 @@ export default function GatePassRequestModal({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        assetRef.current &&
-        !assetRef.current.contains(event.target as Node)
-      ) {
+      if (assetRef.current && !assetRef.current.contains(event.target as Node)) {
         setAssetOpen(false);
       }
-      if (
-        movementRef.current &&
-        !movementRef.current.contains(event.target as Node)
-      ) {
+      if (movementRef.current && !movementRef.current.contains(event.target as Node)) {
         setMovementOpen(false);
       }
     }
@@ -82,27 +73,19 @@ export default function GatePassRequestModal({
 
   // Submit is only allowed when required fields are filled and not already loading
   const canSubmit =
-    form.asset !== "" &&
-    form.movementType !== "" &&
-    form.purpose.trim() !== "" &&
-    !isLoading;
+    form.asset !== "" && form.movementType !== "" && form.purpose.trim() !== "" && !isLoading;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[95vh] overflow-hidden">
         <div className="bg-indigo-50 px-8 py-6 rounded-t-2xl flex justify-between items-start">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
-              Gate Pass Request
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900">Gate Pass Request</h2>
             <p className="text-gray-500 text-sm mt-1">
               Create and manage entry or exit permissions effortlessly
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 cursor-pointer"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 cursor-pointer">
             <FiX size={18} />
           </button>
         </div>
@@ -124,14 +107,10 @@ export default function GatePassRequestModal({
                       setMovementOpen(false);
                     }}
                     className={`w-full flex justify-between items-center border rounded-lg px-4 py-2.5 text-sm bg-white text-gray-700 font-medium focus:outline-none ${
-                      assetOpen
-                        ? "border-indigo-500 ring-2 ring-indigo-200"
-                        : "border-gray-200"
+                      assetOpen ? "border-indigo-500 ring-2 ring-indigo-200" : "border-gray-200"
                     }`}
                   >
-                    <span
-                      className={form.asset ? "text-gray-800" : "text-gray-400"}
-                    >
+                    <span className={form.asset ? "text-gray-800" : "text-gray-400"}>
                       {form.asset || "Select Asset"}
                     </span>
                     <FiChevronDown size={14} className="text-gray-400" />
@@ -180,16 +159,10 @@ export default function GatePassRequestModal({
                       setAssetOpen(false);
                     }}
                     className={`w-full flex justify-between items-center border rounded-lg px-4 py-2.5 text-sm bg-white text-gray-700 font-medium focus:outline-none ${
-                      movementOpen
-                        ? "border-indigo-500 ring-2 ring-indigo-200"
-                        : "border-gray-200"
+                      movementOpen ? "border-indigo-500 ring-2 ring-indigo-200" : "border-gray-200"
                     }`}
                   >
-                    <span
-                      className={
-                        form.movementType ? "text-gray-800" : "text-gray-400"
-                      }
-                    >
+                    <span className={form.movementType ? "text-gray-800" : "text-gray-400"}>
                       {form.movementType || "Select Movement Type"}
                     </span>
                     <FiChevronDown size={14} className="text-gray-400" />
@@ -257,13 +230,9 @@ export default function GatePassRequestModal({
                     </label>
                     <input
                       className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
-                      placeholder={
-                        isOUT ? "e.g. Server Room" : "e.g. Client Site"
-                      }
+                      placeholder={isOUT ? "e.g. Server Room" : "e.g. Client Site"}
                       value={form.fromLocation}
-                      onChange={(e) =>
-                        updateField("fromLocation", e.target.value)
-                      }
+                      onChange={(e) => updateField("fromLocation", e.target.value)}
                     />
                   </div>
                   <div>
@@ -272,13 +241,9 @@ export default function GatePassRequestModal({
                     </label>
                     <input
                       className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
-                      placeholder={
-                        isOUT ? "e.g. Client Site" : "e.g. Server Room"
-                      }
+                      placeholder={isOUT ? "e.g. Client Site" : "e.g. Server Room"}
                       value={form.toLocation}
-                      onChange={(e) =>
-                        updateField("toLocation", e.target.value)
-                      }
+                      onChange={(e) => updateField("toLocation", e.target.value)}
                     />
                   </div>
                 </div>
@@ -293,9 +258,7 @@ export default function GatePassRequestModal({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
                       placeholder="e.g. Shubham"
                       value={form.carrierName}
-                      onChange={(e) =>
-                        updateField("carrierName", e.target.value)
-                      }
+                      onChange={(e) => updateField("carrierName", e.target.value)}
                     />
                   </div>
                   <div>
@@ -306,9 +269,7 @@ export default function GatePassRequestModal({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
                       placeholder="e.g. 4125487451"
                       value={form.carrierContact}
-                      onChange={(e) =>
-                        updateField("carrierContact", e.target.value)
-                      }
+                      onChange={(e) => updateField("carrierContact", e.target.value)}
                     />
                   </div>
                 </div>
@@ -322,9 +283,7 @@ export default function GatePassRequestModal({
                     className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
                     placeholder="e.g. Aadhar No. / Employee ID / Email"
                     value={form.carrierIdProof}
-                    onChange={(e) =>
-                      updateField("carrierIdProof", e.target.value)
-                    }
+                    onChange={(e) => updateField("carrierIdProof", e.target.value)}
                   />
                 </div>
 
@@ -339,9 +298,7 @@ export default function GatePassRequestModal({
                         type="date"
                         className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
                         value={form.expectedReturnDate}
-                        onChange={(e) =>
-                          updateField("expectedReturnDate", e.target.value)
-                        }
+                        onChange={(e) => updateField("expectedReturnDate", e.target.value)}
                       />
                     </div>
                     <div>
@@ -352,9 +309,7 @@ export default function GatePassRequestModal({
                         type="time"
                         className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-gray-50"
                         value={form.expectedReturnTime}
-                        onChange={(e) =>
-                          updateField("expectedReturnTime", e.target.value)
-                        }
+                        onChange={(e) => updateField("expectedReturnTime", e.target.value)}
                       />
                     </div>
                   </div>

@@ -12,11 +12,7 @@ export const getSubLocations = async (req: NextRequest) => {
   // if ("status" in auth) return auth;
 
   const subLocations = await subLocationService.getAllSubLocations();
-  return successResponse(
-    subLocations,
-    "Sub locations fetched successfully",
-    200,
-  );
+  return successResponse(subLocations, "Sub locations fetched successfully", 200);
 };
 
 // GET single sub location
@@ -41,11 +37,7 @@ export const createSubLocation = async (req: NextRequest) => {
 
   const body = await req.json();
 
-  const validation = validateFields(body, [
-    "subLocationName",
-    "locationId",
-    "locationName",
-  ]);
+  const validation = validateFields(body, ["subLocationName", "locationId", "locationName"]);
   if (validation) return validation;
 
   const subLocation = await subLocationService.createSubLocation(body);

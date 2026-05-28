@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "../../../../backend/config/db";
-import {
-  getVendors,
-  createVendor,
-} from "../../../../backend/modules/admin/vendor/controller";
+import { getVendors, createVendor } from "../../../../backend/modules/admin/vendor/controller";
 import { handleError } from "../../../../backend/middleware/error";
 
 export const GET = async (req: NextRequest) => {

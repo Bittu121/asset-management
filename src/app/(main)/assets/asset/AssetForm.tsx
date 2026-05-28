@@ -72,8 +72,7 @@ export default function AssetForm({
         ...initialData,
         // Normalize populated objects → _id strings
         category: initialData.category?._id || initialData.category || "",
-        subCategory:
-          initialData.subCategory?._id || initialData.subCategory || "",
+        subCategory: initialData.subCategory?._id || initialData.subCategory || "",
         assetType: initialData.assetType?._id || initialData.assetType || "",
         vendor: initialData.vendor?._id || initialData.vendor || "",
       });
@@ -83,20 +82,14 @@ export default function AssetForm({
     }
   }, [initialData]);
 
-  const handleChange = (key: string, value: any) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const handleChange = (key: string, value: any) => setForm((prev) => ({ ...prev, [key]: value }));
 
   // Sub-categories filtered by selected category
-  const filteredSubs = subCategories.filter(
-    (s: any) => s.category?._id === form.category,
-  );
+  const filteredSubs = subCategories.filter((s: any) => s.category?._id === form.category);
 
-  const selectedCategory =
-    assetCategories.find((c: any) => c._id === form.category) || null;
-  const selectedSubCategory =
-    filteredSubs.find((s: any) => s._id === form.subCategory) || null;
-  const selectedVendor =
-    vendors.find((v: any) => v._id === form.vendor) || null;
+  const selectedCategory = assetCategories.find((c: any) => c._id === form.category) || null;
+  const selectedSubCategory = filteredSubs.find((s: any) => s._id === form.subCategory) || null;
+  const selectedVendor = vendors.find((v: any) => v._id === form.vendor) || null;
 
   const nextStep = () => {
     if (step < steps.length - 1) setStep(step + 1);
@@ -158,18 +151,12 @@ export default function AssetForm({
                   getOptionLabel={(option: any) => option?.name || ""}
                   isOptionEqualToValue={(o: any, v: any) => o._id === v._id}
                   value={selectedSubCategory}
-                  onChange={(_e, val: any) =>
-                    handleChange("subCategory", val?._id || "")
-                  }
+                  onChange={(_e, val: any) => handleChange("subCategory", val?._id || "")}
                   disabled={loading || !form.category}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      placeholder={
-                        form.category
-                          ? "Select sub category"
-                          : "Select category first"
-                      }
+                      placeholder={form.category ? "Select sub category" : "Select category first"}
                       size="small"
                       sx={muiStyle}
                     />
@@ -206,9 +193,7 @@ export default function AssetForm({
                   <span className="text-sm text-gray-500">Active</span>
                   <button
                     type="button"
-                    onClick={() =>
-                      handleChange("isActive", !form.isActive)
-                    }
+                    onClick={() => handleChange("isActive", !form.isActive)}
                     disabled={loading}
                     className={`w-10 h-5 flex items-center rounded-full p-1 transition ${
                       form.isActive ? "bg-green-500" : "bg-gray-300"
@@ -246,17 +231,10 @@ export default function AssetForm({
                 getOptionLabel={(option: any) => option?.vendorName || ""}
                 isOptionEqualToValue={(o: any, v: any) => o._id === v._id}
                 value={selectedVendor}
-                onChange={(_e, val: any) =>
-                  handleChange("vendor", val?._id || "")
-                }
+                onChange={(_e, val: any) => handleChange("vendor", val?._id || "")}
                 disabled={loading}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="Select vendor"
-                    size="small"
-                    sx={muiStyle}
-                  />
+                  <TextField {...params} placeholder="Select vendor" size="small" sx={muiStyle} />
                 )}
               />
             </div>
@@ -440,13 +418,7 @@ export default function AssetForm({
               disabled={loading}
               className="px-4 py-2 text-sm rounded-md bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {loading
-                ? isEdit
-                  ? "Updating..."
-                  : "Creating..."
-                : isEdit
-                  ? "Update"
-                  : "Create"}
+              {loading ? (isEdit ? "Updating..." : "Creating...") : isEdit ? "Update" : "Create"}
             </button>
           ) : (
             <button
@@ -489,12 +461,7 @@ function StringDropdown({ label, value, onChange, options, placeholder, disabled
         onChange={(_e: any, newValue: any) => onChange(newValue || "")}
         disabled={disabled}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            placeholder={placeholder}
-            size="small"
-            sx={muiStyle}
-          />
+          <TextField {...params} placeholder={placeholder} size="small" sx={muiStyle} />
         )}
       />
     </div>

@@ -32,15 +32,14 @@ type SubDepartmentType = {
 
 function SubDepartment() {
   const dispatch = useDispatch<AppDispatch>();
-  const { subDepartments, loading } = useSelector(
-    (state: RootState) => state.subDepartment,
-  );
+  const { subDepartments, loading } = useSelector((state: RootState) => state.subDepartment);
   const { departments } = useSelector((state: RootState) => state.department);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [selectedSubDepartment, setSelectedSubDepartment] =
-    useState<SubDepartmentType | null>(null);
+  const [selectedSubDepartment, setSelectedSubDepartment] = useState<SubDepartmentType | null>(
+    null
+  );
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,8 +64,7 @@ function SubDepartment() {
 
     const departmentMatch =
       subDepartmentFilter === "" ||
-      subdept.departmentName.toLowerCase() ===
-        subDepartmentFilter.toLowerCase();
+      subdept.departmentName.toLowerCase() === subDepartmentFilter.toLowerCase();
 
     return searchMatch && departmentMatch;
   });
@@ -75,13 +73,11 @@ function SubDepartment() {
   const totalPages = Math.ceil(filteredSubDepartments.length / itemsPerPage);
   const paginatedSubDepartment = filteredSubDepartments.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   // Handlers
-  const handleAddSubDepartment = async (
-    data: Omit<SubDepartmentType, "_id" | "createdAt">,
-  ) => {
+  const handleAddSubDepartment = async (data: Omit<SubDepartmentType, "_id" | "createdAt">) => {
     const success = await dispatch(createSubDepartmentAction(data));
     if (success) {
       dispatch(getSubDepartmentsAction());
@@ -96,7 +92,7 @@ function SubDepartment() {
   const handleUpdateSubDepartment = async (updatedData: any) => {
     if (selectedSubDepartment) {
       const success = await dispatch(
-        updateSubDepartmentAction(selectedSubDepartment._id, updatedData),
+        updateSubDepartmentAction(selectedSubDepartment._id, updatedData)
       );
       if (success) {
         dispatch(getSubDepartmentsAction());
@@ -116,20 +112,16 @@ function SubDepartment() {
       const department = departments.find(
         (dept) =>
           dept.departmentName.toLowerCase() ===
-          (item.Department || item.departmentName || "").toLowerCase(),
+          (item.Department || item.departmentName || "").toLowerCase()
       );
 
       return {
-        subDepartmentName:
-          item["Sub Department"] || item.subDepartmentName || "",
+        subDepartmentName: item["Sub Department"] || item.subDepartmentName || "",
         departmentId: department?._id || "",
         departmentName: department?.departmentName || "",
         manager: item.Manager || item.manager || "",
         description: item.Description || item.description || "",
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
     });
 
@@ -154,9 +146,7 @@ function SubDepartment() {
     if (successCount === validData.length) {
       toast.success(`${successCount} sub departments uploaded successfully`);
     } else {
-      toast.warning(
-        `${successCount} of ${validData.length} sub departments uploaded`,
-      );
+      toast.warning(`${successCount} of ${validData.length} sub departments uploaded`);
     }
   };
 
@@ -165,9 +155,7 @@ function SubDepartment() {
       <div className="mb-4 space-y-3">
         {/* TITLE */}
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">
-            Sub Department
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900">Sub Department</h1>
         </div>
 
         {/* CONTROLS */}
@@ -269,14 +257,9 @@ function SubDepartment() {
               </tr>
             ) : (
               paginatedSubDepartment.map((subDept) => (
-                <tr
-                  key={subDept._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={subDept._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {subDept._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{subDept._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">

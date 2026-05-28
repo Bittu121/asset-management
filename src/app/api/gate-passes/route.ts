@@ -6,7 +6,7 @@ import {
 } from "../../../backend/modules/assets/asset-gate-pass/controller";
 import { handleError } from "../../../backend/middleware/error";
 
-// GET /api/gate-passes 
+// GET /api/gate-passes
 export async function GET(req: NextRequest) {
   await connectDB();
   try {
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/gate-passes 
+// POST /api/gate-passes
 export async function POST(req: NextRequest) {
   await connectDB();
   try {

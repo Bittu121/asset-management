@@ -227,15 +227,11 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
         transition-all duration-300`}
       >
         <div
-          className={`flex items-center mb-10 ${
-            collapsed ? "justify-center" : "justify-between"
-          }`}
+          className={`flex items-center mb-10 ${collapsed ? "justify-center" : "justify-between"}`}
         >
           {!collapsed && (
             <div className="cursor-pointer flex items-center gap-2">
-              <h1 className="text-white font-semibold text-base tracking-wide">
-                Asset Management
-              </h1>
+              <h1 className="text-white font-semibold text-base tracking-wide">Asset Management</h1>
             </div>
           )}
 
@@ -279,9 +275,7 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
                 }`}
                 >
                   <div
-                    className={`flex items-center ${
-                      collapsed ? "justify-center w-full" : "gap-3"
-                    }`}
+                    className={`flex items-center ${collapsed ? "justify-center w-full" : "gap-3"}`}
                   >
                     <Icon
                       size={collapsed ? 20 : 18}
@@ -291,18 +285,12 @@ function Sidebar({ onCollapseChange }: SidebarProps) {
                           : "text-gray-400 group-hover:text-white"
                       }`}
                     />
-                    {!collapsed && (
-                      <span className="text-sm font-medium">{item.name}</span>
-                    )}
+                    {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
                   </div>
 
                   {!collapsed &&
                     item.children &&
-                    (isOpen ? (
-                      <ChevronDown size={16} />
-                    ) : (
-                      <ChevronRight size={16} />
-                    ))}
+                    (isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
 
                   {/* Tooltip */}
                   {collapsed && (

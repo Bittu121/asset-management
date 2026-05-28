@@ -18,7 +18,7 @@ export const login = async (req: NextRequest) => {
 
   const response = NextResponse.json(
     successResponse({ user: result.user }, messages.AUTH.LOGIN_SUCCESS, 200),
-    { status: 200 },
+    { status: 200 }
   );
 
   // Set access token cookie (httpOnly for security)

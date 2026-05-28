@@ -18,26 +18,18 @@ export default function ReturnHistory({ allocations }: Props) {
   const returnedList = allocations.filter((a) => a.status === "RETURNED");
 
   const totalPages = Math.ceil(returnedList.length / PER_PAGE);
-  const pageItems = returnedList.slice(
-    (currentPage - 1) * PER_PAGE,
-    currentPage * PER_PAGE,
-  );
+  const pageItems = returnedList.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-gray-900">
-            Return History
-          </h2>
-          <p className="text-xs text-gray-400 mt-0.5">
-            All processed asset returns
-          </p>
+          <h2 className="text-base font-semibold text-gray-900">Return History</h2>
+          <p className="text-xs text-gray-400 mt-0.5">All processed asset returns</p>
         </div>
         <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">
-          {returnedList.length}{" "}
-          {returnedList.length === 1 ? "Return" : "Returns"}
+          {returnedList.length} {returnedList.length === 1 ? "Return" : "Returns"}
         </span>
       </div>
 
@@ -65,13 +57,9 @@ export default function ReturnHistory({ allocations }: Props) {
               {/* Asset + user + dates */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm text-gray-900">
-                    {item.asset.assetTag}
-                  </span>
+                  <span className="font-semibold text-sm text-gray-900">{item.asset.assetTag}</span>
                   <span className="text-gray-300 text-xs">•</span>
-                  <span className="text-sm text-gray-500 truncate">
-                    {item.asset.device}
-                  </span>
+                  <span className="text-sm text-gray-500 truncate">{item.asset.device}</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 mt-1.5 text-xs text-gray-400">
                   <span className="flex items-center gap-1">
@@ -80,8 +68,7 @@ export default function ReturnHistory({ allocations }: Props) {
                   </span>
                   <span className="flex items-center gap-1">
                     <Calendar size={11} />
-                    Returned:{" "}
-                    {item.returnDate ? formatDate(item.returnDate) : "—"}
+                    Returned: {item.returnDate ? formatDate(item.returnDate) : "—"}
                   </span>
                   {item.returnCondition && (
                     <span className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500">
@@ -104,8 +91,7 @@ export default function ReturnHistory({ allocations }: Props) {
         <div className="border-t border-gray-100 px-6 py-3 flex items-center justify-between text-xs text-gray-500">
           <span>
             Showing {(currentPage - 1) * PER_PAGE + 1}–
-            {Math.min(currentPage * PER_PAGE, returnedList.length)} of{" "}
-            {returnedList.length}
+            {Math.min(currentPage * PER_PAGE, returnedList.length)} of {returnedList.length}
           </span>
           <Pagination
             currentPage={currentPage}

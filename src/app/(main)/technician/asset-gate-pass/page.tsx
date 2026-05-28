@@ -11,17 +11,9 @@ const bCls: Record<BadgeColor, string> = {
   purple: "bg-purple-50 text-purple-600 border-purple-200",
   gray: "bg-gray-50 text-gray-500 border-gray-200",
 };
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${bCls[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${bCls[color]}`}>
       {label}
     </span>
   );
@@ -71,38 +63,30 @@ export default function TechGatePassPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered =
-    filter === "ALL" ? list : list.filter((g) => g.status === filter);
+  const filtered = filter === "ALL" ? list : list.filter((g) => g.status === filter);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">Gate Passes</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          All asset movement gate passes
-        </p>
+        <p className="text-sm text-gray-500 mt-1">All asset movement gate passes</p>
       </div>
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
         <div className="flex gap-2 mb-5 flex-wrap">
-          {["ALL", "PENDING", "APPROVED", "ISSUED", "RETURNED", "REJECTED"].map(
-            (s) => (
-              <button
-                key={s}
-                onClick={() => setFilter(s)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${filter === s ? "bg-indigo-600 text-white border-indigo-600" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}
-              >
-                {s}
-              </button>
-            ),
-          )}
+          {["ALL", "PENDING", "APPROVED", "ISSUED", "RETURNED", "REJECTED"].map((s) => (
+            <button
+              key={s}
+              onClick={() => setFilter(s)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${filter === s ? "bg-indigo-600 text-white border-indigo-600" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}
+            >
+              {s}
+            </button>
+          ))}
         </div>
         {loading ? (
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-gray-100 rounded-xl animate-pulse"
-              />
+              <div key={i} className="h-12 bg-gray-100 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -145,9 +129,7 @@ export default function TechGatePassPage() {
                       {gp.gatePassId || "—"}
                     </td>
                     <td className="py-3 pr-4 text-gray-700">{gp.assetTag}</td>
-                    <td className="py-3 pr-4 text-gray-600 text-xs">
-                      {gp.assetModel || "—"}
-                    </td>
+                    <td className="py-3 pr-4 text-gray-600 text-xs">{gp.assetModel || "—"}</td>
                     <td className="py-3 pr-4">
                       <span
                         className={`text-xs font-semibold border px-2 py-0.5 rounded ${gp.type === "OUT" ? "text-yellow-600 border-yellow-300 bg-yellow-50" : "text-blue-600 border-blue-300 bg-blue-50"}`}
@@ -156,18 +138,12 @@ export default function TechGatePassPage() {
                       </span>
                     </td>
                     <td className="py-3 pr-4 text-gray-600">{gp.purpose}</td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {gp.carrierName || "—"}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {gp.requestedBy}
-                    </td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{gp.carrierName || "—"}</td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{gp.requestedBy}</td>
                     <td className="py-3 pr-4">
                       <Badge label={gp.status} color={statusColor(gp.status)} />
                     </td>
-                    <td className="py-3 text-gray-400 text-xs whitespace-nowrap">
-                      {gp.date}
-                    </td>
+                    <td className="py-3 text-gray-400 text-xs whitespace-nowrap">{gp.date}</td>
                   </tr>
                 ))}
               </tbody>

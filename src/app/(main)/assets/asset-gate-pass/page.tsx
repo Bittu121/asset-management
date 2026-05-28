@@ -4,13 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
-import {
-  FiSearch,
-  FiRefreshCw,
-  FiArrowUpRight,
-  FiArrowDownLeft,
-  FiLoader,
-} from "react-icons/fi";
+import { FiSearch, FiRefreshCw, FiArrowUpRight, FiArrowDownLeft, FiLoader } from "react-icons/fi";
 
 import GatePassDetailModal from "./GatePassDetailModal";
 import ActionModal from "./ActionModal";
@@ -23,11 +17,7 @@ import {
   updateGatePassStatusAction,
 } from "../../../../store/gatePasses/gatePassActions";
 import { fetchAssets } from "../../../../store/assets/assetsActions";
-import {
-  GatePass,
-  GatePassStatus,
-  MovementType,
-} from "../../../../store/gatePasses/gatePassTypes";
+import { GatePass, GatePassStatus, MovementType } from "../../../../store/gatePasses/gatePassTypes";
 
 type FilterMovement = "All Movements" | "OUT only" | "IN only";
 
@@ -44,14 +34,13 @@ type NewGatePassForm = {
   expectedReturnTime: string;
 };
 
-const STATUS_STATS: { label: string; status: GatePassStatus; color: string }[] =
-  [
-    { label: "Pending", status: "PENDING", color: "text-yellow-500" },
-    { label: "Approved", status: "APPROVED", color: "text-blue-600" },
-    { label: "Issued", status: "ISSUED", color: "text-purple-600" },
-    { label: "Returned", status: "RETURNED", color: "text-green-600" },
-    { label: "Rejected", status: "REJECTED", color: "text-red-500" },
-  ];
+const STATUS_STATS: { label: string; status: GatePassStatus; color: string }[] = [
+  { label: "Pending", status: "PENDING", color: "text-yellow-500" },
+  { label: "Approved", status: "APPROVED", color: "text-blue-600" },
+  { label: "Issued", status: "ISSUED", color: "text-purple-600" },
+  { label: "Returned", status: "RETURNED", color: "text-green-600" },
+  { label: "Rejected", status: "REJECTED", color: "text-red-500" },
+];
 
 const TABLE_HEADERS = [
   "Gate Pass #",
@@ -64,11 +53,7 @@ const TABLE_HEADERS = [
   "Actions",
 ];
 
-const FILTER_OPTIONS: FilterMovement[] = [
-  "All Movements",
-  "OUT only",
-  "IN only",
-];
+const FILTER_OPTIONS: FilterMovement[] = ["All Movements", "OUT only", "IN only"];
 
 function StatusBadge({ status }: { status: GatePassStatus }) {
   const styles: Record<GatePassStatus, string> = {
@@ -79,11 +64,7 @@ function StatusBadge({ status }: { status: GatePassStatus }) {
     REJECTED: "bg-red-100 text-red-700 border border-red-300",
   };
   return (
-    <span
-      className={`px-2 py-0.5 rounded text-xs font-semibold ${styles[status]}`}
-    >
-      {status}
-    </span>
+    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${styles[status]}`}>{status}</span>
   );
 }
 
@@ -107,9 +88,7 @@ export default function AssetGatePass() {
   const dispatch = useDispatch<AppDispatch>();
 
   const { user } = useSelector((s: RootState) => s.auth);
-  const isAdmin = ["admin", "superadmin", "manager"].includes(
-    user?.role?.toLowerCase() ?? "",
-  );
+  const isAdmin = ["ADMIN", "SUPERADMIN", "MANAGER"].includes(user?.role?.toUpperCase() ?? "");
 
   const gatePasses = useSelector((s: RootState) => s.gatePasses.gatePasses);
   const isLoading = useSelector((s: RootState) => s.gatePasses.loading);
@@ -122,9 +101,7 @@ export default function AssetGatePass() {
     dispatch(fetchAssets());
   }, [dispatch]);
 
-  const assetLabels = rawAssets.map(
-    (a) => `${a.assetTag} — ${a.device || a.model || ""}`,
-  );
+  const assetLabels = rawAssets.map((a) => `${a.assetTag} — ${a.device || a.model || ""}`);
   const assetIdMap: Record<string, string> = {};
   for (const a of rawAssets) {
     const label = `${a.assetTag} — ${a.device || a.model || ""}`;
@@ -132,12 +109,9 @@ export default function AssetGatePass() {
   }
 
   const [search, setSearch] = useState("");
-  const [filterMovement, setFilterMovement] =
-    useState<FilterMovement>("All Movements");
+  const [filterMovement, setFilterMovement] = useState<FilterMovement>("All Movements");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedGatePass, setSelectedGatePass] = useState<GatePass | null>(
-    null,
-  );
+  const [selectedGatePass, setSelectedGatePass] = useState<GatePass | null>(null);
   const [actionModal, setActionModal] = useState<{
     type: "approve" | "reject";
     id: string;
@@ -149,10 +123,7 @@ export default function AssetGatePass() {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        filterRef.current &&
-        !filterRef.current.contains(event.target as Node)
-      ) {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
         setFilterOpen(false);
       }
     }
@@ -191,22 +162,18 @@ export default function AssetGatePass() {
   function handleApprove(notes: string) {
     if (!actionModal) return;
     dispatch(
-      updateGatePassStatusAction(
-        actionModal.id,
-        { status: "APPROVED", notes },
-        () => setActionModal(null),
-      ),
+      updateGatePassStatusAction(actionModal.id, { status: "APPROVED", notes }, () =>
+        setActionModal(null)
+      )
     );
   }
 
   function handleReject(notes: string) {
     if (!actionModal) return;
     dispatch(
-      updateGatePassStatusAction(
-        actionModal.id,
-        { status: "REJECTED", notes },
-        () => setActionModal(null),
-      ),
+      updateGatePassStatusAction(actionModal.id, { status: "REJECTED", notes }, () =>
+        setActionModal(null)
+      )
     );
   }
 
@@ -229,8 +196,8 @@ export default function AssetGatePass() {
           carrierContact: form.carrierContact,
           carrierIdProof: form.carrierIdProof,
         },
-        () => setShowNewModal(false),
-      ),
+        () => setShowNewModal(false)
+      )
     );
   }
 
@@ -239,9 +206,7 @@ export default function AssetGatePass() {
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h1 className="text-xl font-semibold text-gray-600">
-            Gate Pass Management
-          </h1>
+          <h1 className="text-xl font-semibold text-gray-600">Gate Pass Management</h1>
           <p className="text-gray-400 text-sm mt-0.5">
             Track asset movement in and out of premises
           </p>
@@ -252,10 +217,7 @@ export default function AssetGatePass() {
             className="text-gray-400 hover:text-gray-600"
             title="Refresh"
           >
-            <FiRefreshCw
-              size={18}
-              className={isLoading ? "animate-spin" : ""}
-            />
+            <FiRefreshCw size={18} className={isLoading ? "animate-spin" : ""} />
           </button>
           <button
             onClick={() => setShowNewModal(true)}
@@ -274,9 +236,7 @@ export default function AssetGatePass() {
             key={status}
             className="bg-white rounded-xl border border-gray-200 p-5 text-center shadow-sm"
           >
-            <p className={`text-3xl font-bold ${color}`}>
-              {countByStatus(status)}
-            </p>
+            <p className={`text-3xl font-bold ${color}`}>{countByStatus(status)}</p>
             <p className="text-gray-500 text-sm mt-1">{label}</p>
           </div>
         ))}
@@ -285,10 +245,7 @@ export default function AssetGatePass() {
       {/* Search and filter bar */}
       <div className="flex gap-3 mb-4">
         <div className="flex-1 relative">
-          <FiSearch
-            size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-          />
+          <FiSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-white"
             placeholder="Search gate pass ID, asset, carrier..."
@@ -351,10 +308,7 @@ export default function AssetGatePass() {
             {/* Loading skeleton row */}
             {isLoading && (
               <tr>
-                <td
-                  colSpan={8}
-                  className="px-5 py-10 text-center text-sm text-gray-400"
-                >
+                <td colSpan={8} className="px-5 py-10 text-center text-sm text-gray-400">
                   <div className="flex items-center justify-center gap-2">
                     <FiLoader size={16} className="animate-spin" />
                     Loading gate passes...
@@ -366,10 +320,7 @@ export default function AssetGatePass() {
             {/* Empty state */}
             {!isLoading && filteredPasses.length === 0 && (
               <tr>
-                <td
-                  colSpan={8}
-                  className="px-5 py-10 text-center text-sm text-gray-400"
-                >
+                <td colSpan={8} className="px-5 py-10 text-center text-sm text-gray-400">
                   No gate passes found.
                 </td>
               </tr>
@@ -378,10 +329,7 @@ export default function AssetGatePass() {
             {/* Data rows */}
             {!isLoading &&
               filteredPasses.map((gp) => (
-                <tr
-                  key={gp._id}
-                  className="border-b border-gray-50 hover:bg-gray-50 transition"
-                >
+                <tr key={gp._id} className="border-b border-gray-50 hover:bg-gray-50 transition">
                   {/* Gate pass ID — clickable to open detail panel */}
                   <td className="px-5 py-4">
                     <button
@@ -394,36 +342,26 @@ export default function AssetGatePass() {
 
                   {/* Asset tag and model */}
                   <td className="px-5 py-4">
-                    <p className="font-semibold text-gray-800">
-                      {gp.asset?.assetTag}
-                    </p>
-                    <p className="text-gray-400 text-xs">
-                      {gp.asset?.model || gp.asset?.device}
-                    </p>
+                    <p className="font-semibold text-gray-800">{gp.asset?.assetTag}</p>
+                    <p className="text-gray-400 text-xs">{gp.asset?.model || gp.asset?.device}</p>
                   </td>
 
                   <td className="px-5 py-4">
                     <TypeBadge type={gp.type} />
                   </td>
                   <td className="px-5 py-4 text-gray-600">{gp.purpose}</td>
-                  <td className="px-5 py-4 text-gray-600">
-                    {gp.carrierName || "—"}
-                  </td>
+                  <td className="px-5 py-4 text-gray-600">{gp.carrierName || "—"}</td>
                   <td className="px-5 py-4">
                     <StatusBadge status={gp.status} />
                   </td>
-                  <td className="px-5 py-4 text-gray-500">
-                    {formatDate(gp.createdAt)}
-                  </td>
+                  <td className="px-5 py-4 text-gray-500">{formatDate(gp.createdAt)}</td>
 
                   {/* Approve / Reject — visible to admin/manager only */}
                   <td className="px-5 py-4">
                     {isAdmin ? (
                       <div className="flex gap-2 items-center">
                         <button
-                          onClick={() =>
-                            setActionModal({ type: "approve", id: gp._id })
-                          }
+                          onClick={() => setActionModal({ type: "approve", id: gp._id })}
                           disabled={isUpdating}
                           className="text-blue-500 hover:text-blue-700 disabled:opacity-40"
                           title="Approve"
@@ -431,9 +369,7 @@ export default function AssetGatePass() {
                           <FaCheck size={18} />
                         </button>
                         <button
-                          onClick={() =>
-                            setActionModal({ type: "reject", id: gp._id })
-                          }
+                          onClick={() => setActionModal({ type: "reject", id: gp._id })}
                           disabled={isUpdating}
                           className="text-red-500 hover:text-red-700 disabled:opacity-40"
                           title="Reject"
@@ -468,9 +404,7 @@ export default function AssetGatePass() {
         <ActionModal
           type={actionModal.type}
           onClose={() => setActionModal(null)}
-          onConfirm={
-            actionModal.type === "approve" ? handleApprove : handleReject
-          }
+          onConfirm={actionModal.type === "approve" ? handleApprove : handleReject}
         />
       )}
 

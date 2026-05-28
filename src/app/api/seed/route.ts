@@ -9,10 +9,7 @@ export async function POST(req: Request) {
   try {
     // Security: Only allow in development
     if (process.env.NODE_ENV === "production") {
-      return NextResponse.json(
-        { error: "Seed endpoint disabled in production" },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: "Seed endpoint disabled in production" }, { status: 403 });
     }
 
     await mongoose.connect(env.MONGODB_URI);
@@ -76,12 +73,7 @@ export async function POST(req: Request) {
       name: "TECHNICIAN",
       description: "Technical support staff",
       isActive: true,
-      permissions: [
-        "Create Incident",
-        "Edit Incident",
-        "View Inventory",
-        "View Notifications",
-      ],
+      permissions: ["Create Incident", "Edit Incident", "View Inventory", "View Notifications"],
     });
 
     const userRole = await Role.create({

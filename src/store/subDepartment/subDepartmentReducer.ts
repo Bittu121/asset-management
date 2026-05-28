@@ -35,10 +35,7 @@ const initialState: SubDepartmentState = {
   error: null,
 };
 
-const subDepartmentReducer = (
-  state = initialState,
-  action: Action,
-): SubDepartmentState => {
+const subDepartmentReducer = (state = initialState, action: Action): SubDepartmentState => {
   switch (action.type) {
     case SUBDEPARTMENT_LOADING:
       return { ...state, loading: true, error: null };
@@ -59,16 +56,14 @@ const subDepartmentReducer = (
       return {
         ...state,
         subDepartments: state.subDepartments.map((dept) =>
-          dept._id === action.payload._id ? action.payload : dept,
+          dept._id === action.payload._id ? action.payload : dept
         ),
       };
 
     case DELETE_SUBDEPARTMENT_SUCCESS:
       return {
         ...state,
-        subDepartments: state.subDepartments.filter(
-          (dept) => dept._id !== action.payload,
-        ),
+        subDepartments: state.subDepartments.filter((dept) => dept._id !== action.payload),
       };
 
     default:

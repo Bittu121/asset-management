@@ -13,7 +13,7 @@ export const getAllSubDepartments = async () => {
 export const getSubDepartmentById = async (id: string) => {
   const subDepartment = await SubDepartment.findById(id).populate(
     "departmentId",
-    "departmentName code",
+    "departmentName code"
   );
   return subDepartment;
 };
@@ -25,10 +25,7 @@ export const createSubDepartment = async (data: CreateSubDepartmentDto) => {
 };
 
 // Update sub department
-export const updateSubDepartment = async (
-  id: string,
-  data: UpdateSubDepartmentDto,
-) => {
+export const updateSubDepartment = async (id: string, data: UpdateSubDepartmentDto) => {
   const subDepartment = await SubDepartment.findByIdAndUpdate(id, data, {
     new: true,
   });

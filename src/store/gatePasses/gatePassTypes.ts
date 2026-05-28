@@ -1,9 +1,4 @@
-export type GatePassStatus =
-  | "PENDING"
-  | "APPROVED"
-  | "ISSUED"
-  | "RETURNED"
-  | "REJECTED";
+export type GatePassStatus = "PENDING" | "APPROVED" | "ISSUED" | "RETURNED" | "REJECTED";
 export type MovementType = "OUT" | "IN";
 
 // Shape of a gate pass returned from the API (asset field is populated)

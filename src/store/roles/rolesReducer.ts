@@ -63,9 +63,7 @@ const rolesReducer = (state = initialState, action: Action): RolesState => {
       return {
         ...state,
         updateLoading: false,
-        roles: state.roles.map((role) =>
-          role._id === action.payload._id ? action.payload : role,
-        ),
+        roles: state.roles.map((role) => (role._id === action.payload._id ? action.payload : role)),
       };
 
     case DELETE_ROLE_LOADING:

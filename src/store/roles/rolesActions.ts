@@ -69,8 +69,7 @@ export const createRoleAction =
 
 // Update role
 export const updateRoleAction =
-  (id: string, roleData: any, onSuccess?: () => void) =>
-  async (dispatch: Dispatch) => {
+  (id: string, roleData: any, onSuccess?: () => void) => async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_ROLE_LOADING });
     try {
       const res = await fetch(`/api/admin/roles/${id}`, {

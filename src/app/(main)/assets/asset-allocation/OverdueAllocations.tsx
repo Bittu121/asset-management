@@ -15,36 +15,25 @@ const PER_PAGE = 5;
 function getDaysOverdue(expectedReturn: string): number {
   const expected = new Date(expectedReturn);
   const now = new Date();
-  return Math.floor(
-    (now.getTime() - expected.getTime()) / (1000 * 60 * 60 * 24),
-  );
+  return Math.floor((now.getTime() - expected.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 export default function OverdueAllocations({ allocations, onReturn }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // ACTIVE allocations that are past their expected return date
-  const overdueList = allocations.filter(
-    (a) => a.status !== "RETURNED" && isOverdue(a),
-  );
+  const overdueList = allocations.filter((a) => a.status !== "RETURNED" && isOverdue(a));
 
   const totalPages = Math.ceil(overdueList.length / PER_PAGE);
-  const pageItems = overdueList.slice(
-    (currentPage - 1) * PER_PAGE,
-    currentPage * PER_PAGE,
-  );
+  const pageItems = overdueList.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-gray-900">
-            Overdue Allocations
-          </h2>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {overdueList.length} overdue
-          </p>
+          <h2 className="text-base font-semibold text-gray-900">Overdue Allocations</h2>
+          <p className="text-xs text-gray-400 mt-0.5">{overdueList.length} overdue</p>
         </div>
         <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
           Overdue
@@ -71,9 +60,7 @@ export default function OverdueAllocations({ allocations, onReturn }: Props) {
                 <td colSpan={7} className="px-6 py-14 text-center">
                   <div className="flex flex-col items-center gap-2 text-gray-400">
                     <AlertCircle size={32} strokeWidth={1.5} />
-                    <p className="text-sm font-medium text-gray-600">
-                      No overdue allocations
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">No overdue allocations</p>
                     <p className="text-xs">All assets returned on time</p>
                   </div>
                 </td>
@@ -83,18 +70,11 @@ export default function OverdueAllocations({ allocations, onReturn }: Props) {
             {pageItems.map((item) => {
               const days = getDaysOverdue(item.expectedReturn);
               return (
-                <tr
-                  key={item._id}
-                  className="hover:bg-red-50/30 transition-colors"
-                >
+                <tr key={item._id} className="hover:bg-red-50/30 transition-colors">
                   {/* Asset */}
                   <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">
-                      {item.asset.assetTag}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {item.asset.device}
-                    </p>
+                    <p className="font-semibold text-gray-900">{item.asset.assetTag}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{item.asset.device}</p>
                   </td>
 
                   {/* User */}
@@ -105,18 +85,12 @@ export default function OverdueAllocations({ allocations, onReturn }: Props) {
                           {getInitials(item.allocatedTo.name)}
                         </span>
                       </div>
-                      <span className="text-gray-800">
-                        {item.allocatedTo.name}
-                      </span>
+                      <span className="text-gray-800">{item.allocatedTo.name}</span>
                     </div>
                   </td>
 
-                  <td className="px-6 py-4 text-gray-500">
-                    {formatDate(item.allocationDate)}
-                  </td>
-                  <td className="px-6 py-4 text-gray-500">
-                    {formatDate(item.expectedReturn)}
-                  </td>
+                  <td className="px-6 py-4 text-gray-500">{formatDate(item.allocationDate)}</td>
+                  <td className="px-6 py-4 text-gray-500">{formatDate(item.expectedReturn)}</td>
 
                   <td className="px-6 py-4">
                     <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
@@ -151,8 +125,7 @@ export default function OverdueAllocations({ allocations, onReturn }: Props) {
         <div className="border-t border-gray-100 px-6 py-3 flex items-center justify-between text-xs text-gray-500">
           <span>
             Showing {(currentPage - 1) * PER_PAGE + 1}–
-            {Math.min(currentPage * PER_PAGE, overdueList.length)} of{" "}
-            {overdueList.length}
+            {Math.min(currentPage * PER_PAGE, overdueList.length)} of {overdueList.length}
           </span>
           <Pagination
             currentPage={currentPage}

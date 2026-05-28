@@ -39,12 +39,12 @@ export async function createAllocation(data: {
 // Mark an allocation as returned
 export async function returnAllocation(
   id: string,
-  data: { returnCondition: string; returnNotes: string; returnDate: string },
+  data: { returnCondition: string; returnNotes: string; returnDate: string }
 ) {
   return await Allocation.findByIdAndUpdate(
     id,
     { status: "RETURNED", ...data },
-    { new: true },
+    { new: true }
   ).populate(POPULATE);
 }
 

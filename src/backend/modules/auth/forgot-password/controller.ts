@@ -10,8 +10,7 @@ export const forgotPassword = async (req: NextRequest) => {
   const validation = validateFields(body, ["email"]);
   if (validation) return validation;
 
-  const result = await forgotPasswordService(body.email);
-  if (!result) return errorResponse(messages.AUTH.EMAIL_NOT_FOUND, 404);
+  await forgotPasswordService(body.email);
 
   return successResponse(null, messages.AUTH.FORGOT_PASSWORD_SUCCESS, 200);
 };

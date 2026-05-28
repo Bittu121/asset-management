@@ -15,14 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-type BadgeColor =
-  | "green"
-  | "red"
-  | "yellow"
-  | "blue"
-  | "purple"
-  | "gray"
-  | "orange";
+type BadgeColor = "green" | "red" | "yellow" | "blue" | "purple" | "gray" | "orange";
 const badgeClasses: Record<BadgeColor, string> = {
   green: "bg-green-50 text-green-600 border-green-200",
   red: "bg-red-50 text-red-500 border-red-200",
@@ -33,17 +26,9 @@ const badgeClasses: Record<BadgeColor, string> = {
   orange: "bg-orange-50 text-orange-600 border-orange-200",
 };
 
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string | number;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string | number; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}>
       {label}
     </span>
   );
@@ -122,9 +107,7 @@ function StatCard({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start justify-between hover:shadow-md transition-shadow">
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-          {title}
-        </p>
+        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{title}</p>
         <h3 className="text-2xl font-bold text-gray-900 mt-1">{value}</h3>
         {sub && <span className="text-xs text-gray-400">{sub}</span>}
       </div>
@@ -175,9 +158,7 @@ export default function EndUserDashboard() {
     <div className="min-h-screen bg-gray-50 p-6 space-y-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">My Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Welcome back, {user?.name ?? "User"}
-        </p>
+        <p className="text-sm text-gray-500 mt-1">Welcome back, {user?.name ?? "User"}</p>
       </div>
 
       {!loading && alerts.length > 0 && (
@@ -246,12 +227,8 @@ export default function EndUserDashboard() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-800 text-sm">
-                My Assigned Assets
-              </h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Assets currently allocated to you
-              </p>
+              <h3 className="font-semibold text-gray-800 text-sm">My Assigned Assets</h3>
+              <p className="text-xs text-gray-400 mt-0.5">Assets currently allocated to you</p>
             </div>
             <button
               onClick={() => router.push("/end-user/assets")}
@@ -263,10 +240,7 @@ export default function EndUserDashboard() {
           {loading ? (
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-10 rounded-lg bg-gray-100 animate-pulse"
-                />
+                <div key={i} className="h-10 rounded-lg bg-gray-100 animate-pulse" />
               ))}
             </div>
           ) : myAssets.length === 0 ? (
@@ -305,9 +279,7 @@ export default function EndUserDashboard() {
                       <td className="py-3 pr-4 font-semibold text-indigo-600 text-sm">
                         {a.assetTag}
                       </td>
-                      <td className="py-3 pr-4 text-gray-700">
-                        {a.device || a.assetType}
-                      </td>
+                      <td className="py-3 pr-4 text-gray-700">{a.device || a.assetType}</td>
                       <td className="py-3 pr-4 text-gray-500 text-xs whitespace-nowrap">
                         {a.allocationDate}
                       </td>
@@ -331,9 +303,7 @@ export default function EndUserDashboard() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-800 text-sm">
-                My Gate Passes
-              </h3>
+              <h3 className="font-semibold text-gray-800 text-sm">My Gate Passes</h3>
               <p className="text-xs text-gray-400 mt-0.5">
                 Asset movement history for your devices
               </p>
@@ -348,10 +318,7 @@ export default function EndUserDashboard() {
           {loading ? (
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-12 rounded-xl bg-gray-100 animate-pulse"
-                />
+                <div key={i} className="h-12 rounded-xl bg-gray-100 animate-pulse" />
               ))}
             </div>
           ) : gatePassList.length === 0 ? (
@@ -397,12 +364,8 @@ export default function EndUserDashboard() {
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="font-semibold text-gray-800 text-sm">
-              Quick Actions
-            </h3>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Navigate to sections relevant to you
-            </p>
+            <h3 className="font-semibold text-gray-800 text-sm">Quick Actions</h3>
+            <p className="text-xs text-gray-400 mt-0.5">Navigate to sections relevant to you</p>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -446,9 +409,7 @@ export default function EndUserDashboard() {
               >
                 {item.icon}
               </div>
-              <span className="text-sm font-medium text-gray-700">
-                {item.label}
-              </span>
+              <span className="text-sm font-medium text-gray-700">{item.label}</span>
             </button>
           ))}
         </div>

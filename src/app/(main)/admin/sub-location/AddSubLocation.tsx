@@ -37,18 +37,11 @@ function AddSubLocation({ isOpen, onClose, onAdd, locations }: any) {
         {/* Header */}
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Add Sub Location
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Create a new sub location
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Add Sub Location</h2>
+            <p className="text-gray-500 text-sm mt-1">Create a new sub location</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -151,9 +144,7 @@ function AddSubLocation({ isOpen, onClose, onAdd, locations }: any) {
 
             {/* Active Toggle */}
             <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-5">
-              <span className="text-sm font-semibold text-gray-500">
-                Active Status
-              </span>
+              <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
               <button
                 onClick={() =>

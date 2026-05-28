@@ -11,11 +11,10 @@ const departmentSchema = new mongoose.Schema<DepartmentDocument>(
     departmentName: { type: String, required: true, trim: true },
     code: { type: String, required: true, trim: true, unique: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Department =
-  mongoose.models.Department ||
-  mongoose.model<DepartmentDocument>("Department", departmentSchema);
+  mongoose.models.Department || mongoose.model<DepartmentDocument>("Department", departmentSchema);
 
 export default Department;

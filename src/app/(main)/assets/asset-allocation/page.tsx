@@ -20,14 +20,7 @@ import { fetchAssets } from "../../../../store/assets/assetsActions";
 import { fetchUserAccounts } from "../../../../store/userAccounts/userAccountsActions";
 import { RootState, AppDispatch } from "../../../../store/auth/store";
 
-import {
-  Asset,
-  User,
-  Allocation,
-  isOverdue,
-  today,
-  thirtyDaysFromNow,
-} from "./types";
+import { Asset, User, Allocation, isOverdue, today, thirtyDaysFromNow } from "./types";
 
 type Tab = "active" | "overdue" | "dragdrop" | "history";
 
@@ -41,9 +34,7 @@ const TABS: { key: Tab; label: string }[] = [
 export default function AssetAllocationPage() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const rawAllocations = useSelector(
-    (s: RootState) => s.allocations.allocations,
-  );
+  const rawAllocations = useSelector((s: RootState) => s.allocations.allocations);
   const rawAssets = useSelector((s: RootState) => s.assets.assets);
   const rawUsers = useSelector((s: RootState) => s.userAccounts.users);
   // Fetch data on mount
@@ -56,7 +47,7 @@ export default function AssetAllocationPage() {
   // Compute asset status: AVAILABLE if no active allocation exists for it
   const assets: Asset[] = rawAssets.map((a: any) => {
     const isAllocated = rawAllocations.some(
-      (al: Allocation) => al.asset._id === a._id && al.status !== "RETURNED",
+      (al: Allocation) => al.asset._id === a._id && al.status !== "RETURNED"
     );
     return {
       _id: a._id,
@@ -79,8 +70,7 @@ export default function AssetAllocationPage() {
   const [activeTab, setActiveTab] = useState<Tab>("active");
   const [allocateModalOpen, setAllocateModalOpen] = useState(false);
   const [returnModalOpen, setReturnModalOpen] = useState(false);
-  const [allocationToReturn, setAllocationToReturn] =
-    useState<Allocation | null>(null);
+  const [allocationToReturn, setAllocationToReturn] = useState<Allocation | null>(null);
 
   function handleReturnClick(allocation: Allocation) {
     setAllocationToReturn(allocation);
@@ -88,23 +78,13 @@ export default function AssetAllocationPage() {
   }
 
   // Confirm return: send PUT to API via Redux action
-  function handleReturnConfirm({
-    condition,
-    notes,
-  }: {
-    condition: string;
-    notes: string;
-  }) {
+  function handleReturnConfirm({ condition, notes }: { condition: string; notes: string }) {
     if (!allocationToReturn) return;
     dispatch(
-      returnAllocationAction(
-        allocationToReturn._id,
-        { condition, notes },
-        () => {
-          setReturnModalOpen(false);
-          setAllocationToReturn(null);
-        },
-      ),
+      returnAllocationAction(allocationToReturn._id, { condition, notes }, () => {
+        setReturnModalOpen(false);
+        setAllocationToReturn(null);
+      })
     );
   }
 
@@ -123,8 +103,8 @@ export default function AssetAllocationPage() {
           allocationDate: today(),
           expectedReturn: payload.expectedReturn,
         },
-        () => setAllocateModalOpen(false),
-      ),
+        () => setAllocateModalOpen(false)
+      )
     );
   }
 
@@ -136,29 +116,21 @@ export default function AssetAllocationPage() {
         allocatedTo: userId,
         allocationDate: today(),
         expectedReturn: thirtyDaysFromNow(),
-      }),
+      })
     );
   }
 
   // Summary counts for stat cards
-  const activeCount = allocations.filter(
-    (a) => a.status !== "RETURNED" && !isOverdue(a),
-  ).length;
-  const overdueCount = allocations.filter(
-    (a) => a.status !== "RETURNED" && isOverdue(a),
-  ).length;
-  const returnedCount = allocations.filter(
-    (a) => a.status === "RETURNED",
-  ).length;
+  const activeCount = allocations.filter((a) => a.status !== "RETURNED" && !isOverdue(a)).length;
+  const overdueCount = allocations.filter((a) => a.status !== "RETURNED" && isOverdue(a)).length;
+  const returnedCount = allocations.filter((a) => a.status === "RETURNED").length;
 
   return (
     <div className="p-4 bg-[#f8fafc] min-h-screen space-y-4">
       {/* Page header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg font-semibold text-gray-900">
-            Asset Allocation
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900">Asset Allocation</h1>
           <p className="text-xs text-gray-400 mt-0.5">
             Manage asset assignments, returns, and overdue tracking
           </p>
@@ -176,11 +148,7 @@ export default function AssetAllocationPage() {
       <div className="grid grid-cols-3 gap-3">
         <StatCard label="Active" value={activeCount} color="text-green-600" />
         <StatCard label="Overdue" value={overdueCount} color="text-red-600" />
-        <StatCard
-          label="Returned"
-          value={returnedCount}
-          color="text-gray-600"
-        />
+        <StatCard label="Returned" value={returnedCount} color="text-gray-600" />
       </div>
 
       {/* Tab bar */}
@@ -202,16 +170,10 @@ export default function AssetAllocationPage() {
 
       {/* Tab content */}
       {activeTab === "active" && (
-        <ActiveAllocations
-          allocations={allocations}
-          onReturn={handleReturnClick}
-        />
+        <ActiveAllocations allocations={allocations} onReturn={handleReturnClick} />
       )}
       {activeTab === "overdue" && (
-        <OverdueAllocations
-          allocations={allocations}
-          onReturn={handleReturnClick}
-        />
+        <OverdueAllocations allocations={allocations} onReturn={handleReturnClick} />
       )}
       {activeTab === "history" && <ReturnHistory allocations={allocations} />}
       {activeTab === "dragdrop" && (
@@ -246,15 +208,7 @@ export default function AssetAllocationPage() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: string;
-}) {
+function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="bg-white rounded-lg border border-gray-100 px-5 py-4 shadow-sm">
       <p className="text-xs text-gray-400 font-medium">{label}</p>

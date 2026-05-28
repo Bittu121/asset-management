@@ -78,11 +78,7 @@ export async function updateGatePassStatus(req: NextRequest, id: string) {
   const gatePass = await gatePassService.updateGatePassStatus(id, body);
   if (!gatePass) return errorResponse("Gate pass not found", 404);
 
-  return successResponse(
-    gatePass,
-    `Gate pass ${body.status.toLowerCase()} successfully`,
-    200,
-  );
+  return successResponse(gatePass, `Gate pass ${body.status.toLowerCase()} successfully`, 200);
 }
 
 // DELETE

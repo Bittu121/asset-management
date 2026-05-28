@@ -10,17 +10,9 @@ const bCls: Record<BadgeColor, string> = {
   gray: "bg-gray-50 text-gray-500 border-gray-200",
   orange: "bg-orange-50 text-orange-600 border-orange-200",
 };
-function Badge({
-  label,
-  color = "gray",
-}: {
-  label: string;
-  color?: BadgeColor;
-}) {
+function Badge({ label, color = "gray" }: { label: string; color?: BadgeColor }) {
   return (
-    <span
-      className={`text-xs font-semibold px-2 py-0.5 rounded border ${bCls[color]}`}
-    >
+    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${bCls[color]}`}>
       {label}
     </span>
   );
@@ -37,13 +29,7 @@ type AllocRow = {
   status: string;
 };
 function statusColor(s: string): BadgeColor {
-  return s === "ACTIVE"
-    ? "green"
-    : s === "OVERDUE"
-      ? "red"
-      : s === "RETURNED"
-        ? "gray"
-        : "yellow";
+  return s === "ACTIVE" ? "green" : s === "OVERDUE" ? "red" : s === "RETURNED" ? "gray" : "yellow";
 }
 
 export default function TechAllocPage() {
@@ -99,10 +85,7 @@ export default function TechAllocPage() {
         {loading ? (
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-gray-100 rounded-xl animate-pulse"
-              />
+              <div key={i} className="h-12 bg-gray-100 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -139,16 +122,10 @@ export default function TechAllocPage() {
                     key={a._id}
                     className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="py-3 pr-4 font-semibold text-indigo-600">
-                      {a.assetTag}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-700">
-                      {a.device || "—"}
-                    </td>
+                    <td className="py-3 pr-4 font-semibold text-indigo-600">{a.assetTag}</td>
+                    <td className="py-3 pr-4 text-gray-700">{a.device || "—"}</td>
                     <td className="py-3 pr-4 text-gray-700">{a.allocatedTo}</td>
-                    <td className="py-3 pr-4 text-gray-500 text-xs">
-                      {a.department || "—"}
-                    </td>
+                    <td className="py-3 pr-4 text-gray-500 text-xs">{a.department || "—"}</td>
                     <td className="py-3 pr-4 text-gray-500 text-xs whitespace-nowrap">
                       {a.allocationDate}
                     </td>

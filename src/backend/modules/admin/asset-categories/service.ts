@@ -17,10 +17,7 @@ export const createAssetCategory = async (data: CreateAssetCategoryDto) => {
   return await AssetCategory.create(data);
 };
 
-export const updateAssetCategory = async (
-  id: string,
-  data: UpdateAssetCategoryDto,
-) => {
+export const updateAssetCategory = async (id: string, data: UpdateAssetCategoryDto) => {
   return await AssetCategory.findByIdAndUpdate(id, data, { new: true });
 };
 

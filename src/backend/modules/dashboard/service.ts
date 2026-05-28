@@ -5,20 +5,7 @@ import UserAccount from "../admin/user-account/schema";
 import "../admin/asset-categories/schema";
 import "../admin/user-account/schema";
 
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function monthKey(dateStr: string) {
   const d = new Date(dateStr);
@@ -32,9 +19,7 @@ function last6MonthKeys() {
   const now = new Date();
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    keys.push(
-      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
-    );
+    keys.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   }
   return keys;
 }
@@ -54,9 +39,7 @@ export async function getAdminDashboard() {
       ])
       .sort({ createdAt: -1 }),
     GatePass.find()
-      .populate([
-        { path: "asset", select: "assetTag device manufacturer model" },
-      ])
+      .populate([{ path: "asset", select: "assetTag device manufacturer model" }])
       .sort({ createdAt: -1 }),
     UserAccount.find().select("name email department isVerified createdAt"),
   ]);
@@ -64,8 +47,7 @@ export async function getAdminDashboard() {
   // Allocated asset IDs (ACTIVE only)
   const allocatedAssetIds = new Set<string>();
   for (const a of allocations) {
-    if (a.status === "ACTIVE")
-      allocatedAssetIds.add(String((a.asset as any)?._id ?? a.asset));
+    if (a.status === "ACTIVE") allocatedAssetIds.add(String((a.asset as any)?._id ?? a.asset));
   }
 
   const totalAssets = assets.length;
@@ -97,9 +79,10 @@ export async function getAdminDashboard() {
     const name = (a.category as any)?.name ?? "Unknown";
     categoryMap[name] = (categoryMap[name] ?? 0) + 1;
   }
-  const categoryBreakdown = Object.entries(categoryMap).map(
-    ([category, count]) => ({ category, count }),
-  );
+  const categoryBreakdown = Object.entries(categoryMap).map(([category, count]) => ({
+    category,
+    count,
+  }));
 
   // Gate pass status counts
   const gatePassSummary: Record<string, number> = {
@@ -115,7 +98,7 @@ export async function getAdminDashboard() {
 
   // Overdue allocations
   const overdueCount = allocations.filter(
-    (a) => a.status === "ACTIVE" && a.expectedReturn < today,
+    (a) => a.status === "ACTIVE" && a.expectedReturn < today
   ).length;
 
   // Monthly allocation trend (last 6 months)
@@ -169,8 +152,7 @@ export async function getAdminDashboard() {
       assetTag: (a.asset as any)?.assetTag ?? "",
       device:
         `${(a.asset as any)?.manufacturer ?? ""} ${(a.asset as any)?.model ?? (a.asset as any)?.device ?? ""}`.trim(),
-      allocatedTo:
-        (a.allocatedTo as any)?.name ?? (a.allocatedTo as any)?.email ?? "",
+      allocatedTo: (a.allocatedTo as any)?.name ?? (a.allocatedTo as any)?.email ?? "",
       department: (a.allocatedTo as any)?.department ?? "",
       allocationDate: a.allocationDate ?? "",
       expectedReturn: a.expectedReturn ?? "",
@@ -202,10 +184,7 @@ export async function getAdminDashboard() {
   }[] = [];
   for (const alloc of allocations.slice(0, 10)) {
     const tag = (alloc.asset as any)?.assetTag ?? "Unknown";
-    const user =
-      (alloc.allocatedTo as any)?.name ??
-      (alloc.allocatedTo as any)?.email ??
-      "Unknown";
+    const user = (alloc.allocatedTo as any)?.name ?? (alloc.allocatedTo as any)?.email ?? "Unknown";
     activityItems.push({
       action: "Asset Allocated",
       detail: `${tag} → ${user}`,

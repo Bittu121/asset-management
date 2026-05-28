@@ -54,18 +54,11 @@ function UpdateSubDepartment({
       <div className="bg-white w-full max-w-md rounded-lg shadow-2xl overflow-hidden">
         <div className="bg-indigo-50 px-6 py-5 flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              Update Sub Department
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Update sub department details
-            </p>
+            <h2 className="text-lg font-bold text-gray-900">Update Sub Department</h2>
+            <p className="text-gray-500 text-sm mt-1">Update sub department details</p>
           </div>
 
-          <button
-            onClick={onClose}
-            className="text-black text-xl font-bold cursor-pointer"
-          >
+          <button onClick={onClose} className="text-black text-xl font-bold cursor-pointer">
             ✕
           </button>
         </div>
@@ -80,9 +73,7 @@ function UpdateSubDepartment({
               </label>
               <input
                 value={form.subDepartmentName}
-                onChange={(e) =>
-                  setForm({ ...form, subDepartmentName: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, subDepartmentName: e.target.value })}
                 placeholder="Sub Department Name"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
@@ -98,10 +89,7 @@ function UpdateSubDepartment({
                 options={deptOptions}
                 getOptionLabel={(option) => option.label}
                 isOptionEqualToValue={(o, v) => o.id === v.id}
-                value={
-                  deptOptions.find((d: any) => d.id === form.departmentId) ||
-                  null
-                }
+                value={deptOptions.find((d: any) => d.id === form.departmentId) || null}
                 onChange={(e, value) =>
                   setForm((prev) => ({
                     ...prev,
@@ -138,9 +126,7 @@ function UpdateSubDepartment({
 
             {/* Manager */}
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Manager
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Manager</label>
               <input
                 value={form.manager}
                 onChange={(e) => setForm({ ...form, manager: e.target.value })}
@@ -151,14 +137,10 @@ function UpdateSubDepartment({
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-500 mb-1">
-                Description
-              </label>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">Description</label>
               <textarea
                 value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Description"
                 className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 min-h-[70px]"
               />
@@ -166,9 +148,7 @@ function UpdateSubDepartment({
 
             {/* Toggle */}
             <div className="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 mt-5">
-              <span className="text-sm font-semibold text-gray-500">
-                Active Status
-              </span>
+              <span className="text-sm font-semibold text-gray-500">Active Status</span>
 
               <button
                 onClick={() =>

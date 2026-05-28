@@ -398,21 +398,13 @@ import {
 } from "@/store/supportGroups/supportGroupsActions";
 import { fetchUserAccounts } from "@/store/userAccounts/userAccountsActions";
 
-const levels = [
-  "L1 - First Line Support",
-  "L2 - Second Line Support",
-  "L3 - Third Line Support",
-];
+const levels = ["L1 - First Line Support", "L2 - Second Line Support", "L3 - Third Line Support"];
 
 function SupportGroup() {
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    supportGroups,
-    loading,
-    createLoading,
-    updateLoading,
-    deleteLoading,
-  } = useSelector((state: RootState) => state.supportGroups);
+  const { supportGroups, loading, createLoading, updateLoading, deleteLoading } = useSelector(
+    (state: RootState) => state.supportGroups
+  );
   const { users } = useSelector((state: RootState) => state.userAccounts);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -433,9 +425,7 @@ function SupportGroup() {
     dispatch(fetchUserAccounts());
   }, [dispatch]);
 
-  const managers = users.filter((u) =>
-    ["ADMIN", "MANAGER"].includes(u.role.name),
-  );
+  const managers = users.filter((u) => ["ADMIN", "MANAGER"].includes(u.role.name));
 
   const filteredSupportGroup = supportGroups.filter((sup) => {
     const matchesSearch =
@@ -457,7 +447,7 @@ function SupportGroup() {
   const totalPages = Math.ceil(filteredSupportGroup.length / itemsPerPage);
   const paginatedSupportGroup = filteredSupportGroup.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handleAddSupportGroup = (data: any) => {
@@ -478,8 +468,8 @@ function SupportGroup() {
     if (selectedSupportGroup) {
       dispatch(
         updateSupportGroupAction(selectedSupportGroup._id, updatedData, () =>
-          setIsUpdateOpen(false),
-        ),
+          setIsUpdateOpen(false)
+        )
       );
     }
   };
@@ -502,10 +492,7 @@ function SupportGroup() {
         services: item.Services || item.services || "",
         maxTickets: Number(item["Max Tickets"] || item.maxTickets || 10),
         description: item.Description || item.description || "",
-        isActive:
-          item.Status === "Active" ||
-          item.status === "Active" ||
-          item.isActive === true,
+        isActive: item.Status === "Active" || item.status === "Active" || item.isActive === true,
       };
 
       if (groupData.name && groupData.code) {
@@ -636,9 +623,7 @@ function SupportGroup() {
                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-400">
                       <FiUser size={18} />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      No Support Group Found
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-700">No Support Group Found</h3>
                     <p className="text-xs text-gray-500">
                       You haven't added any Support Group yet.
                     </p>
@@ -653,19 +638,12 @@ function SupportGroup() {
               </tr>
             ) : (
               paginatedSupportGroup?.map((group) => (
-                <tr
-                  key={group._id}
-                  className="hover:bg-gray-50 transition-all duration-150"
-                >
+                <tr key={group._id} className="hover:bg-gray-50 transition-all duration-150">
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {group._id.slice(-6)}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{group._id.slice(-6)}</div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm font-medium text-gray-900">
-                      {group.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{group.name}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700">{group.code}</div>
@@ -676,9 +654,7 @@ function SupportGroup() {
                     </span>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {group.manager?.name || "-"}
-                    </div>
+                    <div className="text-sm text-gray-700">{group.manager?.name || "-"}</div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="text-sm text-gray-700 max-w-xs truncate">
@@ -686,16 +662,12 @@ function SupportGroup() {
                     </div>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="text-sm text-gray-700">
-                      {group.maxTickets}
-                    </div>
+                    <div className="text-sm text-gray-700">{group.maxTickets}</div>
                   </td>
                   <td className="px-6 py-5">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        group.isActive
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-500"
+                        group.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {group.isActive ? "Active" : "Inactive"}

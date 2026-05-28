@@ -36,9 +36,7 @@ export async function createAllocation(req: NextRequest) {
   if (validation) return validation;
 
   // Prevent allocating an asset that is already active
-  const existing = await allocationService.getActiveAllocationForAsset(
-    body.asset,
-  );
+  const existing = await allocationService.getActiveAllocationForAsset(body.asset);
   if (existing) return errorResponse("This asset is already allocated", 409);
 
   const allocation = await allocationService.createAllocation(body);

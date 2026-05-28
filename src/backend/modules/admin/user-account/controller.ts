@@ -35,22 +35,14 @@ export const createUserAccount = async (req: NextRequest) => {
 
   const body = await req.json();
 
-  const validation = validateFields(body, [
-    "name",
-    "email",
-    "password",
-    "employeeCode",
-    "role",
-  ]);
+  const validation = validateFields(body, ["name", "email", "password", "employeeCode", "role"]);
   if (validation) return validation;
 
   // Check duplicates
   const existingEmail = await userService.getUserByEmail(body.email);
   if (existingEmail) return errorResponse("Email already exists", 409);
 
-  const existingCode = await userService.getUserByEmployeeCode(
-    body.employeeCode,
-  );
+  const existingCode = await userService.getUserByEmployeeCode(body.employeeCode);
   if (existingCode) return errorResponse("Employee code already exists", 409);
 
   const user = await userService.createUserAccount(body);

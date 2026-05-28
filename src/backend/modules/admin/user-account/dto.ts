@@ -13,8 +13,6 @@ export type CreateUserAccountDto = {
   subLocation?: string;
 };
 
-export type UpdateUserAccountDto = Partial<
-  Omit<CreateUserAccountDto, "password">
-> & {
+export type UpdateUserAccountDto = Partial<Omit<CreateUserAccountDto, "password">> & {
   password?: string;
 };

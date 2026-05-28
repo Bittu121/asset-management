@@ -8,13 +8,7 @@ export async function getTechnician(req: NextRequest) {
   const auth = await authenticate(req);
   if ("statusCode" in auth) return auth;
 
-  const roleCheck = authorizeRoles(
-    auth.user,
-    "ADMIN",
-    "SUPERADMIN",
-    "TECHNICIAN",
-    "MANAGER",
-  );
+  const roleCheck = authorizeRoles(auth.user, "ADMIN", "SUPERADMIN", "TECHNICIAN", "MANAGER");
   if (roleCheck) return roleCheck;
 
   const data = await getTechnicianData();

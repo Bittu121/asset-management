@@ -11,13 +11,7 @@ export const permissionModules = [
   },
   {
     name: "Asset Management",
-    permissions: [
-      "Create Asset",
-      "Edit Asset",
-      "Delete Asset",
-      "Assign Asset",
-      "View Inventory",
-    ],
+    permissions: ["Create Asset", "Edit Asset", "Delete Asset", "Assign Asset", "View Inventory"],
   },
   {
     name: "User Management",
