@@ -15,14 +15,13 @@ import {
   Layers,
   Truck,
   ClipboardList,
-  TrendingUp,
   BadgeCheck,
   ChevronRight,
-  Globe,
+  ChevronLeft,
+  ImageIcon,
   Lock,
-  Cpu,
-  Wifi,
 } from "lucide-react";
+import { FaChevronUp } from "react-icons/fa";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -35,22 +34,22 @@ const features = [
   {
     icon: <QrCode size={20} />,
     title: "QR Code Tracking",
-    desc: "Generate unique QR tags for every asset. Scan with any device to instantly retrieve full asset details — no login required.",
+    desc: "Generate unique QR tags for every asset. Scan with any device to instantly retrieve full asset details.",
   },
   {
     icon: <Layers size={20} />,
     title: "Hierarchical Classification",
-    desc: "Organise assets into Categories → Sub-Categories → Asset Types. Filter and report at any level with one click.",
+    desc: "Organise assets into Categories → Sub-Categories → Asset Types.",
   },
   {
     icon: <Package size={20} />,
     title: "Full Lifecycle Management",
-    desc: "Track every asset from procurement through allocation, transfer, maintenance, and eventual retirement or disposal.",
+    desc: "Track every asset from procurement through allocation, transfer, and gate-pass movement in one place.",
   },
   {
     icon: <Truck size={20} />,
     title: "Vendor & Contract Management",
-    desc: "Maintain a vendor directory with GST numbers, contract expiry dates, and linked assets. Never miss a renewal.",
+    desc: "Maintain a vendor directory with GST numbers, contract expiry dates, and linked assets.",
   },
   {
     icon: <FileSpreadsheet size={20} />,
@@ -60,7 +59,7 @@ const features = [
   {
     icon: <BarChart3 size={20} />,
     title: "Reports & Audit Trail",
-    desc: "Real-time dashboards, allocation reports, gate-pass logs, and a full audit trail for every change made in the system.",
+    desc: "Real-time dashboards, allocation reports, gate-pass logs, and an audit trail of every allocation and gate-pass action.",
   },
 ];
 
@@ -83,7 +82,7 @@ const modules = [
       "Assign assets to employees by department",
       "Track active allocations in real time",
       "Process returns with condition notes",
-      "Overdue allocation alerts and reports",
+      "Overdue allocation reports",
       "Full allocation history per asset or user",
     ],
   },
@@ -94,7 +93,6 @@ const modules = [
       "Raise gate pass requests for asset movement",
       "Approval workflow for managers",
       "In / out tracking with timestamps",
-      "Auto-expiry and return reminders",
       "Printable pass with asset and user details",
     ],
   },
@@ -105,8 +103,7 @@ const modules = [
       "Asset status overview dashboard",
       "Allocation & return history reports",
       "Gate pass logs with filter & export",
-      "Vendor-wise and category-wise breakdown",
-      "Full audit trail for compliance",
+      "Allocation & gate-pass audit trail",
     ],
   },
 ];
@@ -114,18 +111,18 @@ const modules = [
 const steps = [
   {
     num: "01",
-    title: "Configure Masters",
-    desc: "Set up asset categories, sub-categories, vendors, departments, locations, and user roles in the admin panel.",
+    title: "Setup Masters",
+    desc: "Set up asset categories, sub-categories, asset types, vendors, departments, locations, and user roles in the admin panel.",
   },
   {
     num: "02",
     title: "Register Assets",
-    desc: "Add assets with full technical and financial details. Generate QR tags for physical labelling instantly.",
+    desc: "Add assets with details. Generate QR tags for physical labelling instantly.",
   },
   {
     num: "03",
     title: "Track & Manage",
-    desc: "Allocate assets to employees, issue gate passes, monitor lifecycle, and generate compliance reports.",
+    desc: "Allocate assets to employees, issue gate passes, and generate compliance reports.",
   },
 ];
 
@@ -142,27 +139,21 @@ const roles = [
   },
   {
     role: "Manager",
-    desc: "Oversee team assets, approve gate passes and manage allocations.",
-    perms: [
-      "View & update assets",
-      "Approve gate pass requests",
-      "Manage team allocations",
-      "Access team-level reports",
-    ],
+    desc: "View team assets, approve gate passes and manage allocations.",
+    perms: ["View & update assets", "Approve gate pass requests"],
   },
   {
     role: "Technician",
-    desc: "Handle day-to-day asset operations, maintenance and tracking.",
+    desc: "Handle asset operations, maintenance and tracking.",
     perms: [
       "View asset details",
       "Update asset status",
-      "Process allocations & returns",
       "Raise gate pass requests",
     ],
   },
   {
     role: "End User",
-    desc: "View assigned assets and raise service or gate pass requests.",
+    desc: "View assigned assets and gate pass requests.",
     perms: [
       "View own assigned assets",
       "Raise gate pass requests",
@@ -173,48 +164,93 @@ const roles = [
 ];
 
 const stats = [
-  { value: "10K+", label: "Assets Tracked" },
-  { value: "500+", label: "Organisations" },
-  { value: "99.9%", label: "Uptime" },
   { value: "4", label: "Access Roles" },
+  { value: "QR", label: "Code Asset Tag" },
+  { value: "Full", label: "Audit Trail" },
+  { value: "Gate Pass", label: "Movement Approval" },
 ];
 
-// ── QR cell pattern (static — no Math.random) ─────────────
-const QR_CELLS = [
-  1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1,
-  0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+// Replace `image: null` with a screenshot path once captured (e.g. "/previews/dashboard.png")
+const previewSlides = [
+  {
+    image: null as string | null,
+    caption: "Live dashboard with real asset & allocation data",
+  },
+  {
+    image: null as string | null,
+    caption: "Asset registry populated with seeded records",
+  },
+  {
+    image: null as string | null,
+    caption: "Gate pass approval workflow in action",
+  },
+  {
+    image: null as string | null,
+    caption: "QR code generated for a real asset",
+  },
 ];
+
+// typography classes
+const sectionEyebrow =
+  "text-xs font-semibold uppercase tracking-widest text-gray-500";
+const sectionHeading =
+  "mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900";
+const sectionSubtext = "mt-3 text-gray-500 max-w-xl mx-auto text-sm";
+const cardDesc = "text-sm text-gray-500 leading-relaxed";
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [previewIndex, setPreviewIndex] = useState(0);
+
+  const prevSlide = () =>
+    setPreviewIndex(
+      (i) => (i - 1 + previewSlides.length) % previewSlides.length,
+    );
+  const nextSlide = () =>
+    setPreviewIndex((i) => (i + 1) % previewSlides.length);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 40);
+    const handler = () => {
+      setScrolled(window.scrollY > 40);
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(scrollable > 0 ? window.scrollY / scrollable : 0);
+    };
     window.addEventListener("scroll", handler);
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    const target = document.querySelector(href);
+    if (!target) return;
+    e.preventDefault();
+    const top = target.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top, behavior: "smooth" });
+    setMenuOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#060c2c] text-white font-sans antialiased">
-      {/* ── NAVBAR ──────────────────────────────────────── */}
+      {/* NAVBAR  */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-white border-b border-gray-200 shadow-sm" : "bg-transparent"
+          scrolled
+            ? "bg-white border-b border-gray-200 shadow-sm"
+            : "bg-transparent"
         }`}
       >
         <nav className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div
-              className={`w-8 h-8 rounded-lg flex items-center justify-center border ${scrolled ? "bg-gray-900 border-gray-700" : "bg-white/5 border-white/10"}`}
-            >
-              <Package size={15} className={scrolled ? "text-white" : "text-white"} />
-            </div>
             <span
-              className={`text-base font-bold tracking-tight ${scrolled ? "text-gray-900" : "text-white"}`}
+              className={`text-lg font-bold tracking-tight ${scrolled ? "text-gray-900" : "text-white"}`}
             >
-              AssetFlow
+              Asset Management
             </span>
           </Link>
 
@@ -224,6 +260,7 @@ export default function LandingPage() {
               <li key={l.href}>
                 <a
                   href={l.href}
+                  onClick={(e) => handleNavClick(e, l.href)}
                   className={`text-sm font-medium transition ${scrolled ? "text-gray-500 hover:text-gray-900" : "text-gray-400 hover:text-white"}`}
                 >
                   {l.label}
@@ -236,16 +273,13 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/login"
-              className={`text-sm font-medium transition px-3 py-1.5 ${scrolled ? "text-gray-600 hover:text-gray-900" : "text-gray-400 hover:text-white"}`}
-            >
-              Login
-            </Link>
-            <Link
-              href="/login"
-              className="flex items-center gap-1.5 px-4 py-2 bg-gray-900 hover:bg-gray-700 text-white text-sm font-semibold rounded-md transition"
+              className="flex items-center gap-1.5 px-4 py-2.5 bg-gray-900 hover:bg-gray-700 text-white text-sm font-semibold rounded-md"
             >
               Get Started
-              <ArrowRight size={14} />
+              <ArrowRight
+                size={14}
+                className="transition-transform group-hover:translate-x-1"
+              />
             </Link>
           </div>
 
@@ -267,7 +301,7 @@ export default function LandingPage() {
               <a
                 key={l.href}
                 href={l.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, l.href)}
                 className={`block text-sm font-medium py-1.5 ${scrolled ? "text-gray-700" : "text-gray-300"}`}
               >
                 {l.label}
@@ -293,7 +327,7 @@ export default function LandingPage() {
         )}
       </header>
 
-      {/* ── HERO ────────────────────────────────────────── */}
+      {/* HERO*/}
       <section className="pt-32 pb-24 px-5 bg-[#060c2c] relative overflow-hidden">
         {/* Subtle radial glow */}
         <div
@@ -305,119 +339,89 @@ export default function LandingPage() {
         />
 
         <div className="relative max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-gray-300 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            Enterprise Asset Management Platform
-          </span>
-
           {/* Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight text-white leading-tight">
             Manage Every Asset.
-            <br />
-            <span className="text-gray-400">Track Every Movement.</span>
           </h1>
 
           {/* Sub */}
           <p className="mt-5 text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            The complete IT asset lifecycle management platform — from procurement and QR tagging to
-            allocation, gate passes, and compliance reporting. Built for modern organisations.
+            The complete IT asset lifecycle management platform — from
+            procurement and QR tagging to allocation, gate passes, and
+            compliance reporting.
           </p>
 
           {/* CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/login"
-              className="flex items-center gap-2 px-7 py-3 bg-white hover:bg-gray-100 text-gray-900 font-semibold rounded-md text-sm transition active:scale-95"
-            >
-              Start Free Trial
-              <ArrowRight size={15} />
-            </Link>
             <a
               href="#how-it-works"
+              onClick={(e) => handleNavClick(e, "#how-it-works")}
               className="flex items-center gap-2 px-7 py-3 border border-white/20 hover:border-white/40 hover:bg-white/5 text-gray-300 hover:text-white font-semibold rounded-md text-sm transition"
             >
               See How It Works
             </a>
           </div>
-
-          <p className="mt-4 text-xs text-gray-600">
-            No credit card required &nbsp;·&nbsp; Setup in minutes &nbsp;·&nbsp; Role-based access
-            included
-          </p>
         </div>
 
-        {/* Mock dashboard */}
-        <div className="relative max-w-5xl mx-auto mt-16">
-          <div className="bg-[#0f172a] rounded-xl border border-white/5 shadow-2xl overflow-hidden">
-            {/* Browser chrome */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-[#1e293b] border-b border-white/5">
-              <span className="w-3 h-3 rounded-full bg-red-500/50" />
-              <span className="w-3 h-3 rounded-full bg-yellow-500/50" />
-              <span className="w-3 h-3 rounded-full bg-green-500/50" />
-              <div className="flex-1 mx-4 h-5 bg-white/5 rounded-md" />
+        {/* PRODUCT PREVIEW */}
+        <section id="preview" className="py-24 px-5 bg-[#070D2D]">
+          <div className="max-w-5xl mx-auto text-center">
+            <span className={sectionEyebrow}>Product Preview</span>
+            <div className="mt-10">
+              <div className="aspect-video w-full bg-[#0f172a] rounded-md border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-3 overflow-hidden">
+                {previewSlides[previewIndex].image ? (
+                  <img
+                    src={previewSlides[previewIndex].image}
+                    alt={previewSlides[previewIndex].caption}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <>
+                    <ImageIcon size={32} className="text-white/20" />
+                    <p className="text-xs text-white/40">
+                      coming soon
+                    </p>
+                  </>
+                )}
+              </div>
+              <p className="mt-4 text-sm text-gray-600 font-medium">
+                {previewSlides[previewIndex].caption}
+              </p>
             </div>
-            {/* Dashboard content */}
-            <div className="p-5">
-              {/* Stat cards */}
-              <div className="grid grid-cols-4 gap-3 mb-4">
-                {[
-                  { label: "Total Assets", val: "1,284", color: "text-white" },
-                  { label: "Allocated", val: "947", color: "text-green-400" },
-                  { label: "Available", val: "312", color: "text-gray-300" },
-                  { label: "Maintenance", val: "25", color: "text-gray-400" },
-                ].map((c) => (
-                  <div key={c.label} className="bg-[#1e293b] rounded-lg border border-white/5 p-3">
-                    <p className="text-[10px] text-gray-500 font-medium mb-1">{c.label}</p>
-                    <p className={`text-xl font-bold ${c.color}`}>{c.val}</p>
-                  </div>
+
+            <div className="mt-6 inline-flex items-center gap-3 bg-gray-900 rounded-full px-3 py-2">
+              <button
+                onClick={prevSlide}
+                aria-label="Previous screenshot"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <div className="flex items-center gap-1.5">
+                {previewSlides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPreviewIndex(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    className={`h-1.5 rounded-full transition-all ${
+                      i === previewIndex ? "bg-white w-4" : "bg-white/30 w-1.5"
+                    }`}
+                  />
                 ))}
               </div>
-              {/* Table */}
-              <div className="bg-[#1e293b] rounded-lg border border-white/5 overflow-hidden">
-                <div className="grid grid-cols-5 px-4 py-2.5 border-b border-white/5 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
-                  {["Asset Tag", "Device", "Category", "Status", "Warranty"].map((h) => (
-                    <span key={h}>{h}</span>
-                  ))}
-                </div>
-                {[
-                  ["LAP-001", "Dell Latitude 5540", "Laptop", "Active", "2027-01-15"],
-                  ["DESK-002", "HP EliteDesk 800", "Desktop", "Active", "2026-09-10"],
-                  ["MAC-003", "MacBook Pro 14 M3", "Laptop", "Allocated", "2026-11-01"],
-                  ["TAB-004", "Samsung Galaxy Tab", "Tablet", "Inactive", "2025-12-20"],
-                ].map(([tag, dev, cat, status]) => (
-                  <div
-                    key={tag}
-                    className="grid grid-cols-5 px-4 py-2.5 border-b border-white/5 text-[10px] text-gray-400 last:border-0"
-                  >
-                    <span className="font-semibold text-white">{tag}</span>
-                    <span className="truncate">{dev}</span>
-                    <span>{cat}</span>
-                    <span>
-                      <span
-                        className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold ${
-                          status === "Active"
-                            ? "bg-green-500/20 text-green-400"
-                            : status === "Allocated"
-                              ? "bg-white/10 text-gray-300"
-                              : "bg-white/5 text-gray-500"
-                        }`}
-                      >
-                        {status}
-                      </span>
-                    </span>
-                    <span className="text-gray-500">—</span>
-                  </div>
-                ))}
-              </div>
+              <button
+                onClick={nextSlide}
+                aria-label="Next screenshot"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition"
+              >
+                <ChevronRight size={16} />
+              </button>
             </div>
           </div>
-          {/* Bottom fade */}
-          <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#060c2c] to-transparent pointer-events-none" />
-        </div>
+        </section>
       </section>
 
-      {/* ── STATS BAR ───────────────────────────────────── */}
+      {/*STATS BAR */}
       <section className="py-10 bg-[#0f172a] border-y border-white/5">
         <div className="max-w-4xl mx-auto px-5 grid grid-cols-2 sm:grid-cols-4 gap-8">
           {stats.map((s) => (
@@ -429,19 +433,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FEATURES ────────────────────────────────────── */}
+      {/* FEATURES */}
       <section id="features" className="py-24 px-5 bg-[#f8fafc]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Features
-            </span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
+            <span className={sectionEyebrow}>Features</span>
+            <h2 className={sectionHeading}>
               Everything you need in one platform
             </h2>
-            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              Designed for IT teams, operations managers, and finance departments who need complete
-              visibility over physical assets.
+            <p className={sectionSubtext}>
+              Designed for IT teams, operations managers, and departments who
+              need complete visibility over physical assets.
             </p>
           </div>
 
@@ -454,27 +456,28 @@ export default function LandingPage() {
                 <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center text-white mb-4 group-hover:bg-gray-700 transition-colors">
                   {f.icon}
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm">{f.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm">
+                  {f.title}
+                </h3>
+                <p className={cardDesc}>{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── MODULES ─────────────────────────────────────── */}
+      {/* MODULES */}
       <section id="modules" className="py-24 px-5 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Modules
-            </span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
+            <span className={sectionEyebrow}>Modules</span>
+            <h2 className={sectionHeading}>
               Four powerful modules, one platform
             </h2>
-            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              Each module is purpose-built and works seamlessly with the others, giving you
-              end-to-end control over your asset ecosystem.
+            <p className={sectionSubtext}>
+              Each module is purpose-built and works seamlessly with the others,
+              giving you full control over asset registration, allocation, and
+              movement.
             </p>
           </div>
 
@@ -487,11 +490,18 @@ export default function LandingPage() {
                 <div className="w-10 h-10 rounded-lg bg-gray-900 flex items-center justify-center text-white mb-5">
                   {m.icon}
                 </div>
-                <h3 className="text-base font-bold text-gray-900 mb-4">{m.title}</h3>
+                <h3 className="text-base font-bold text-gray-900 mb-4">
+                  {m.title}
+                </h3>
                 <ul className="space-y-2.5">
                   {m.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-sm text-gray-600">
-                      <span className="text-green-500 mt-0.5 shrink-0 text-xs">✔</span>
+                    <li
+                      key={p}
+                      className="flex items-start gap-2.5 text-sm text-gray-600"
+                    >
+                      <span className="text-green-500 mt-0.5 shrink-0 text-xs">
+                        ✔
+                      </span>
                       {p}
                     </li>
                   ))}
@@ -502,20 +512,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ────────────────────────────────── */}
+      {/* HOW IT WORKS */}
       <section id="how-it-works" className="py-24 px-5 bg-[#f8fafc]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              How It Works
-            </span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
-              Up and running in three steps
-            </h2>
-            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              No complex onboarding. Configure your masters, add your assets, and start tracking in
-              minutes.
-            </p>
+            <span className={sectionEyebrow}>How It Works</span>
           </div>
 
           <div className="relative">
@@ -524,10 +525,14 @@ export default function LandingPage() {
               {steps.map((s) => (
                 <div key={s.num} className="text-center">
                   <div className="w-14 h-14 rounded-xl border-2 border-gray-900 bg-white flex items-center justify-center mx-auto mb-5 shadow-sm">
-                    <span className="text-lg font-black text-gray-900">{s.num}</span>
+                    <span className="text-lg font-black text-gray-900">
+                      {s.num}
+                    </span>
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2 text-sm">{s.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                  <h3 className="font-bold text-gray-900 mb-2 text-sm">
+                    {s.title}
+                  </h3>
+                  <p className={cardDesc}>{s.desc}</p>
                 </div>
               ))}
             </div>
@@ -535,13 +540,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── QR HIGHLIGHT ────────────────────────────────── */}
+      {/* QR Code */}
       <section className="py-20 px-5 bg-[#060c2c]">
         <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1">
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-gray-400 mb-5">
               <QrCode size={12} />
-              QR Code System
+              QR Code
             </span>
             <h2 className="text-3xl font-bold text-white leading-tight mb-4">
               Scan any asset tag.
@@ -549,18 +554,20 @@ export default function LandingPage() {
               Get instant details.
             </h2>
             <p className="text-gray-400 leading-relaxed mb-6 text-sm">
-              Every registered asset gets a unique QR code that encodes key details directly — asset
-              tag, serial number, category, status, and warranty expiry. Scan with any phone camera.
-              No app, no login needed.
+              Every asset gets a unique QR code with the asset tag, serial
+              number, category, and other details. Scan the QR code using any
+              phone camera or third-party QR scanner app.
             </p>
             <ul className="space-y-3">
               {[
                 "Print-ready QR cards with asset info",
                 "Download as PNG or print directly",
                 "Works with any QR scanner app",
-                "Instant identification in the field",
               ].map((pt) => (
-                <li key={pt} className="flex items-center gap-2.5 text-sm text-gray-300">
+                <li
+                  key={pt}
+                  className="flex items-center gap-2.5 text-sm text-gray-300"
+                >
                   <span className="text-green-400 text-xs shrink-0">✔</span>
                   {pt}
                 </li>
@@ -573,16 +580,15 @@ export default function LandingPage() {
             <div className="bg-[#0f172a] rounded-xl border border-white/5 shadow-xl overflow-hidden">
               <div className="h-1 bg-white/10" />
               <div className="px-5 py-5 text-center">
-                <p className="text-[10px] font-bold text-white mb-0.5">Asset Management</p>
-                <p className="text-[9px] text-gray-500 mb-4">Asset Identification Card</p>
-                <p className="text-base font-extrabold text-white tracking-widest mb-1">LAP-001</p>
-                <p className="text-[10px] text-gray-500 mb-3">Dell Latitude 5540</p>
-                {/* Static QR grid */}
-                <div className="w-24 h-24 mx-auto bg-white rounded-lg p-2 mb-3 grid grid-cols-7 gap-px">
-                  {QR_CELLS.map((cell, i) => (
-                    <div key={i} className={`rounded-[1px] ${cell ? "bg-gray-900" : "bg-white"}`} />
-                  ))}
-                </div>
+                <p className="text-[10px] font-bold text-white mb-0.5">
+                  Asset Management
+                </p>
+                <p className="text-base font-extrabold text-white tracking-widest mb-1">
+                  LAP-001
+                </p>
+                <p className="text-[10px] text-gray-500 mb-3">
+                  Dell Latitude 5540
+                </p>
                 <p className="text-[9px] text-gray-500">Scan to get details</p>
               </div>
             </div>
@@ -590,20 +596,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── ROLES ───────────────────────────────────────── */}
+      {/*ROLES  */}
       <section id="roles" className="py-24 px-5 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Access Control
-            </span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
-              The right access for every team member
-            </h2>
-            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              Four predefined roles with granular permissions. Assign the right level of access to
-              every person in your organisation.
-            </p>
+            <span className={sectionEyebrow}>Right Access Control</span>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -614,13 +611,23 @@ export default function LandingPage() {
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full bg-gray-900" />
-                  <span className="text-sm font-bold text-gray-900">{r.role}</span>
+                  <span className="text-sm font-bold text-gray-900">
+                    {r.role}
+                  </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-4 leading-relaxed">{r.desc}</p>
+                <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+                  {r.desc}
+                </p>
                 <ul className="space-y-2">
                   {r.perms.map((p) => (
-                    <li key={p} className="flex items-start gap-2 text-xs text-gray-600">
-                      <ChevronRight size={11} className="text-gray-400 mt-0.5 shrink-0" />
+                    <li
+                      key={p}
+                      className="flex items-start gap-2 text-xs text-gray-600"
+                    >
+                      <ChevronRight
+                        size={11}
+                        className="text-gray-400 mt-0.5 shrink-0"
+                      />
                       {p}
                     </li>
                   ))}
@@ -631,7 +638,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── SECURITY ────────────────────────────────────── */}
+      {/* SECURITY  */}
       <section className="py-20 px-5 bg-[#f8fafc] border-y border-gray-100">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -639,12 +646,12 @@ export default function LandingPage() {
               Secure, reliable, and enterprise-ready
             </h2>
             <p className="mt-3 text-gray-500 max-w-lg mx-auto text-sm">
-              Built with security and auditability at the core so your organisation stays compliant
-              and in control.
+              Built with security and auditability at the core so your
+              organisation stays compliant and in control.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 icon: <Lock size={18} />,
@@ -657,14 +664,9 @@ export default function LandingPage() {
                 desc: "Every API endpoint is protected with role and permission checks.",
               },
               {
-                icon: <Globe size={18} />,
-                title: "Cloud-Hosted",
-                desc: "MongoDB Atlas backend with automatic backups and 99.9% uptime SLA.",
-              },
-              {
                 icon: <BadgeCheck size={18} />,
-                title: "Full Audit Trail",
-                desc: "Every change is logged — who did what, when, and on which asset.",
+                title: "Audit Trail",
+                desc: "Every allocation and gate-pass action is logged — who did what, when, and on which asset.",
               },
             ].map((c) => (
               <div
@@ -674,148 +676,111 @@ export default function LandingPage() {
                 <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center text-white mb-3">
                   {c.icon}
                 </div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">{c.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{c.desc}</p>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  {c.title}
+                </h3>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  {c.desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────────── */}
-      <section className="py-24 px-5 bg-[#060c2c]">
-        <div className="max-w-3xl mx-auto">
-          {/* Card matching login's dark card style */}
-          <div className="bg-[#0f172a] rounded-xl p-10 border border-white/5 shadow-sm text-center">
-            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-              <TrendingUp size={22} className="text-white" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-              Ready to take control of your assets?
-            </h2>
-            <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-              Join hundreds of organisations that use AssetFlow to track, manage, and optimise their
-              physical assets every day.
-            </p>
-            <div className="space-y-3">
-              {[
-                "Real-time asset tracking",
-                "Reduce risks and costs",
-                "End-to-end lifecycle management",
-              ].map((pt) => (
-                <div
-                  key={pt}
-                  className="flex items-center justify-center gap-2 text-sm text-gray-300"
-                >
-                  <span className="text-green-400 text-xs">✔</span>
-                  {pt}
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                href="/login"
-                className="flex items-center gap-2 px-7 py-3 bg-white hover:bg-gray-100 text-gray-900 font-semibold rounded-md text-sm transition active:scale-95"
-              >
-                Start Free Trial
-                <ArrowRight size={15} />
-              </Link>
-              <Link
-                href="/login"
-                className="flex items-center gap-2 px-7 py-3 border border-white/20 hover:border-white/40 hover:bg-white/5 text-gray-300 font-semibold rounded-md text-sm transition"
-              >
-                Login to Dashboard
-              </Link>
-            </div>
-            <p className="mt-5 text-xs text-gray-600">
-              No credit card required &nbsp;·&nbsp; All modules included
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FOOTER ──────────────────────────────────────── */}
+      {/*FOOTER */}
       <footer className="bg-[#0f172a] border-t border-white/5">
-        <div className="max-w-6xl mx-auto px-5 py-12">
-          <div className="flex flex-col sm:flex-row items-start justify-between gap-8">
-            {/* Brand */}
-            <div className="max-w-xs">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                  <Package size={13} className="text-white" />
-                </div>
-                <span className="font-bold text-white">AssetFlow</span>
-              </div>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                The complete IT asset lifecycle management platform for modern organisations.
-              </p>
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Top Footer */}
+          <div className="flex flex-col lg:flex-row items-center justify-between py-6 gap-6">
+            <div className="flex items-center">
+              <h2 className="text-lg font-bold text-white">Asset Management</h2>
             </div>
 
-            {/* Links */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-sm">
-              <div>
-                <p className="font-semibold text-gray-400 mb-3">Platform</p>
-                <ul className="space-y-2 text-gray-500">
-                  <li>
-                    <a href="#features" className="hover:text-white transition">
-                      Features
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#modules" className="hover:text-white transition">
-                      Modules
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#how-it-works" className="hover:text-white transition">
-                      How It Works
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-400 mb-3">Access</p>
-                <ul className="space-y-2 text-gray-500">
-                  <li>
-                    <a href="#roles" className="hover:text-white transition">
-                      Roles
-                    </a>
-                  </li>
-                  <li>
-                    <Link href="/login" className="hover:text-white transition">
-                      Login
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/login" className="hover:text-white transition">
-                      Get Started
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-400 mb-3">Company</p>
-                <ul className="space-y-2 text-gray-500">
-                  <li>
-                    <span>About</span>
-                  </li>
-                  <li>
-                    <span>Contact</span>
-                  </li>
-                  <li>
-                    <span>Privacy</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            {/* Center - Navigation */}
+            <nav className="flex flex-wrap items-center justify-center gap-8 text-sm font-medium">
+              <a
+                href="#features"
+                onClick={(e) => handleNavClick(e, "#features")}
+                className="text-gray-400 hover:text-white transition"
+              >
+                Features
+              </a>
+
+              <a
+                href="#modules"
+                onClick={(e) => handleNavClick(e, "#modules")}
+                className="text-gray-400 hover:text-white transition"
+              >
+                Modules
+              </a>
+
+              <a
+                href="#how-it-works"
+                onClick={(e) => handleNavClick(e, "#how-it-works")}
+                className="text-gray-400 hover:text-white transition"
+              >
+                How It Works
+              </a>
+            </nav>
+
+            {/* Right - CTA */}
+            <Link
+              href="/login"
+              className="group inline-flex items-center gap-1 rounded-md bg-white/10 backdrop-blur-xl 
+              border border-white/15 px-4 py-2.5 text-sm font-medium text-white transition-all duration-300
+              hover:bg-white/20"
+            >
+              Get Started
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </Link>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
-            <p>© {new Date().getFullYear()} AssetFlow. All rights reserved.</p>
-            <p>Built for enterprise IT asset management</p>
+          {/* Bottom */}
+          <div className="border-t border-white/5 py-5 text-center text-sm text-gray-500">
+            © {new Date().getFullYear()} Asset Management. All rights reserved.
           </div>
         </div>
       </footer>
+
+      {/* SCROLL TO TOP */}
+      {scrolled && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Scroll to top"
+          className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gray-900 hover:bg-gray-700 text-white shadow-lg flex items-center justify-center transition-colors"
+        >
+          <svg
+            className="absolute inset-0 w-full h-full -rotate-90"
+            viewBox="0 0 48 48"
+          >
+            <circle
+              cx="24"
+              cy="24"
+              r="21"
+              fill="none"
+              stroke="rgba(255,255,255,0.2)"
+              strokeWidth="2"
+            />
+            <circle
+              cx="24"
+              cy="24"
+              r="21"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeDasharray={2 * Math.PI * 21}
+              strokeDashoffset={2 * Math.PI * 21 * (1 - scrollProgress)}
+              className="transition-[stroke-dashoffset] duration-150"
+            />
+          </svg>
+          <FaChevronUp size={16} className="relative" />
+        </button>
+      )}
     </div>
   );
 }
