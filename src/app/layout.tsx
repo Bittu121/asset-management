@@ -7,6 +7,8 @@ import connectDB from "@/backend/config/db";
 
 import { Providers } from "./providers";
 
+// DB connection + first-run bootstrap happen in src/instrumentation.ts (runs
+// once on server startup). This keeps the request-time connection warm.
 connectDB();
 
 const inter = Poppins({

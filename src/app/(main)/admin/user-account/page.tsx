@@ -365,6 +365,10 @@ import {
   updateUserAccountAction,
 } from "@/store/userAccounts/userAccountsActions";
 import { fetchRoles } from "@/store/roles/rolesActions";
+import { getDepartmentsAction } from "@/store/department/departmentActions";
+import { getSubDepartmentsAction } from "@/store/subDepartment/subDepartmentActions";
+import { getLocationsAction } from "@/store/location/locationActions";
+import { getSubLocationsAction } from "@/store/subLocation/subLocationActions";
 
 function UserAccount() {
   const dispatch = useDispatch<AppDispatch>();
@@ -372,7 +376,12 @@ function UserAccount() {
     (state: RootState) => state.userAccounts
   );
   const { roles } = useSelector((state: RootState) => state.roles);
-  console.log("roles", roles);
+  const { departments: departmentList } = useSelector((state: RootState) => state.department);
+  const { subDepartments: subDepartmentList } = useSelector(
+    (state: RootState) => state.subDepartment
+  );
+  const { locations: locationList } = useSelector((state: RootState) => state.location);
+  const { subLocations: subLocationList } = useSelector((state: RootState) => state.subLocation);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -389,18 +398,29 @@ function UserAccount() {
   useEffect(() => {
     dispatch(fetchUserAccounts());
     dispatch(fetchRoles());
+    dispatch(getDepartmentsAction());
+    dispatch(getSubDepartmentsAction());
+    dispatch(getLocationsAction());
+    dispatch(getSubLocationsAction());
   }, [dispatch]);
 
-  // Get unique values for filters
   const managers = users.filter((u) => ["ADMIN", "MANAGER"].includes(u.role.name));
 
-  const departments = Array.from(new Set(users.map((u) => u.department).filter(Boolean)));
+  // Dropdown options come from the master-data collections (not from existing
+  // users), so they're available even before any user has a department/location.
+  const departments = Array.from(
+    new Set(departmentList.map((d) => d.departmentName).filter(Boolean))
+  );
 
-  const subDepartments = Array.from(new Set(users.map((u) => u.subDepartment).filter(Boolean)));
+  const subDepartments = Array.from(
+    new Set(subDepartmentList.map((d) => d.subDepartmentName).filter(Boolean))
+  );
 
-  const locations = Array.from(new Set(users.map((u) => u.location).filter(Boolean)));
+  const locations = Array.from(new Set(locationList.map((l) => l.locationName).filter(Boolean)));
 
-  const subLocations = Array.from(new Set(users.map((u) => u.subLocation).filter(Boolean)));
+  const subLocations = Array.from(
+    new Set(subLocationList.map((l) => l.subLocationName).filter(Boolean))
+  );
 
   const filteredUserAccount = users.filter((u) => {
     const matchesSearch =

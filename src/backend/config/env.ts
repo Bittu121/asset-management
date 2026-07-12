@@ -20,5 +20,11 @@ export const env = {
   SMTP_USER: process.env.SMTP_USER as string,
   SMTP_PASS: process.env.SMTP_PASS as string,
 
+  // First-run admin bootstrap (created only if no admin exists yet)
+  ADMIN_NAME: process.env.ADMIN_NAME || "Super Admin",
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || "admin@assetmanagement.com",
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "Admin@123",
+  ADMIN_EMPLOYEE_CODE: process.env.ADMIN_EMPLOYEE_CODE || "EMP001",
+
   NODE_ENV: process.env.NODE_ENV,
 };

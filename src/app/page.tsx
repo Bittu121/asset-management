@@ -153,10 +153,10 @@ const roles = [
   },
   {
     role: "End User",
-    desc: "View assigned assets and gate pass requests.",
+    desc: "View assigned assets and track gate pass status.",
     perms: [
       "View own assigned assets",
-      "Raise gate pass requests",
+      "Track own gate pass request status",
       "View allocation history",
       "Scan QR for asset info",
     ],

@@ -3,15 +3,42 @@
 import { Bell, LogOut, User } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store/auth/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/auth/store";
 import { logoutAction } from "../../../store/auth/authActions";
+
+// Background color for the avatar, based on the user's role
+const roleColor = (role?: string) => {
+  switch ((role || "").toLowerCase()) {
+    case "admin":
+    case "superadmin":
+      return "bg-violet-600";
+    case "manager":
+      return "bg-blue-600";
+    case "technician":
+      return "bg-amber-600";
+    default:
+      return "bg-gray-500";
+  }
+};
 
 function Header() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
+
+  // Initials from the user's name (up to 2 letters), e.g. "Bittu Kumar" -> "BK"
+  const initials =
+    (user?.name || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "?";
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -57,12 +84,15 @@ function Header() {
 
         {/* PROFILE */}
         <div className="relative" ref={dropdownRef}>
-          <img
-            src="https://i.pravatar.cc/40"
-            alt="profile"
+          <div
             onClick={() => setOpen(!open)}
-            className="w-9 h-9 rounded-full ring-2 ring-gray-200 hover:ring-gray-300 cursor-pointer transition"
-          />
+            title={user?.name}
+            className={`w-9 h-9 rounded-full ring-2 ring-gray-200 hover:ring-gray-300 cursor-pointer transition flex items-center justify-center text-white text-sm font-semibold select-none ${roleColor(
+              user?.role
+            )}`}
+          >
+            {initials}
+          </div>
 
           {open && (
             <div className="absolute right-0 top-12 z-50 w-44 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">

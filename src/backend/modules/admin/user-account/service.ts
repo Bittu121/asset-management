@@ -32,6 +32,8 @@ export const createUserAccount = async (data: CreateUserAccountDto) => {
 
   const user = await UserAccount.create({
     ...data,
+    // reportingManager is optional; an empty string can't cast to ObjectId, so store null
+    reportingManager: data.reportingManager || null,
     password: hashedPassword,
     isVerified: true,
   });
@@ -65,6 +67,11 @@ export const createUserAccount = async (data: CreateUserAccountDto) => {
 export const updateUserAccount = async (id: string, data: UpdateUserAccountDto) => {
   if (data.password) {
     data.password = await hashPassword(data.password);
+  }
+
+  // reportingManager is optional; convert an empty string to null so it doesn't fail ObjectId cast
+  if ("reportingManager" in data && !data.reportingManager) {
+    data.reportingManager = null as unknown as string;
   }
 
   const user = await UserAccount.findByIdAndUpdate(id, data, { new: true })
