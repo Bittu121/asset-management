@@ -166,7 +166,7 @@ This document is written to match the actual code in this repository, so every f
 
 ## Application Flow
 
-![Operational Flow Diagram](readme/images/operational-flow.png)
+![Operational Flow Diagram](readme/images/asset_management_flow.png)
 
 ---
 
@@ -197,13 +197,13 @@ A few fields look like they should be links but are actually stored as plain tex
 
 ## Entity Relationship Overview
 
-![Entity Relationship Diagram](readme/images/er-diagram.png)
+![Entity Relationship Diagram](readme/images/Asset_Management_ER_Diagram.png)
 
 ---
 
 ## Schema Diagram
 
-![Database Schema Diagram](readme/images/schema-diagram.png)
+![Database Schema Diagram](readme/images/Asset_Management_Schema_Diagram.png)
 
 ---
 
