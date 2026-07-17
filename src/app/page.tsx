@@ -20,6 +20,7 @@ import {
   ChevronLeft,
   ImageIcon,
   Lock,
+  Download,
 } from "lucide-react";
 import { FaChevronUp } from "react-icons/fa";
 
@@ -44,7 +45,7 @@ const features = [
   {
     icon: <Package size={20} />,
     title: "Full Lifecycle Management",
-    desc: "Track every asset from procurement through allocation, transfer, and gate-pass movement in one place.",
+    desc: "Track every asset through allocation, returns, and gate-pass movement in one place.",
   },
   {
     icon: <Truck size={20} />,
@@ -144,10 +145,10 @@ const roles = [
   },
   {
     role: "Technician",
-    desc: "Handle asset operations, maintenance and tracking.",
+    desc: "Handle asset returns and gate-pass requests.",
     perms: [
       "View asset details",
-      "Update asset status",
+      "Process asset returns",
       "Raise gate pass requests",
     ],
   },
@@ -178,7 +179,7 @@ const previewSlides = [
   },
   {
     image: null as string | null,
-    caption: "Asset registry populated with seeded records",
+    caption: "Asset registry with real records",
   },
   {
     image: null as string | null,
@@ -346,9 +347,8 @@ export default function LandingPage() {
 
           {/* Sub */}
           <p className="mt-5 text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            The complete IT asset lifecycle management platform — from
-            procurement and QR tagging to allocation, gate passes, and
-            compliance reporting.
+            The complete IT asset lifecycle management platform — from QR
+            tagging to allocation, gate passes, and reporting.
           </p>
 
           {/* CTAs */}
@@ -575,23 +575,21 @@ export default function LandingPage() {
             </ul>
           </div>
 
-          {/* Mock QR card — matching login card style */}
-          <div className="shrink-0 w-52">
-            <div className="bg-[#0f172a] rounded-xl border border-white/5 shadow-xl overflow-hidden">
-              <div className="h-1 bg-white/10" />
-              <div className="px-5 py-5 text-center">
-                <p className="text-[10px] font-bold text-white mb-0.5">
-                  Asset Management
-                </p>
-                <p className="text-base font-extrabold text-white tracking-widest mb-1">
-                  LAP-001
-                </p>
-                <p className="text-[10px] text-gray-500 mb-3">
-                  Dell Latitude 5540
-                </p>
-                <p className="text-[9px] text-gray-500">Scan to get details</p>
-              </div>
-            </div>
+          {/* Asset ID card image */}
+          <div className="shrink-0 w-full max-w-xs">
+            <img
+              src="/asset-barcode.png"
+              alt="Asset identification card with QR code"
+              className="w-full rounded-xl shadow-2xl border border-white/10"
+            />
+            <a
+              href="/asset-barcode.png"
+              download="asset-id-card.png"
+              className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 bg-white/10 hover:bg-white/20 border border-white/15 rounded-md text-sm font-medium text-white transition"
+            >
+              <Download size={16} />
+              Download Card
+            </a>
           </div>
         </div>
       </section>
@@ -661,7 +659,7 @@ export default function LandingPage() {
               {
                 icon: <ShieldCheck size={18} />,
                 title: "Role-Based Access",
-                desc: "Every API endpoint is protected with role and permission checks.",
+                desc: "API routes are protected with role-based access checks.",
               },
               {
                 icon: <BadgeCheck size={18} />,
@@ -696,33 +694,6 @@ export default function LandingPage() {
             <div className="flex items-center">
               <h2 className="text-lg font-bold text-white">Asset Management</h2>
             </div>
-
-            {/* Center - Navigation */}
-            <nav className="flex flex-wrap items-center justify-center gap-8 text-sm font-medium">
-              <a
-                href="#features"
-                onClick={(e) => handleNavClick(e, "#features")}
-                className="text-gray-400 hover:text-white transition"
-              >
-                Features
-              </a>
-
-              <a
-                href="#modules"
-                onClick={(e) => handleNavClick(e, "#modules")}
-                className="text-gray-400 hover:text-white transition"
-              >
-                Modules
-              </a>
-
-              <a
-                href="#how-it-works"
-                onClick={(e) => handleNavClick(e, "#how-it-works")}
-                className="text-gray-400 hover:text-white transition"
-              >
-                How It Works
-              </a>
-            </nav>
 
             {/* Right - CTA */}
             <Link

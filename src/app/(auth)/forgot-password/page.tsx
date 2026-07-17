@@ -9,7 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 export default function ForgotPassword() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { forgotLoading, error } = useSelector((state: RootState) => state.auth);
+  const { forgotLoading, error } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -43,11 +45,14 @@ export default function ForgotPassword() {
           </div>
 
           {/* Heading */}
-          <h2 className="text-3xl font-semibold text-white leading-tight">Asset Management</h2>
+          <h2 className="text-3xl font-semibold text-white leading-tight">
+            Asset Management
+          </h2>
 
           {/* Description */}
           <p className="mt-4 text-gray-400 text-sm leading-relaxed">
-            Track, manage, and optimize assets with real-time visibility and automation.
+            Track, manage, and optimize assets with real-time visibility and
+            automation.
           </p>
 
           {/* Points */}
@@ -64,7 +69,9 @@ export default function ForgotPassword() {
 
             <div className="flex items-start gap-3">
               <span className="text-green-400 mt-1">✔</span>
-              <p className="text-sm text-gray-300">End-to-end lifecycle management</p>
+              <p className="text-sm text-gray-300">
+                End-to-end lifecycle management
+              </p>
             </div>
           </div>
         </div>
@@ -74,8 +81,12 @@ export default function ForgotPassword() {
       <div className="flex w-full md:w-1/2 items-center justify-center">
         <div className="w-full max-w-sm px-6">
           {/* Heading */}
-          <h1 className="text-2xl font-semibold text-gray-900">Forgot password</h1>
-          <p className="text-sm text-gray-500 mt-1">Enter your email to receive a reset link</p>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Forgot password
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Enter your email to receive a reset link
+          </p>
           {error && (
             <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
               {error}

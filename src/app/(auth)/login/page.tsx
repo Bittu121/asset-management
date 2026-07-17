@@ -85,23 +85,6 @@ function Login() {
           </p>
 
           <div className="mt-6 space-y-4">
-            {/* Google Login */}
-            <button className="w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 transition">
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="Google"
-                className="w-4 h-4"
-              />
-              Continue with Google
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-px bg-gray-300"></div>
-              <span className="text-xs text-gray-400">OR</span>
-              <div className="flex-1 h-px bg-gray-300"></div>
-            </div>
-
             {/* Error message */}
             {error && (
               <div className="px-4 py-2.5 bg-red-50 border border-red-200 rounded-md">
