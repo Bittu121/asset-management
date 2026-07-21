@@ -35,13 +35,29 @@ This document is written to match the actual code in this repository, so every f
 
 ## Screenshots
 
-> _Screenshots and a demo GIF go here — add the images to `readme/images/` and uncomment the lines below._
+### Login
 
-<!--
-![Dashboard](readme/images/screenshot-dashboard.png)
-![Asset Allocation](readme/images/screenshot-allocation.png)
-![Gate Pass Workflow](readme/images/screenshot-gatepass.png)
--->
+![Login](readme/images/login1.webp)
+
+### Dashboard
+
+![Dashboard](readme/images/dashboard2.webp)
+
+### Asset Registry
+
+![Asset Registry](readme/images/assetDetails3.webp)
+
+### Asset Allocation
+
+![Asset Allocation](readme/images/allocation4.webp)
+
+### Gate Pass Workflow
+
+![Gate Pass Workflow](readme/images/gatePassAllocation5.webp)
+
+### Reports &amp; Analytics
+
+![Reports](readme/images/reports6.webp)
 
 ---
 

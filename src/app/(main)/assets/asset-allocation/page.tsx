@@ -47,7 +47,7 @@ export default function AssetAllocationPage() {
   // Compute asset status: AVAILABLE if no active allocation exists for it
   const assets: Asset[] = rawAssets.map((a: any) => {
     const isAllocated = rawAllocations.some(
-      (al: Allocation) => al.asset._id === a._id && al.status !== "RETURNED"
+      (al: Allocation) => al.asset?._id === a._id && al.status !== "RETURNED"
     );
     return {
       _id: a._id,
@@ -201,7 +201,7 @@ export default function AssetAllocationPage() {
           setReturnModalOpen(false);
           setAllocationToReturn(null);
         }}
-        assetTag={allocationToReturn?.asset.assetTag ?? ""}
+        assetTag={allocationToReturn?.asset?.assetTag ?? ""}
         onSubmit={handleReturnConfirm}
       />
     </div>

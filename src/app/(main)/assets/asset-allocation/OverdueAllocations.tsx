@@ -73,8 +73,8 @@ export default function OverdueAllocations({ allocations, onReturn }: Props) {
                 <tr key={item._id} className="hover:bg-red-50/30 transition-colors">
                   {/* Asset */}
                   <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">{item.asset.assetTag}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{item.asset.device}</p>
+                    <p className="font-semibold text-gray-900">{item.asset?.assetTag ?? "—"}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{item.asset?.device ?? "—"}</p>
                   </td>
 
                   {/* User */}
@@ -82,10 +82,10 @@ export default function OverdueAllocations({ allocations, onReturn }: Props) {
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
                         <span className="text-xs font-bold text-red-700">
-                          {getInitials(item.allocatedTo.name)}
+                          {getInitials(item.allocatedTo?.name ?? "?")}
                         </span>
                       </div>
-                      <span className="text-gray-800">{item.allocatedTo.name}</span>
+                      <span className="text-gray-800">{item.allocatedTo?.name ?? "—"}</span>
                     </div>
                   </td>
 

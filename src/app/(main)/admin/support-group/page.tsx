@@ -604,7 +604,7 @@ function SupportGroup() {
         <table className="min-w-[1400px] w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-              <th className="px-6 py-4 text-left">ID</th>
+              {/* <th className="px-6 py-4 text-left">ID</th> */}
               <th className="px-6 py-4 text-left">Group Name</th>
               <th className="px-6 py-4 text-left">Code</th>
               <th className="px-6 py-4 text-left">Level</th>
@@ -639,9 +639,9 @@ function SupportGroup() {
             ) : (
               paginatedSupportGroup?.map((group) => (
                 <tr key={group._id} className="hover:bg-gray-50 transition-all duration-150">
-                  <td className="px-6 py-5">
+                  {/* <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">{group._id.slice(-6)}</div>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">{group.name}</div>
                   </td>

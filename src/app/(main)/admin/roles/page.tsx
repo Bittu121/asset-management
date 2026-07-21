@@ -518,7 +518,7 @@ function Roles() {
         <table className="min-w-275 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-              <th className="text-left px-6 py-4">ID</th>
+              {/* <th className="text-left px-6 py-4">ID</th> */}
               <th className="text-left px-6 py-4">Role Name</th>
               <th className="text-left px-6 py-4">Description</th>
               <th className="text-left px-6 py-4">Permissions</th>
@@ -552,9 +552,9 @@ function Roles() {
             ) : (
               paginatedRoles.map((rol: any) => (
                 <tr key={rol._id} className="hover:bg-gray-50 transition-all duration-150">
-                  <td className="px-6 py-5">
+                  {/* <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">{rol._id.slice(-6)}</div>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">{rol.name}</div>
                   </td>

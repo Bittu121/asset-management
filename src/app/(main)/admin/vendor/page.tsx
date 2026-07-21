@@ -200,7 +200,7 @@ function VendorPage() {
         <table className="min-w-300 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-              <th className="px-6 py-4 text-left">ID</th>
+              {/* <th className="px-6 py-4 text-left">ID</th> */}
               <th className="px-6 py-4 text-left">Vendor Name</th>
               <th className="px-6 py-4 text-left">Email</th>
               <th className="px-6 py-4 text-left">Phone</th>
@@ -233,7 +233,7 @@ function VendorPage() {
             ) : (
               paginatedVendors.map((v) => (
                 <tr key={v._id} className="hover:bg-gray-50 transition-all duration-150">
-                  <td className="px-6 py-5 text-sm font-medium text-gray-900">{v._id.slice(-6)}</td>
+                  {/* <td className="px-6 py-5 text-sm font-medium text-gray-900">{v._id.slice(-6)}</td> */}
                   <td className="px-6 py-5 text-sm font-medium text-gray-900">{v.vendorName}</td>
                   <td className="px-6 py-5 text-sm text-gray-700">{v.email}</td>
                   <td className="px-6 py-5 text-sm text-gray-700">{v.phone}</td>

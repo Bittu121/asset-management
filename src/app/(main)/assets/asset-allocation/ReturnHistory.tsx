@@ -57,14 +57,14 @@ export default function ReturnHistory({ allocations }: Props) {
               {/* Asset + user + dates */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm text-gray-900">{item.asset.assetTag}</span>
+                  <span className="font-semibold text-sm text-gray-900">{item.asset?.assetTag ?? "—"}</span>
                   <span className="text-gray-300 text-xs">•</span>
-                  <span className="text-sm text-gray-500 truncate">{item.asset.device}</span>
+                  <span className="text-sm text-gray-500 truncate">{item.asset?.device ?? "—"}</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 mt-1.5 text-xs text-gray-400">
                   <span className="flex items-center gap-1">
                     <User size={11} />
-                    {item.allocatedTo.name}
+                    {item.allocatedTo?.name ?? "—"}
                   </span>
                   <span className="flex items-center gap-1">
                     <Calendar size={11} />

@@ -37,6 +37,14 @@ export const loginService = async (email: string, password: string): Promise<Log
     return { success: false, message: "Invalid email or password" };
   }
 
+  // Role may be null if the assigned role was deleted — fail cleanly instead of crashing
+  if (!user.role) {
+    return {
+      success: false,
+      message: "Your account has no assigned role. Please contact an administrator.",
+    };
+  }
+
   // ✅ Tokens guaranteed string
   const accessToken = signAccessToken({ userId: user._id.toString() });
   const refreshToken = signRefreshToken({ userId: user._id.toString() });

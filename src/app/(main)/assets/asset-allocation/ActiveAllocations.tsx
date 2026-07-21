@@ -64,8 +64,8 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
               <tr key={item._id} className="hover:bg-gray-50 transition-colors">
                 {/* Asset tag + device name */}
                 <td className="px-6 py-4">
-                  <p className="font-semibold text-gray-900">{item.asset.assetTag}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{item.asset.device}</p>
+                  <p className="font-semibold text-gray-900">{item.asset?.assetTag ?? "—"}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{item.asset?.device ?? "—"}</p>
                 </td>
 
                 {/* Avatar + user name */}
@@ -73,10 +73,10 @@ export default function ActiveAllocations({ allocations, onReturn }: Props) {
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                       <span className="text-xs font-bold text-indigo-700">
-                        {getInitials(item.allocatedTo.name)}
+                        {getInitials(item.allocatedTo?.name ?? "?")}
                       </span>
                     </div>
-                    <span className="text-gray-800">{item.allocatedTo.name}</span>
+                    <span className="text-gray-800">{item.allocatedTo?.name ?? "—"}</span>
                   </div>
                 </td>
 

@@ -199,7 +199,7 @@ function AssetSubCategories() {
         <table className="min-w-275 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-              <th className="px-6 py-3 text-left">ID</th>
+              {/* <th className="px-6 py-3 text-left">ID</th> */}
               <th className="px-6 py-3 text-left">Sub Category</th>
               <th className="px-6 py-3 text-left">Category</th>
               <th className="px-6 py-3 text-left">Description</th>
@@ -233,9 +233,9 @@ function AssetSubCategories() {
             ) : (
               paginatedSubCategories.map((sc: any) => (
                 <tr key={sc._id} className="hover:bg-gray-50 transition-all duration-150">
-                  <td className="px-6 py-5">
+                  {/* <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">{sc._id.slice(-6)}</div>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">{sc.name}</div>
                   </td>

@@ -205,7 +205,7 @@ function AssetCategories() {
         <table className="min-w-225 w-full">
           <thead>
             <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-              <th className="text-left px-6 py-4">ID</th>
+              {/* <th className="text-left px-6 py-4">ID</th> */}
               <th className="text-left px-6 py-4">Name</th>
               <th className="text-left px-6 py-4">Code</th>
               <th className="text-left px-6 py-4">Description</th>
@@ -242,11 +242,11 @@ function AssetCategories() {
                   key={cat._id}
                   className="hover:bg-gray-50 transition-all duration-150"
                 >
-                  <td className="px-6 py-5">
+                  {/* <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
                       {cat._id.slice(-6)}
                     </div>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-5">
                     <div className="text-sm font-medium text-gray-900">
                       {cat.name}

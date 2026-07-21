@@ -185,7 +185,7 @@ function Location() {
         <table className="min-w-[1100px] w-full">
           <thead>
             <tr className="bg-white text-xs text-gray-500 uppercase tracking-wide">
-              <th className="text-left px-6 py-4">ID</th>
+              {/* <th className="text-left px-6 py-4">ID</th> */}
               <th className="text-left px-6 py-4 ">Location</th>
               <th className="text-left px-6 py-4 ">City</th>
               <th className="text-left px-6 py-4 ">Address</th>
@@ -219,9 +219,9 @@ function Location() {
               <>
                 {paginatedLocation.map((loc) => (
                   <tr key={loc._id} className="hover:bg-gray-50 transition-all duration-150">
-                    <td className="px-6 py-5">
+                    {/* <td className="px-6 py-5">
                       <div className="text-sm font-medium text-gray-900">{loc._id}</div>
-                    </td>
+                    </td> */}
                     <td className="px-6 py-5">
                       <div className="text-sm font-medium text-gray-900">{loc.locationName}</div>
                     </td>

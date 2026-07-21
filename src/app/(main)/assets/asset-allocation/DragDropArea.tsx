@@ -18,7 +18,7 @@ export default function DragDropArea({ assets, users, allocations, onAssign }: P
   const availableAssets = assets.filter((a) => a.status === "AVAILABLE");
 
   function countAssigned(userId: string): number {
-    return allocations.filter((a) => a.allocatedTo._id === userId && a.status !== "RETURNED")
+    return allocations.filter((a) => a.allocatedTo?._id === userId && a.status !== "RETURNED")
       .length;
   }
 

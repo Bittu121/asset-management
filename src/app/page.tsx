@@ -23,6 +23,20 @@ import {
   Download,
 } from "lucide-react";
 import { FaChevronUp } from "react-icons/fa";
+import Image from "next/image";
+
+// Landing preview screenshots (from readme/images) — statically imported so Next
+// optimizes them and lazy-loads them automatically.
+import login1 from "../../readme/images/login1.webp";
+import dashboard2 from "../../readme/images/dashboard2.webp";
+import assetDetails3 from "../../readme/images/assetDetails3.webp";
+import allocation4 from "../../readme/images/allocation4.webp";
+import gatePass5 from "../../readme/images/gatePassAllocation5.webp";
+import reports6 from "../../readme/images/reports6.webp";
+import user7 from "../../readme/images/user7.webp";
+import vendor8 from "../../readme/images/VendorOrder8.webp";
+import departments9 from "../../readme/images/DepartmentsOrder9.webp";
+import categories10 from "../../readme/images/Categories10.webp";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -171,24 +185,17 @@ const stats = [
   { value: "Gate Pass", label: "Movement Approval" },
 ];
 
-// Replace `image: null` with a screenshot path once captured (e.g. "/previews/dashboard.png")
 const previewSlides = [
-  {
-    image: null as string | null,
-    caption: "Live dashboard with real asset & allocation data",
-  },
-  {
-    image: null as string | null,
-    caption: "Asset registry with real records",
-  },
-  {
-    image: null as string | null,
-    caption: "Gate pass approval workflow in action",
-  },
-  {
-    image: null as string | null,
-    caption: "QR code generated for a real asset",
-  },
+  { image: login1, caption: "Secure login with role-based access" },
+  { image: dashboard2, caption: "Live dashboard with real asset data" },
+  { image: assetDetails3, caption: "Detailed asset registry with QR codes" },
+  { image: allocation4, caption: "Asset allocation to employees" },
+  { image: gatePass5, caption: "Gate pass approval workflow" },
+  { image: reports6, caption: "Reports & analytics" },
+  { image: user7, caption: "User & role management" },
+  { image: vendor8, caption: "Vendor management" },
+  { image: departments9, caption: "Departments & sub-departments" },
+  { image: categories10, caption: "Asset categories & types" },
 ];
 
 // typography classes
@@ -368,19 +375,20 @@ export default function LandingPage() {
           <div className="max-w-5xl mx-auto text-center">
             <span className={sectionEyebrow}>Product Preview</span>
             <div className="mt-10">
-              <div className="aspect-video w-full bg-[#0f172a] rounded-md border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-3 overflow-hidden">
+              <div className="relative aspect-video w-full bg-[#0f172a] rounded-md border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-3 overflow-hidden">
                 {previewSlides[previewIndex].image ? (
-                  <img
+                  <Image
                     src={previewSlides[previewIndex].image}
                     alt={previewSlides[previewIndex].caption}
-                    className="w-full h-full object-cover"
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 1024px) 100vw, 1000px"
+                    className="object-contain"
                   />
                 ) : (
                   <>
                     <ImageIcon size={32} className="text-white/20" />
-                    <p className="text-xs text-white/40">
-                      coming soon
-                    </p>
+                    <p className="text-xs text-white/40">coming soon</p>
                   </>
                 )}
               </div>

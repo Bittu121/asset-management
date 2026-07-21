@@ -48,7 +48,10 @@ function Header() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -77,10 +80,10 @@ function Header() {
       {/* RIGHT */}
       <div className="flex items-center gap-3">
         {/* NOTIFICATION */}
-        <div className="relative p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+        {/* <div className="relative p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
           <Bell size={18} className="text-gray-600" />
           <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-        </div>
+        </div> */}
 
         {/* PROFILE */}
         <div className="relative" ref={dropdownRef}>
@@ -88,7 +91,7 @@ function Header() {
             onClick={() => setOpen(!open)}
             title={user?.name}
             className={`w-9 h-9 rounded-full ring-2 ring-gray-200 hover:ring-gray-300 cursor-pointer transition flex items-center justify-center text-white text-sm font-semibold select-none ${roleColor(
-              user?.role
+              user?.role,
             )}`}
           >
             {initials}
