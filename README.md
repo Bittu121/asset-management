@@ -1,8 +1,8 @@
 # Asset Management System
 
-A full-stack IT asset management application built with Next.js 16 (App Router), MongoDB/Mongoose, and Redux. It lets an organization register assets, allocate them to employees, track asset movement with a gate-pass workflow, and view reports — with role-based access for Admin, Manager, Technician, and End User.
+A full-stack IT Asset Management System built with Next.js, MongoDB, and Redux. It supports asset registration, employee allocation, gate-pass management, reporting, and role-based access for Admin, Manager, Technician, and End User.
 
-This document is written to match the actual code in this repository, so every feature described below is genuinely implemented. Planned hardening and cleanup work is listed separately in the **Roadmap** section at the end.
+This README documents the current implementation. Planned improvements are listed in the **Roadmap**.
 
 **Live demo:** _coming soon_
 
@@ -18,19 +18,18 @@ This document is written to match the actual code in this repository, so every f
 - [Schema Diagram](#schema-diagram)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
-- [Roadmap / Planned Improvements](#roadmap--planned-improvements)
-
+  
 ---
 
 ## Highlights
 
-- 🔐 **Auth done right** — JWT access + refresh tokens in httpOnly cookies, bcrypt password hashing, and OTP-based password reset over email.
-- 🛡️ **Role-based access** — 4 roles (Admin, Manager, Technician, End User) enforced by middleware on every protected route, not just hidden in the UI.
-- ⚙️ **Idempotent startup bootstrap** — auto-provisions the 4 roles and an admin account on first boot; safe to re-run and never destroys existing data.
-- 🔒 **Data integrity at the database layer** — a partial unique index guarantees an asset can have only one _active_ allocation at a time, even under concurrent requests.
-- 📦 **Real-world asset operations** — bulk Excel import/export, an auto-generated QR code per asset, and a full gate-pass approval workflow (Pending → Approved → Issued → Returned).
-- 🧱 **Clean modular backend** — 17 feature modules, each split into schema / controller / service, exposed through a REST API (40+ routes).
-
+- **Authentication** — JWT, Refresh Tokens, httpOnly Cookies & OTP Password Reset
+- **Role-Based Access** — Admin, Manager, Technician & End User
+- **System Setup** — Auto-creates roles and admin account on first startup
+- **Asset Allocation** — active allocation per asset
+- **Asset Operations** — Bulk Excel Import/Export, QR Codes & Gate Pass Workflow (Pending → Approved → Issued → Returned)
+- **Architecture** — REST API (17 Modules, 40+ Endpoints)
+  
 ---
 
 ## Screenshots
@@ -63,11 +62,11 @@ This document is written to match the actual code in this repository, so every f
 
 ## Tech Stack
 
-- **Frontend:** Next.js 16 (App Router), React 19, Redux + Redux Thunk, Tailwind CSS
-- **Backend:** Next.js API routes (Route Handlers) calling backend controllers/services
-- **Database:** MongoDB with Mongoose
-- **Auth:** JWT (access + refresh tokens) stored in httpOnly cookies, bcrypt password hashing
-- **Other:** react-qr-code (QR generation), xlsx (bulk Excel import/export), react-pdf / pdfmake (printable documents)
+- **Frontend:** Next.js 16, React 19, Redux, Redux Thunk, Tailwind CSS
+- **Backend:** Next.js Route Handlers, REST API
+- **Database:** MongoDB, Mongoose
+- **Authentication:** JWT, Refresh Tokens, httpOnly Cookies, bcrypt
+- **Libraries:** react-qr-code, xlsx, react-pdf, pdfmake
 
 ---
 
@@ -76,29 +75,30 @@ This document is written to match the actual code in this repository, so every f
 ### 0. First-Time Setup (Automatic)
 
 - On first startup, the app auto-creates the 4 roles (Admin, Manager, Technician, User) and one Admin account.
-- If an Admin already exists on restart, nothing is recreated and no data is deleted.
+- If an Admin account already exists, the seed process is skipped.
 - The Admin email and password are configurable via environment variables.
 
 ### 1. Login and Security
 
-- Log in using email and password.
-- Passwords are stored securely in hashed (encrypted) form.
-- Users stay logged in via a secure authentication token (httpOnly cookie).
-- Reset a password using a One-Time Password (OTP) sent to email.
-- Secure logout that clears the session.
+- Email and password authentication.
+- Passwords hashed using bcrypt.
+- JWT authentication with access and refresh tokens stored in httpOnly cookies.
+- Password reset using an email-based OTP.
+- Logout clears the authentication cookies.
 
 ### 2. Role
 
-- Create and manage user roles.
-- Assign permissions to each role.
-- Assign a role to each user; only permitted roles can perform specific actions (role-based access).
+- Create and manage roles.
+- Assign permissions to roles.
+- Assign roles to users.
+- Role- and permission-based access control.
 
 ### 3. User Account
 
 - Create and manage user accounts for system access.
 - Stores name, email, password, employee code, phone number, and job title.
 - Assign a Role and an optional Reporting Manager.
-- Stores the user's Department, Sub-Department, Location, and Sub-Location (as text).
+- Stores the user's Department, Sub-Department, Location, and Sub-Location .
 
 ### 4. Department
 
@@ -147,13 +147,13 @@ This document is written to match the actual code in this repository, so every f
 - Each asset has a unique Asset Tag and Serial Number.
 - Stores technical (OS, processor, RAM), network (IP address, hostname), and purchase (cost, warranty, AMC) details.
 - A unique QR code is generated for each asset — printable, downloadable, and scannable.
-- Add assets one by one or import in bulk via Excel; export the full list to Excel.
-
+- Add, import, and export assets via Excel.
+  
 ### 14. Asset Allocation (Giving Assets to Employees)
 
 - Allocate an asset to a user with an expected return date.
 - Each allocation links one asset to one user.
-- The same asset cannot be allocated to two users at once (enforced by the database).
+- The same asset cannot be allocated to two users at once.
 - An Admin, Manager, or Technician can process a return and record the asset's condition.
 - View full allocation history and track overdue allocations.
 - Only an Admin can permanently delete an allocation.
@@ -186,28 +186,21 @@ This document is written to match the actual code in this repository, so every f
 
 ---
 
-## How the Schemas Are Connected
+## Schema Relationships
 
-This is a plain description of how each database collection relates to the others. "One-to-many" means one record in the first collection can be linked to many records in the second collection.
-
-- **AssetCategory → SubCategory**: one category can have many sub-categories.
-- **AssetCategory → AssetType**: one category can have many asset types.
-- **SubCategory → AssetType**: one sub-category can have many asset types (optional link).
-- **AssetCategory / SubCategory / AssetType → Asset**: every asset must belong to one category, and may optionally belong to a sub-category and asset type.
-- **Vendor → Asset**: one vendor can supply many assets (optional link).
-- **Department → SubDepartment**: one department can have many sub-departments.
-- **Location → SubLocation**: one location can have many sub-locations.
-- **Role → UserAccount**: one role can be assigned to many users.
-- **UserAccount → UserAccount**: a user can have a "reporting manager", which is another user in the same collection (self-reference).
-- **UserAccount → SupportGroup**: a user can be the manager of a support group, and a user can also be a member of many support groups at once (many-to-many, stored as a list of user IDs inside the support group).
-- **Asset → Allocation**: one asset can have many allocation records over time, but only one of them can be "active" at any given moment (this is enforced by the database itself, not just the application code).
-- **UserAccount → Allocation**: one user can hold many allocations (past and present).
-- **Asset → GatePass**: one asset can have many gate pass records over time (there is no limit on how many are open at once).
-
-A few fields look like they should be links but are actually stored as plain text, not as a real database relationship:
-- A user's department, sub-department, location, and sub-location are stored as plain text on the user record, not linked to the actual Department/Location collections.
-- The sub-department's department name, and the sub-location's location name, are stored as a text copy in addition to the real link.
-- The "requested by" field on a gate pass stores the requester's email as text, not a link to the user account.
+- **AssetCategory → SubCategory:** One category can have multiple sub-categories.
+- **AssetCategory → AssetType:** One category can have multiple asset types.
+- **SubCategory → AssetType:** One sub-category can have multiple asset types (optional).
+- **AssetCategory / SubCategory / AssetType → Asset:** Each asset belongs to one category and can optionally reference a sub-category and asset type.
+- **Vendor → Asset:** One vendor can supply multiple assets.
+- **Department → SubDepartment:** One department can have multiple sub-departments.
+- **Location → SubLocation:** One location can have multiple sub-locations.
+- **Role → UserAccount:** One role can be assigned to multiple users.
+- **UserAccount → UserAccount:** Users can reference another user as their reporting manager.
+- **UserAccount ↔ SupportGroup:** A user can manage one support group and belong to multiple support groups.
+- **Asset → Allocation:** One asset can have multiple allocations, but only one active allocation at a time.
+- **UserAccount → Allocation:** One user can have multiple asset allocations.
+- **Asset → GatePass:** One asset can have multiple gate-pass records.
 
 ---
 
@@ -249,21 +242,30 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open http://localhost:3000 in your browser.
 
-You will need a `.env` file with at least: `MONGODB_URI`, `JWT_SECRET`, `JWT_REFRESH_SECRET` (and mail settings if you want the OTP/forgot-password email to actually send).
+Create a `.env` file with the required environment variables, including:
 
-On first startup the app auto-bootstraps the 4 system roles (`ADMIN`, `MANAGER`, `TECHNICIAN`, `USER`) and a single Admin account (idempotent — skipped if an admin already exists). The admin then creates all other users from the app. Admin credentials can be overridden via `.env`: `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_EMPLOYEE_CODE` (defaults: `admin@assetmanagement.com` / `Admin@123`).
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `JWT_REFRESH_SECRET`
 
+Configure your mail settings if you want OTP and password reset emails to work.
+
+On first startup, the application automatically creates the default system roles (`ADMIN`, `MANAGER`, `TECHNICIAN`, `USER`) and an Admin account. This process is idempotent and runs only if an Admin account does not already exist.
+
+The default Admin account can be customized using the following environment variables:
+
+- `ADMIN_NAME`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+- `ADMIN_EMPLOYEE_CODE`
+
+Default credentials:
+
+```text
+Email: admin@assetmanagement.com
+Password: Admin@123
+```
 ---
 
-## Roadmap / Planned Improvements
-
-The core flows (auth, asset registry, allocation, gate pass, reports) are fully working end to end. The items below are the next planned hardening/cleanup steps, listed here for transparency:
-
-1. **Tighten role restriction on Location and Sub-Location endpoints.** These two endpoints currently allow any authenticated user to create/edit/delete records; the plan is to restrict them to Admin/Manager, matching every other admin master-data endpoint.
-2. **Enforce permissions server-side, not just by role name.** Each Role already stores a granular `permissions` list (e.g. "Create Asset") and it's returned to the frontend at login; the next step is to check this list on the backend for finer-grained access control, instead of relying on the broader role name alone.
-3. **Add a `/api/auth/refresh` endpoint.** A refresh token is already issued and stored in a cookie at login; wiring up a refresh route will let a session extend past the access token's expiry instead of requiring a fresh login.
-4. **Formalize the `SUPERADMIN` role.** A couple of backend checks already anticipate a `SUPERADMIN` role for a level of access above Admin; the plan is to seed it properly and document it as a first-class role rather than something an Admin has to create manually.
-5. **Link user location/department fields to the master-data collections.** These are currently stored as text on the user record; converting them to proper references will keep them automatically in sync if a department or location is renamed.
-6. **Remove legacy scaffolding models (`AuthUser`, `GroupMember`, unused `roles` constants file)** that were superseded by `UserAccount` and the `SupportGroup.members` array during development.
