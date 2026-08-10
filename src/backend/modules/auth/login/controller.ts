@@ -8,12 +8,13 @@ export const login = async (req: NextRequest) => {
   const body = await req.json();
 
   const validation = validateFields(body, ["email", "password"]);
-  if (validation) return validation;
+  if (validation) return NextResponse.json(validation, { status: validation.statusCode });
 
   const result = await loginService(body.email, body.password);
 
   if (!result.success) {
-    return errorResponse(result.message, 401);
+    const err = errorResponse(result.message, 401);
+    return NextResponse.json(err, { status: err.statusCode });
   }
 
   const response = NextResponse.json(
