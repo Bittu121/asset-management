@@ -30,8 +30,6 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   MoreHorizontal,
-  Filter,
-  Download,
   ChevronRight,
   Users,
   Activity,
@@ -53,7 +51,9 @@ const badgeClasses: Record<BadgeColor, string> = {
 
 function Badge({ label, color = "gray" }: { label: string | number; color?: BadgeColor }) {
   return (
-    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${badgeClasses[color]}`}>
+    <span
+      className={`inline-block text-xs font-semibold px-2 py-0.5 rounded border whitespace-nowrap ${badgeClasses[color]}`}
+    >
       {label}
     </span>
   );
@@ -291,10 +291,9 @@ export default function AdminDashboard() {
     name: c.category,
     value: c.count,
   }));
-  const gpPieData = Object.entries(gatePassSummary).map(([name, value]) => ({
-    name,
-    value,
-  }));
+  const gpPieChartData = Object.entries(gatePassSummary)
+    .map(([name, value]) => ({ name, value }))
+    .filter((d) => d.value > 0);
   const utilPct =
     stats.totalAssets > 0 ? Math.round((stats.allocated / stats.totalAssets) * 100) : 0;
 
@@ -435,25 +434,34 @@ export default function AdminDashboard() {
           </ChartCard>
         </div>
         <ChartCard title="Gate Pass Status" subtitle="Current breakdown">
+          {gpPieChartData.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-sm text-gray-400">
+              No gate passes yet
+            </div>
+          ) : (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={gpPieData.filter((d) => d.value > 0)}
+                data={gpPieChartData}
                 cx="50%"
                 cy="50%"
-                outerRadius={85}
-                innerRadius={38}
+                outerRadius={70}
+                innerRadius={34}
                 dataKey="value"
-                label={({ name }: { name?: string }) => name ?? ""}
+                label={({ percent }: { percent?: number }) =>
+                  `${((percent ?? 0) * 100).toFixed(0)}%`
+                }
                 labelLine={false}
               >
-                {gpPieData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                {gpPieChartData.map((entry, i) => (
+                  <Cell key={entry.name} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
+              <Legend iconType="circle" iconSize={8} />
             </PieChart>
           </ResponsiveContainer>
+          )}
         </ChartCard>
       </div>
 
@@ -641,20 +649,7 @@ export default function AdminDashboard() {
         </SectionCard>
       </div>
 
-      <SectionCard
-        title="Gate Pass Records"
-        subtitle="All recent asset movements"
-        action={
-          <div className="flex gap-2">
-            <button className="flex items-center gap-1 text-xs border border-gray-200 px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-50">
-              <Filter size={11} /> Filter
-            </button>
-            <button className="flex items-center gap-1 text-xs border border-gray-200 px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-50">
-              <Download size={11} /> Export
-            </button>
-          </div>
-        }
-      >
+      <SectionCard title="Gate Pass Records" subtitle="All recent asset movements">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <THead
@@ -695,7 +690,7 @@ export default function AdminDashboard() {
                     <td className="py-3 pr-4 text-gray-600">{gp.purpose}</td>
                     <td className="py-3 pr-4 text-gray-500">{gp.carrierName || "?"}</td>
                     <td className="py-3 pr-4 text-gray-500 text-xs">{gp.requestedBy}</td>
-                    <td className="py-3 pr-4">
+                    <td className="py-3 pr-4 whitespace-nowrap">
                       <Badge label={gp.status} color={statusColor(gp.status)} />
                     </td>
                     <td className="py-3 text-gray-400 text-xs whitespace-nowrap">{gp.date}</td>

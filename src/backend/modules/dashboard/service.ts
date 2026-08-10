@@ -7,6 +7,13 @@ import "../admin/user-account/schema";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+// Normalizes Date objects or date strings to YYYY-MM-DD for display.
+function toDateOnly(value: unknown) {
+  if (!value) return "";
+  const d = new Date(value as string | Date);
+  return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
+}
+
 function monthKey(dateStr: string) {
   const d = new Date(dateStr);
   return isNaN(d.getTime())
@@ -172,7 +179,7 @@ export async function getAdminDashboard() {
     carrierName: gp.carrierName ?? "",
     requestedBy: gp.requestedBy ?? "",
     status: gp.status,
-    date: String(gp.createdAt).split("T")[0],
+    date: toDateOnly(gp.createdAt),
   }));
 
   // Recent activity (last 15 events combined)
