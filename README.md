@@ -4,7 +4,7 @@ A full-stack IT Asset Management System built with Next.js, MongoDB, and Redux. 
 
 This README documents the current implementation. Planned improvements are listed in the **Roadmap**.
 
-**Live demo:** _coming soon_
+**Live demo:** https://asset-management-1-619b.onrender.com/
 
 ## Table of Contents
 
