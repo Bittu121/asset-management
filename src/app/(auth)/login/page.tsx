@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../store/auth/store";
 import { clearError, loginAction } from "../../../store/auth/authActions";
 import Image from "next/image";
-import { Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, KeyRound } from "lucide-react";
 
 function Login() {
   const router = useRouter();
@@ -53,8 +53,8 @@ function Login() {
           </h2>
 
           <p className="mt-4 text-gray-400 text-sm leading-relaxed">
-            Track, allocate, and manage assets with real-time visibility
-            across your organization.
+            Track, allocate, and manage assets with real-time visibility across
+            your organization.
           </p>
 
           <div className="mt-8 space-y-4">
@@ -172,6 +172,28 @@ function Login() {
               )}
             </button>
           </div>
+
+          {/* Demo access */}
+          <a
+            href="mailto:bittukumar8713@gmail.com?subject=Asset%20Management%20-%20Demo%20Credentials"
+            className="group mt-6 flex items-center gap-3 rounded-lg border border-gray-200 bg-white/60 px-4 py-3 transition-all hover:border-gray-300 hover:bg-white hover:shadow-sm"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-gray-900/5 text-gray-500 transition group-hover:bg-gray-900 group-hover:text-white">
+              <KeyRound size={14} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-medium text-gray-900">
+                Request demo credentials
+              </span>
+              <span className="block text-[11px] text-gray-500">
+                Get access to explore the full web app
+              </span>
+            </span>
+            <ArrowRight
+              size={14}
+              className="shrink-0 text-gray-300 transition-all group-hover:translate-x-0.5 group-hover:text-gray-900"
+            />
+          </a>
 
           {/* Footer */}
           <p className="mt-8 text-xs text-gray-400 text-center">
